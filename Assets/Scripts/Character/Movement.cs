@@ -52,14 +52,14 @@ public class Movement : MonoBehaviour
             currentAcceleration * Time.fixedDeltaTime
         );
 
-        _rb.MovePosition(_rb.position + _currentVelocity * Time.fixedDeltaTime);
+        _rb.linearVelocityX = _currentVelocity.x;
 
         //JUMP
         if (_jumpRequested)
         {
             if (IsGrounded())
             {
-                _rb.MovePosition(_rb.position + jumpForce * Time.fixedDeltaTime * Vector2.up);
+                _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             }
             _jumpRequested = false;
         }
