@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 2488839925827164851}
   - component: {fileID: 3405827934571186790}
   - component: {fileID: 6763204819788602041}
+  - component: {fileID: 766848926895462639}
   m_Layer: 0
   m_Name: Ninja Frog
   m_TagString: Untagged
@@ -213,7 +214,7 @@ MonoBehaviour:
   moveSpeed: 5
   acceleration: 10
   deceleration: 30
-  jumpForce: 30
+  jumpForce: 20
   jumpCutMultiplier: 0.5
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
@@ -222,3 +223,25 @@ MonoBehaviour:
     m_Bits: 8
   groundCheckDistance: 0.1
   groundCheckPoint: {fileID: 9177720307881465292}
+--- !u!95 &766848926895462639
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6633632527193284704}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 95504671977a0cd4b992be5b4f88e9ec, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
