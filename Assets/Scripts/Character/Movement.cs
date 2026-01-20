@@ -7,15 +7,29 @@ public class Movement : MonoBehaviour
     //------- Unity Editor Variables -------//
     [Header("Movement Settings")]
     [SerializeField] protected float moveSpeed = 5f;
+    [SerializeField] protected float acceleration = 10f;
+    [SerializeField] protected float deceleration = 60f;
+
+    [Header("Jump Settings")]
     [SerializeField] protected float jumpForce = 10f;
+    [Tooltip("Multiplier to apply to upward velocity when jump is released early for variable jump height.")]
+    [SerializeField] protected float jumpCutMultiplier = 0.5f;
+
+    [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
     [SerializeField] protected InputActionReference JumpInputAction;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] protected LayerMask groundLayer;
+    [SerializeField] protected float groundCheckDistance = 0.1f;
+    [SerializeField] protected Transform groundCheckPoint;
 
 
     //------- Private Variables -------//
     private Rigidbody2D _rb;
     private Vector2 _rawMovementInput;
     private bool _jumpRequested = false;
+    private Vector2 _currentVelocity = Vector2.zero;
 
     //------- Unity Methods -------//
     void Start()
@@ -23,13 +37,30 @@ public class Movement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        _rb.linearVelocity = _rawMovementInput * moveSpeed;
+        //MOVEMENT
+        Vector2 targetVelocity = _rawMovementInput * moveSpeed;
 
+        float currentAcceleration = _rawMovementInput == Vector2.zero
+            ? deceleration
+            : acceleration;
+
+        _currentVelocity = Vector2.MoveTowards(
+            _currentVelocity,
+            targetVelocity,
+            currentAcceleration * Time.fixedDeltaTime
+        );
+
+        _rb.MovePosition(_rb.position + _currentVelocity * Time.fixedDeltaTime);
+
+        //JUMP
         if (_jumpRequested)
         {
-            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            if (IsGrounded())
+            {
+                _rb.MovePosition(_rb.position + jumpForce * Time.fixedDeltaTime * Vector2.up);
+            }
             _jumpRequested = false;
         }
     }
@@ -45,6 +76,8 @@ public class Movement : MonoBehaviour
         MovementInputAction.action.started += Move;
 
         JumpInputAction.action.performed += Jump;
+        JumpInputAction.action.started += Jump;
+        JumpInputAction.action.canceled += JumpCancelled;
     }
 
     void OnDisable()
@@ -54,7 +87,12 @@ public class Movement : MonoBehaviour
 
         //callbacks
         MovementInputAction.action.performed -= Move;
+        MovementInputAction.action.canceled -= Move;
+        MovementInputAction.action.started -= Move;
+
         JumpInputAction.action.performed -= Jump;
+        JumpInputAction.action.started -= Jump;
+        JumpInputAction.action.canceled -= JumpCancelled;
     }
 
     //------- Private Methods -------//
@@ -74,5 +112,19 @@ public class Movement : MonoBehaviour
     {
         _jumpRequested = true;
     }
-}
 
+    void JumpCancelled(InputAction.CallbackContext context)
+    {
+        if (_rb.linearVelocityY > 0f)
+        {
+            var currentVelocityY = _rb.linearVelocityY;
+            _rb.linearVelocityY = currentVelocityY * jumpCutMultiplier;
+        }
+    }
+
+    bool IsGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
+        return hit.collider != null;
+    }
+}
