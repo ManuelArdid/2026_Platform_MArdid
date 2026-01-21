@@ -96,10 +96,10 @@ public class Movement : MonoBehaviour
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
 
         //Falling
-        _animator.SetBool("IsFalling", !IsGrounded() && _rb.linearVelocityY < 0f && !_isdoubleJumping);
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isdoubleJumping);
 
         //Jumping
-        _animator.SetBool("IsJumping", !IsGrounded() && _rb.linearVelocityY > 0f && !_isdoubleJumping);
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isdoubleJumping);
 
         //Flip sprite
         if (_currentVelocity.x > 0)
