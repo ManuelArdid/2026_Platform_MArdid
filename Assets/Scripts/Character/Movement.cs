@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,7 @@ public class Movement : MonoBehaviour
     [SerializeField] protected float jumpForce = 10f;
     [Tooltip("Multiplier to apply to upward velocity when jump is released early for variable jump height.")]
     [SerializeField] protected float jumpCutMultiplier = 0.5f;
+    [SerializeField] protected float coyoteTime = 0.2f;
 
     [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
@@ -36,6 +38,8 @@ public class Movement : MonoBehaviour
     private Vector2 _currentVelocity = Vector2.zero;
     private bool _onPlatform = false;
     private bool _isdoubleJumping = false;
+    private bool _canUseCoyoteTime = false;
+
 
     //------- Unity Methods -------//
     void Start()
@@ -68,9 +72,8 @@ public class Movement : MonoBehaviour
             _rb.linearVelocityY = 0f;
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-
             //Double jump
-            if (!IsGrounded())
+            if (!IsGrounded() && !_canUseCoyoteTime)
             {
                 //animation trigger
                 _animator.SetTrigger("PerformDoubleJump");
@@ -84,6 +87,7 @@ public class Movement : MonoBehaviour
         if (IsGrounded())
         {
             _isdoubleJumping = false;
+            _canUseCoyoteTime = false;
         }
 
         //ANIMATIONS
@@ -146,6 +150,7 @@ public class Movement : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             _onPlatform = false;
+            StartCoroutine(CoyoteTime());
         }
     }
 
@@ -155,7 +160,7 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Handles character movement based on player input.
     /// </summary>
-    void Move(InputAction.CallbackContext context)
+    private void Move(InputAction.CallbackContext context)
     {
         _rawMovementInput = context.ReadValue<Vector2>();
     }
@@ -163,7 +168,7 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Handles character jump based on player input.
     /// </summary>
-    void Jump(InputAction.CallbackContext context)
+    private void Jump(InputAction.CallbackContext context)
     {
         _jumpRequested = true;
     }
@@ -171,7 +176,7 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Handles jump cut for variable jump height.
     /// </summary>
-    void JumpCancelled(InputAction.CallbackContext context)
+    private void JumpCancelled(InputAction.CallbackContext context)
     {
         if (_rb.linearVelocityY > 0f)
         {
@@ -183,8 +188,35 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Checks if the character is grounded.
     /// </summary>
-    bool IsGrounded()
+    private bool IsGrounded()
     {
         return _onPlatform;
     }
+
+    /// <summary>
+    /// Coyote Time Coroutine
+    /// </summary>
+    private IEnumerator CoyoteTime()
+    {
+        float elapsedTime = 0f;
+        _canUseCoyoteTime = true;
+
+        while (elapsedTime < coyoteTime)
+        {
+            // If the player lands, exit the coroutine
+            if (_onPlatform)
+            {
+                _canUseCoyoteTime = false;
+                yield break;
+            }
+
+            // Allow coyote time
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // Coyote time expired
+        _canUseCoyoteTime = false;
+    }
+
 }
