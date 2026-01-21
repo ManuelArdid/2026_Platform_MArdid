@@ -137,6 +137,9 @@ public class Movement : MonoBehaviour
 
         JumpInputAction.action.started += Jump;
         JumpInputAction.action.canceled += JumpCancelled;
+
+        //event subscriptions
+        Lilypad.OnLilypadCollected += HandleLilypadCollected;
     }
 
     void OnDisable()
@@ -151,6 +154,9 @@ public class Movement : MonoBehaviour
 
         JumpInputAction.action.started -= Jump;
         JumpInputAction.action.canceled -= JumpCancelled;
+
+        //event unsubscriptions
+        Lilypad.OnLilypadCollected -= HandleLilypadCollected;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -241,4 +247,8 @@ public class Movement : MonoBehaviour
         _canUseCoyoteTime = false;
     }
 
+    private void HandleLilypadCollected(Lilypad lilypad)
+    {
+        _jumpsRemaining = MaximumJumps;
+    }
 }
