@@ -35,7 +35,6 @@ public class Movement : MonoBehaviour
     private bool _jumpRequested = false;
     private Vector2 _currentVelocity = Vector2.zero;
     private bool _onPlatform = false;
-    private bool _isJumping = false;
     private bool _isdoubleJumping = false;
 
     //------- Unity Methods -------//
@@ -68,7 +67,6 @@ public class Movement : MonoBehaviour
         {
             _rb.linearVelocityY = 0f;
             _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            _isJumping = true;
 
 
             //Double jump
@@ -85,7 +83,6 @@ public class Movement : MonoBehaviour
         //Ground check reset
         if (IsGrounded())
         {
-            _isJumping = false;
             _isdoubleJumping = false;
         }
 
@@ -95,10 +92,10 @@ public class Movement : MonoBehaviour
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
 
         //Falling
-        _animator.SetBool("IsFalling", !IsGrounded() && _rb.linearVelocityY < 0f && !_isJumping && !_isdoubleJumping);
+        _animator.SetBool("IsFalling", !IsGrounded() && _rb.linearVelocityY < 0f && !_isdoubleJumping);
 
         //Jumping
-        _animator.SetBool("IsJumping", !IsGrounded() && _rb.linearVelocityY > 0f && _isJumping   && !_isdoubleJumping);
+        _animator.SetBool("IsJumping", !IsGrounded() && _rb.linearVelocityY > 0f && !_isdoubleJumping);
 
         //Flip sprite
         if (_currentVelocity.x > 0)
@@ -181,8 +178,6 @@ public class Movement : MonoBehaviour
             var currentVelocityY = _rb.linearVelocityY;
             _rb.linearVelocityY = currentVelocityY * jumpCutMultiplier;
         }
-
-        _isJumping = false;
     }
 
     /// <summary>
@@ -190,7 +185,6 @@ public class Movement : MonoBehaviour
     /// </summary>
     bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(groundCheckPoint.position, Vector2.down, groundCheckDistance, groundLayer);
-        return hit.collider != null || _onPlatform;
+        return _onPlatform;
     }
 }
