@@ -211,19 +211,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b0d8209160c93c47a956c7641f7a54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
-  moveSpeed: 5
-  acceleration: 10
-  deceleration: 30
-  jumpForce: 20
-  jumpCutMultiplier: 0.5
-  coyoteTime: 0.2
+  MoveSpeed: 5
+  Acceleration: 10
+  Deceleration: 30
+  JumpForce: 20
+  JumpCutMultiplier: 0.5
+  CoyoteTime: 0.2
+  MaximumJumps: 5
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
-  groundLayer:
+  GroundLayer:
     serializedVersion: 2
-    m_Bits: 8
-  groundCheckDistance: 0.1
-  groundCheckPoint: {fileID: 9177720307881465292}
+    m_Bits: 0
+  GroundCheckDistance: 0.1
+  GroundCheckPoint: {fileID: 9177720307881465292}
+  SpawnPoint: {fileID: 0}
 --- !u!95 &766848926895462639
 Animator:
   serializedVersion: 7

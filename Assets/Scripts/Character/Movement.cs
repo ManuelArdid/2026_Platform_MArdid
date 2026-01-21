@@ -29,6 +29,9 @@ public class Movement : MonoBehaviour
     [SerializeField] protected float GroundCheckDistance = 0.1f;
     [SerializeField] protected Transform GroundCheckPoint;
 
+    [Header("Spawn Settings")]
+    [SerializeField] protected Transform SpawnPoint;
+
 
     //------- Private Variables -------//
     private Rigidbody2D _rb;
@@ -41,7 +44,7 @@ public class Movement : MonoBehaviour
     private bool _isDoubleJumping = false;
     private bool _canUseCoyoteTime = false;
     private Coroutine _currentCoyoteTimeCoroutine = null;
-
+    private int _jumpsRemaining;
 
     //------- Unity Methods -------//
     void Start()
@@ -49,10 +52,20 @@ public class Movement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        //Initialize jumps
+        _jumpsRemaining = MaximumJumps;
     }
 
     void FixedUpdate()
     {
+        //RESET CHECK
+        if(_jumpsRemaining < 0)
+        {
+            transform.position = SpawnPoint.position;
+            _jumpsRemaining = MaximumJumps;            
+        }
+
         //MOVEMENT
         Vector2 targetVelocity = _rawMovementInput * MoveSpeed;
 
@@ -73,6 +86,7 @@ public class Movement : MonoBehaviour
         {
             _rb.linearVelocityY = 0f;
             _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            _jumpsRemaining--;
 
             //Double jump
             if (!IsGrounded() && !_canUseCoyoteTime)
@@ -157,7 +171,7 @@ public class Movement : MonoBehaviour
             {
                 StopCoroutine(_currentCoyoteTimeCoroutine);
             }
-            
+
             _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
         }
     }
