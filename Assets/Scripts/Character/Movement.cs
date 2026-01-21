@@ -9,24 +9,25 @@ public class Movement : MonoBehaviour
 {
     //------- Unity Editor Variables -------//
     [Header("Movement Settings")]
-    [SerializeField] protected float moveSpeed = 5f;
-    [SerializeField] protected float acceleration = 10f;
-    [SerializeField] protected float deceleration = 60f;
+    [SerializeField] protected float MoveSpeed = 5f;
+    [SerializeField] protected float Acceleration = 10f;
+    [SerializeField] protected float Deceleration = 60f;
 
     [Header("Jump Settings")]
-    [SerializeField] protected float jumpForce = 10f;
+    [SerializeField] protected float JumpForce = 10f;
     [Tooltip("Multiplier to apply to upward velocity when jump is released early for variable jump height.")]
-    [SerializeField] protected float jumpCutMultiplier = 0.5f;
-    [SerializeField] protected float coyoteTime = 0.2f;
+    [SerializeField] protected float JumpCutMultiplier = 0.5f;
+    [SerializeField] protected float CoyoteTime = 0.2f;
+    [SerializeField] protected int MaximumJumps = 5;
 
     [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
     [SerializeField] protected InputActionReference JumpInputAction;
 
     [Header("Ground Check Settings")]
-    [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected float groundCheckDistance = 0.1f;
-    [SerializeField] protected Transform groundCheckPoint;
+    [SerializeField] protected LayerMask GroundLayer;
+    [SerializeField] protected float GroundCheckDistance = 0.1f;
+    [SerializeField] protected Transform GroundCheckPoint;
 
 
     //------- Private Variables -------//
@@ -37,7 +38,7 @@ public class Movement : MonoBehaviour
     private bool _jumpRequested = false;
     private Vector2 _currentVelocity = Vector2.zero;
     private bool _onPlatform = false;
-    private bool _isdoubleJumping = false;
+    private bool _isDoubleJumping = false;
     private bool _canUseCoyoteTime = false;
 
 
@@ -52,11 +53,11 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         //MOVEMENT
-        Vector2 targetVelocity = _rawMovementInput * moveSpeed;
+        Vector2 targetVelocity = _rawMovementInput * MoveSpeed;
 
         float currentAcceleration = _rawMovementInput == Vector2.zero
-            ? deceleration
-            : acceleration;
+            ? Deceleration
+            : Acceleration;
 
         _currentVelocity = Vector2.MoveTowards(
             _currentVelocity,
@@ -70,14 +71,14 @@ public class Movement : MonoBehaviour
         if (_jumpRequested)
         {
             _rb.linearVelocityY = 0f;
-            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
 
             //Double jump
             if (!IsGrounded() && !_canUseCoyoteTime)
             {
                 //animation trigger
                 _animator.SetTrigger("PerformDoubleJump");
-                _isdoubleJumping = true;
+                _isDoubleJumping = true;
             }
 
             _jumpRequested = false;
@@ -86,7 +87,7 @@ public class Movement : MonoBehaviour
         //Ground check reset
         if (IsGrounded())
         {
-            _isdoubleJumping = false;
+            _isDoubleJumping = false;
             _canUseCoyoteTime = false;
         }
 
@@ -96,10 +97,10 @@ public class Movement : MonoBehaviour
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
 
         //Falling
-        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isdoubleJumping);
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping);
 
         //Jumping
-        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isdoubleJumping);
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping);
 
         //Flip sprite
         if (_currentVelocity.x > 0)
@@ -150,7 +151,7 @@ public class Movement : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             _onPlatform = false;
-            StartCoroutine(CoyoteTime());
+            StartCoroutine(CoyoteTimeCoroutine());
         }
     }
 
@@ -181,7 +182,7 @@ public class Movement : MonoBehaviour
         if (_rb.linearVelocityY > 0f)
         {
             var currentVelocityY = _rb.linearVelocityY;
-            _rb.linearVelocityY = currentVelocityY * jumpCutMultiplier;
+            _rb.linearVelocityY = currentVelocityY * JumpCutMultiplier;
         }
     }
 
@@ -196,12 +197,12 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Coyote Time Coroutine
     /// </summary>
-    private IEnumerator CoyoteTime()
+    private IEnumerator CoyoteTimeCoroutine()
     {
         float elapsedTime = 0f;
         _canUseCoyoteTime = true;
 
-        while (elapsedTime < coyoteTime)
+        while (elapsedTime < CoyoteTime)
         {
             // If the player lands, exit the coroutine
             if (_onPlatform)
