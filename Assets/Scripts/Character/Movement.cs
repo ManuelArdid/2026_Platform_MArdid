@@ -40,6 +40,7 @@ public class Movement : MonoBehaviour
     private bool _onPlatform = false;
     private bool _isDoubleJumping = false;
     private bool _canUseCoyoteTime = false;
+    private Coroutine _currentCoyoteTimeCoroutine = null;
 
 
     //------- Unity Methods -------//
@@ -151,7 +152,13 @@ public class Movement : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             _onPlatform = false;
-            StartCoroutine(CoyoteTimeCoroutine());
+
+            if (_currentCoyoteTimeCoroutine != null)
+            {
+                StopCoroutine(_currentCoyoteTimeCoroutine);
+            }
+            
+            _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
         }
     }
 
