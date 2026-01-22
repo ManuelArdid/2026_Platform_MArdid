@@ -205,6 +205,12 @@ public class Player : MonoBehaviour
     }
 
     //------- Public Methods -------//
+
+    public void SendPlayerToSpawnPoint()
+    {
+        transform.position = SpawnPoint.position;
+    }
+
     public void SetSpawnPoint(Vector3 spawnPosition)
     {
         if (SpawnPoint == null)
