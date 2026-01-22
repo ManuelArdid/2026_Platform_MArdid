@@ -53,9 +53,6 @@ public abstract class Player : MonoBehaviour
     //------- Unity Methods -------//
     protected virtual void Start()
     {
-        //Restart player prefs for debug only
-        PlayerPrefs.DeleteAll();
-
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
