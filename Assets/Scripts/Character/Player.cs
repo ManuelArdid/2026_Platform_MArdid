@@ -55,6 +55,10 @@ public class Player : MonoBehaviour
     //------- Unity Methods -------//
     void Start()
     {
+
+        //Restart player prefs for deebug only
+        PlayerPrefs.DeleteAll();
+
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -71,6 +75,9 @@ public class Player : MonoBehaviour
 
             SpawnPoint.position = new Vector3(x, y, z);
         }
+
+        //Set player to spawn point
+        transform.position = SpawnPoint.position;
     }
 
     void FixedUpdate()
