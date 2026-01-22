@@ -61,6 +61,16 @@ public class Player : MonoBehaviour
 
         //Initialize jumps
         _jumpsRemaining = MaximumJumps;
+
+        //Load spawn point from PlayerPrefs
+        if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
+        {
+            float x = PlayerPrefs.GetFloat("SpawnX");
+            float y = PlayerPrefs.GetFloat("SpawnY");
+            float z = PlayerPrefs.GetFloat("SpawnZ");
+
+            SpawnPoint.position = new Vector3(x, y, z);
+        }
     }
 
     void FixedUpdate()
@@ -197,6 +207,18 @@ public class Player : MonoBehaviour
 
             _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
         }
+    }
+
+    //------- Public Methods -------//
+    public void SetSpawnPoint(Vector3 spawnPosition)
+    {
+        if (SpawnPoint == null)
+        {
+            GameObject temp = new GameObject("RuntimeSpawnPoint");
+            SpawnPoint = temp.transform;
+        }
+
+        SpawnPoint.position = spawnPosition;
     }
 
 
