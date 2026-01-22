@@ -155,13 +155,13 @@ public abstract class Player : MonoBehaviour
             _onPlatform = false;
 
             // Start Coyote Time Coroutine if component is enabled
-            if (!isActiveAndEnabled)
-                return;
+            if (isActiveAndEnabled)
+            {
+                if (_currentCoyoteTimeCoroutine != null)
+                    StopCoroutine(_currentCoyoteTimeCoroutine);
 
-            if (_currentCoyoteTimeCoroutine != null)
-                StopCoroutine(_currentCoyoteTimeCoroutine);
-
-            _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
+                _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
+            }
         }
     }
 
