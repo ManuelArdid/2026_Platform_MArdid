@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7202221280580225622
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6084262025705461906, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_Color.b
+      value: 0.22385025
+      objectReference: {fileID: 0}
+    - target: {fileID: 6084262025705461906, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.49857
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.4919116
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6826275124441921217, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8794024856747203993, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      propertyPath: m_Name
+      value: Frog 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6393785900187709024, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8794024856747203993, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 789214007212054385}
+  m_SourcePrefab: {fileID: 100100000, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+--- !u!1 &1871748241354201039 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8794024856747203993, guid: c09d563ad47616f4baede0fe047818fd, type: 3}
+  m_PrefabInstance: {fileID: 7202221280580225622}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &789214007212054385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871748241354201039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690efb39a04f5b84686e69520669f4c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Player2
+  MoveSpeed: 5
+  Acceleration: 10
+  Deceleration: 30
+  JumpForce: 20
+  JumpCutMultiplier: 0.5
+  CoyoteTime: 0.2
+  MaximumJumps: 10
+  DoubleJumpReduction: 0.05
+  MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
+  JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
+  SpawnPoint: {fileID: 0}

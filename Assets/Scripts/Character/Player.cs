@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class Player : MonoBehaviour
+public abstract class Player : MonoBehaviour
 {
     //------- Unity Editor Variables -------//
     [Header("Movement Settings")]
@@ -31,27 +31,29 @@ public class Player : MonoBehaviour
     //------ Events ------//
     public static event System.Action OnPlayerReset;
 
-
     //------- Private Variables -------//
-    private Rigidbody2D _rb;
-    private Animator _animator;
-    private SpriteRenderer _spriteRenderer;
-    private Vector2 _rawMovementInput;
-    private bool _jumpRequested = false;
-    private Vector2 _currentVelocity = Vector2.zero;
-    private bool _onPlatform = false;
-    private bool _isDoubleJumping = false;
-    private bool _canUseCoyoteTime = false;
     private Coroutine _currentCoyoteTimeCoroutine = null;
-    private int _jumpsRemaining;
 
-    private int _doubleJumpCounter = 0;
+    //------- Protected Variables -------//
+    protected Rigidbody2D _rb;
+    protected Animator _animator;
+    protected SpriteRenderer _spriteRenderer;
+
+    protected Vector2 _rawMovementInput;
+    protected Vector2 _currentVelocity = Vector2.zero;
+
+    protected bool _jumpRequested = false;
+    protected bool _onPlatform = false;
+    protected bool _isDoubleJumping = false;
+    protected bool _canUseCoyoteTime = false;
+
+    protected int _jumpsRemaining;
+    protected int _doubleJumpCounter = 0;
 
     //------- Unity Methods -------//
-    void Start()
+    protected virtual void Start()
     {
-
-        //Restart player prefs for deebug only
+        //Restart player prefs for debug only
         PlayerPrefs.DeleteAll();
 
         _rb = GetComponent<Rigidbody2D>();
@@ -64,18 +66,18 @@ public class Player : MonoBehaviour
         //Load spawn point from PlayerPrefs
         if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
         {
-            float x = PlayerPrefs.GetFloat("SpawnX");
-            float y = PlayerPrefs.GetFloat("SpawnY");
-            float z = PlayerPrefs.GetFloat("SpawnZ");
-
-            SpawnPoint.position = new Vector3(x, y, z);
+            SpawnPoint.position = new Vector3(
+                PlayerPrefs.GetFloat("SpawnX"),
+                PlayerPrefs.GetFloat("SpawnY"),
+                PlayerPrefs.GetFloat("SpawnZ")
+            );
         }
 
         //Set player to spawn point
         transform.position = SpawnPoint.position;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         // Animations
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
@@ -89,63 +91,17 @@ public class Player : MonoBehaviour
             _spriteRenderer.flipX = true;
     }
 
-
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         //RESET CHECK
         if (_jumpsRemaining < 0)
         {
-            transform.position = SpawnPoint.position;
-            _jumpsRemaining = MaximumJumps;
-            OnPlayerReset?.Invoke();
+            SendPlayerToSpawnPoint();
         }
 
-        //MOVEMENT
-        Vector2 targetVelocity = _rawMovementInput * MoveSpeed;
-
-        float currentAcceleration = _rawMovementInput == Vector2.zero
-            ? Deceleration
-            : Acceleration;
-
-        _currentVelocity = Vector2.MoveTowards(
-            _currentVelocity,
-            targetVelocity,
-            currentAcceleration * Time.fixedDeltaTime
-        );
-
-        _rb.linearVelocityX = _currentVelocity.x;
-
-        //JUMP
-        if (_jumpRequested)
-        {
-            _rb.linearVelocityY = 0f;
-            _jumpsRemaining--;
-
-            if (IsGrounded() || _canUseCoyoteTime)
-            {
-                _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
-            }
-            else if (!IsGrounded() && !_canUseCoyoteTime)
-            {
-                _doubleJumpCounter++;
-                _rb.AddForce(Vector2.up * (JumpForce / CalculateDoubleJumpDivisor()), ForceMode2D.Impulse);
-
-                _animator.SetTrigger("PerformDoubleJump");
-                _isDoubleJumping = true;
-            }
-
-            _jumpRequested = false;
-        }
-
-        //Ground check reset
-        if (_onPlatform)
-        {
-            _isDoubleJumping = false;
-            _canUseCoyoteTime = false;
-            _doubleJumpCounter = 0;
-        }
+        HandleMovement();
+        HandleJump();
     }
-
 
     void OnEnable()
     {
@@ -166,9 +122,6 @@ public class Player : MonoBehaviour
 
     void OnDisable()
     {
-        MovementInputAction.action.Disable();
-        JumpInputAction.action.Disable();
-
         //callbacks
         MovementInputAction.action.performed -= Move;
         MovementInputAction.action.canceled -= Move;
@@ -176,6 +129,9 @@ public class Player : MonoBehaviour
 
         JumpInputAction.action.started -= Jump;
         JumpInputAction.action.canceled -= JumpCancelled;
+
+        MovementInputAction.action.Disable();
+        JumpInputAction.action.Disable();
 
         //event unsubscriptions
         Lilypad.OnLilypadCollected -= HandleLilypadCollected;
@@ -186,6 +142,9 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             _onPlatform = true;
+            _isDoubleJumping = false;
+            _canUseCoyoteTime = false;
+            _doubleJumpCounter = 0;
         }
     }
 
@@ -195,26 +154,28 @@ public class Player : MonoBehaviour
         {
             _onPlatform = false;
 
+            // Start Coyote Time Coroutine if component is enabled
+            if (!isActiveAndEnabled)
+                return;
+
             if (_currentCoyoteTimeCoroutine != null)
-            {
                 StopCoroutine(_currentCoyoteTimeCoroutine);
-            }
 
             _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
         }
     }
 
     //------- Public Methods -------//
-
     public void SendPlayerToSpawnPoint()
     {
         transform.position = SpawnPoint.position;
-        // Reset jumps
         _jumpsRemaining = MaximumJumps;
-        // Invoke reset event
         OnPlayerReset?.Invoke();
     }
 
+    /// <summary>
+    /// Sets the spawn point position for the player.
+    /// </summary>
     public void SetSpawnPoint(Vector3 spawnPosition)
     {
         if (SpawnPoint == null)
@@ -235,6 +196,36 @@ public class Player : MonoBehaviour
         _rawMovementInput = context.ReadValue<Vector2>();
     }
 
+    protected virtual void HandleMovement() { }
+
+    protected virtual void HandleJump()
+    {
+        if (!_jumpRequested) return;
+
+        _rb.linearVelocityY = 0f;
+        _jumpsRemaining--;
+        Debug.Log("Jumps Remaining: " + _jumpsRemaining);
+
+        if (IsGrounded() || _canUseCoyoteTime)
+        {
+            PerformJump(JumpForce);
+        }
+        else
+        {
+            _doubleJumpCounter++;
+            PerformJump(JumpForce / CalculateDoubleJumpDivisor());
+            _animator.SetTrigger("PerformDoubleJump");
+            _isDoubleJumping = true;
+        }
+
+        _jumpRequested = false;
+    }
+
+    protected virtual void PerformJump(float force)
+    {
+        _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+    }
+
     /// <summary>
     /// Checks if the character is grounded.
     /// </summary>
@@ -243,9 +234,7 @@ public class Player : MonoBehaviour
         return _onPlatform;
     }
 
-
     //------- Private Methods -------//
-
     /// <summary>
     /// Handles character jump based on player input.
     /// </summary>
@@ -261,8 +250,7 @@ public class Player : MonoBehaviour
     {
         if (_rb.linearVelocityY > 0f)
         {
-            var currentVelocityY = _rb.linearVelocityY;
-            _rb.linearVelocityY = currentVelocityY * JumpCutMultiplier;
+            _rb.linearVelocityY *= JumpCutMultiplier;
         }
     }
 
@@ -271,35 +259,22 @@ public class Player : MonoBehaviour
     /// </summary>
     private IEnumerator CoyoteTimeCoroutine()
     {
-
-        float elapsedTime = 0f;
         _canUseCoyoteTime = true;
+        float elapsedTime = 0f;
 
         while (elapsedTime < CoyoteTime)
         {
-            // If the player lands, exit the coroutine
             if (_onPlatform)
             {
                 _canUseCoyoteTime = false;
                 yield break;
             }
 
-            // Allow coyote time
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        // Coyote time expired
         _canUseCoyoteTime = false;
-    }
-
-    /// <summary>
-    /// Handles lilypad collected event.
-    /// Resets jumps remaining.
-    /// </summary>
-    private void HandleLilypadCollected(Lilypad lilypad)
-    {
-        _jumpsRemaining = MaximumJumps;
     }
 
     /// <summary>
@@ -308,5 +283,14 @@ public class Player : MonoBehaviour
     private float CalculateDoubleJumpDivisor()
     {
         return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
+    }
+
+    /// <summary>
+    /// Handles lilypad collected event.
+    ///  Resets jumps remaining.
+    /// </summary>
+    private void HandleLilypadCollected(Lilypad lilypad)
+    {
+        _jumpsRemaining = MaximumJumps;
     }
 }
