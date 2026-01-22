@@ -25,11 +25,6 @@ public class Player : MonoBehaviour
     [SerializeField] protected InputActionReference MovementInputAction;
     [SerializeField] protected InputActionReference JumpInputAction;
 
-    [Header("Ground Check Settings")]
-    [SerializeField] protected LayerMask GroundLayer;
-    [SerializeField] protected float GroundCheckDistance = 0.1f;
-    [SerializeField] protected Transform GroundCheckPoint;
-
     [Header("Spawn Settings")]
     [SerializeField] protected Transform SpawnPoint;
 
