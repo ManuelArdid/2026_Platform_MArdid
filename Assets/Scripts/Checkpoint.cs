@@ -1,7 +1,19 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Animator))]
 public class Checkpoint : MonoBehaviour
 {
+
+    //------- Private Variables -------//
+    Animator _animator;
+
+    //------- Unity Methods -------//
+    void Start()
+    {
+        _animator = GetComponent<Animator>();
+    }
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -21,8 +33,11 @@ public class Checkpoint : MonoBehaviour
                 PlayerPrefs.Save();
             }
 
-            // Destroy checkpoint after activation
-            Destroy(gameObject);
+            // Deactivate checkpoints collider to prevent multiple triggers
+            GetComponent<Collider2D>().enabled = false;
+
+            //Animation
+            _animator.SetTrigger("PerformActivate");
         }
     }
 }

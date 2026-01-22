@@ -260,6 +260,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private IEnumerator CoyoteTimeCoroutine()
     {
+
         float elapsedTime = 0f;
         _canUseCoyoteTime = true;
 
