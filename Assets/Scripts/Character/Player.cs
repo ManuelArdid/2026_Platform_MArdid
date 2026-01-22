@@ -75,6 +75,21 @@ public class Player : MonoBehaviour
         transform.position = SpawnPoint.position;
     }
 
+    void Update()
+    {
+        // Animations
+        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping);
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping);
+
+        // Flip sprite
+        if (_currentVelocity.x > 0)
+            _spriteRenderer.flipX = false;
+        else if (_currentVelocity.x < 0)
+            _spriteRenderer.flipX = true;
+    }
+
+
     void FixedUpdate()
     {
         //RESET CHECK
@@ -106,20 +121,15 @@ public class Player : MonoBehaviour
             _rb.linearVelocityY = 0f;
             _jumpsRemaining--;
 
-            //From ground or coyote time
             if (IsGrounded() || _canUseCoyoteTime)
             {
                 _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
-
             }
-
-            //Double jump
             else if (!IsGrounded() && !_canUseCoyoteTime)
             {
                 _doubleJumpCounter++;
-                _rb.AddForce(Vector2.up * (JumpForce / (CalculateDoubleJumpDivisor())), ForceMode2D.Impulse);
+                _rb.AddForce(Vector2.up * (JumpForce / CalculateDoubleJumpDivisor()), ForceMode2D.Impulse);
 
-                //animation trigger
                 _animator.SetTrigger("PerformDoubleJump");
                 _isDoubleJumping = true;
             }
@@ -128,31 +138,14 @@ public class Player : MonoBehaviour
         }
 
         //Ground check reset
-        if (IsGrounded())
+        if (_onPlatform)
         {
             _isDoubleJumping = false;
             _canUseCoyoteTime = false;
             _doubleJumpCounter = 0;
         }
-
-        //ANIMATIONS
-
-        //Running
-        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
-
-        //Falling
-        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping);
-
-        //Jumping
-        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping);
-
-        //Flip sprite
-        if (_currentVelocity.x > 0)
-            _spriteRenderer.flipX = false;
-        else if (_currentVelocity.x < 0)
-            _spriteRenderer.flipX = true;
-
     }
+
 
     void OnEnable()
     {
