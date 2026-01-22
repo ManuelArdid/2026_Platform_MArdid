@@ -209,6 +209,10 @@ public class Player : MonoBehaviour
     public void SendPlayerToSpawnPoint()
     {
         transform.position = SpawnPoint.position;
+        // Reset jumps
+        _jumpsRemaining = MaximumJumps;
+        // Invoke reset event
+        OnPlayerReset?.Invoke();
     }
 
     public void SetSpawnPoint(Vector3 spawnPosition)
@@ -222,16 +226,25 @@ public class Player : MonoBehaviour
         SpawnPoint.position = spawnPosition;
     }
 
-
-    //------- Private Methods -------//
-
+    //------- Protected Methods -------//
     /// <summary>
     /// Handles character movement based on player input.
     /// </summary>
-    private void Move(InputAction.CallbackContext context)
+    protected virtual void Move(InputAction.CallbackContext context)
     {
         _rawMovementInput = context.ReadValue<Vector2>();
     }
+
+    /// <summary>
+    /// Checks if the character is grounded.
+    /// </summary>
+    protected bool IsGrounded()
+    {
+        return _onPlatform;
+    }
+
+
+    //------- Private Methods -------//
 
     /// <summary>
     /// Handles character jump based on player input.
@@ -251,14 +264,6 @@ public class Player : MonoBehaviour
             var currentVelocityY = _rb.linearVelocityY;
             _rb.linearVelocityY = currentVelocityY * JumpCutMultiplier;
         }
-    }
-
-    /// <summary>
-    /// Checks if the character is grounded.
-    /// </summary>
-    private bool IsGrounded()
-    {
-        return _onPlatform;
     }
 
     /// <summary>
