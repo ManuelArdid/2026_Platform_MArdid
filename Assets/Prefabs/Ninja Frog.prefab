@@ -218,6 +218,7 @@ MonoBehaviour:
   JumpCutMultiplier: 0.5
   CoyoteTime: 0.2
   MaximumJumps: 5
+  DoubleJumpReduction: 0.1
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   GroundLayer:

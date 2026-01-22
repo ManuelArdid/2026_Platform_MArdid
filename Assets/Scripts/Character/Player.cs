@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] protected float JumpCutMultiplier = 0.5f;
     [SerializeField] protected float CoyoteTime = 0.2f;
     [SerializeField] protected int MaximumJumps = 5;
+    [SerializeField] protected float DoubleJumpReduction = 0.5f;
 
     [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
@@ -48,6 +49,8 @@ public class Player : MonoBehaviour
     private bool _canUseCoyoteTime = false;
     private Coroutine _currentCoyoteTimeCoroutine = null;
     private int _jumpsRemaining;
+
+    private int _doubleJumpCounter = 0;
 
     //------- Unity Methods -------//
     void Start()
@@ -89,12 +92,21 @@ public class Player : MonoBehaviour
         if (_jumpRequested)
         {
             _rb.linearVelocityY = 0f;
-            _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
             _jumpsRemaining--;
 
-            //Double jump
-            if (!IsGrounded() && !_canUseCoyoteTime)
+            //From ground or coyote time
+            if (IsGrounded() || _canUseCoyoteTime)
             {
+                _rb.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+
+            }
+
+            //Double jump
+            else if (!IsGrounded() && !_canUseCoyoteTime)
+            {
+                _doubleJumpCounter++;
+                _rb.AddForce(Vector2.up * (JumpForce / (CalculateDoubleJumpDivisor())), ForceMode2D.Impulse);
+
                 //animation trigger
                 _animator.SetTrigger("PerformDoubleJump");
                 _isDoubleJumping = true;
@@ -108,6 +120,7 @@ public class Player : MonoBehaviour
         {
             _isDoubleJumping = false;
             _canUseCoyoteTime = false;
+            _doubleJumpCounter = 0;
         }
 
         //ANIMATIONS
@@ -251,8 +264,20 @@ public class Player : MonoBehaviour
         _canUseCoyoteTime = false;
     }
 
+    /// <summary>
+    /// Handles lilypad collected event.
+    /// Resets jumps remaining.
+    /// </summary>
     private void HandleLilypadCollected(Lilypad lilypad)
     {
         _jumpsRemaining = MaximumJumps;
+    }
+
+    /// <summary>
+    /// Calculates the divisor for double jump based on the number of double jumps already performed.
+    /// </summary>
+    private float CalculateDoubleJumpDivisor()
+    {
+        return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
     }
 }
