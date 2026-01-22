@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class Movement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     //------- Unity Editor Variables -------//
     [Header("Movement Settings")]
@@ -31,6 +31,9 @@ public class Movement : MonoBehaviour
 
     [Header("Spawn Settings")]
     [SerializeField] protected Transform SpawnPoint;
+
+    //------ Events ------//
+    public static event System.Action OnPlayerReset;
 
 
     //------- Private Variables -------//
@@ -60,10 +63,11 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         //RESET CHECK
-        if(_jumpsRemaining < 0)
+        if (_jumpsRemaining < 0)
         {
             transform.position = SpawnPoint.position;
-            _jumpsRemaining = MaximumJumps;            
+            _jumpsRemaining = MaximumJumps;
+            OnPlayerReset?.Invoke();
         }
 
         //MOVEMENT

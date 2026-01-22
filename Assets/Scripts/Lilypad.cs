@@ -5,17 +5,40 @@ public class Lilypad : MonoBehaviour
 {
 
     //------ Events ------//
-        public static event Action<Lilypad> OnLilypadCollected;
+    public static event Action<Lilypad> OnLilypadCollected;
 
     //------- Unity Methods -------//
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             OnLilypadCollected?.Invoke(this);
-            
-            //Destroy lilypad when player lands on it
-            Destroy(gameObject);
+
+            //Disable lilypad when player lands on it
+            gameObject.SetActive(false);
         }
+    }
+
+    void OnEnable()
+    {
+        Player.OnPlayerReset -= ResetLilypad;
+        Player.OnPlayerReset += ResetLilypad;
+    }
+
+
+    void OnDestroy()
+    {
+        Player.OnPlayerReset -= ResetLilypad;
+    }
+
+
+    //------- Private Methods -------//
+
+    /// <summary>
+    /// Resets the lilypad to be active again.
+    /// </summary>
+    private void ResetLilypad()
+    {
+        gameObject.SetActive(true);
     }
 }
