@@ -4,8 +4,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject greenCharacter;
     [SerializeField] private GameObject redCharacter;
-    [SerializeField] private GameObject greenCamera;
-    [SerializeField] private GameObject redCamera;
+    [SerializeField] private GameObject greenCharacterUtils;
+    [SerializeField] private GameObject redCharacterUtils;
 
     private GameObject _activeCharacter;
 
@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
         {
             greenCharacter.SetActive(true);
             redCharacter.SetActive(false);
-            greenCamera.SetActive(true);
-            redCamera.SetActive(false);
+            greenCharacterUtils.SetActive(true);
+            redCharacterUtils.SetActive(false);
 
             _activeCharacter = greenCharacter;
         }
@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
         {
             greenCharacter.SetActive(false);
             redCharacter.SetActive(true);
-            greenCamera.SetActive(false);
-            redCamera.SetActive(true);
+            greenCharacterUtils.SetActive(false);
+            redCharacterUtils.SetActive(true);
 
             _activeCharacter = redCharacter;
         }
