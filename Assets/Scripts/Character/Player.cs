@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -51,6 +52,8 @@ public abstract class Player : MonoBehaviour
     protected int _jumpsRemaining;
     protected int _doubleJumpCounter = 0;
 
+    protected bool _canReset = false;
+
     //------- Unity Methods -------//
     protected virtual void Start()
     {
@@ -94,7 +97,10 @@ public abstract class Player : MonoBehaviour
         //RESET CHECK
         if (_jumpsRemaining < 0)
         {
-            SendPlayerToSpawnPoint();
+            StartCoroutine(LilypadTimeCoroutine());
+
+            if (_canReset)
+                SendPlayerToSpawnPoint();
         }
 
         HandleMovement();
@@ -116,6 +122,7 @@ public abstract class Player : MonoBehaviour
 
         //event subscriptions
         Lilypad.OnLilypadCollected += HandleLilypadCollected;
+        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
     }
 
     void OnDisable()
@@ -133,6 +140,12 @@ public abstract class Player : MonoBehaviour
 
         //event unsubscriptions
         Lilypad.OnLilypadCollected -= HandleLilypadCollected;
+        Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
+    }
+
+    private void HandleCheckpointActivated()
+    {
+        HandleLilypadCollected();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -286,6 +299,18 @@ public abstract class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// Lilypad Time Coroutine
+    /// </summary>
+    private IEnumerator LilypadTimeCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        if (_jumpsRemaining < 0)
+            _canReset = true;
+    }
+
+
+    /// <summary>
     /// Calculates the divisor for double jump based on the number of double jumps already performed.
     /// </summary>
     private float CalculateDoubleJumpDivisor()
@@ -299,6 +324,7 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     private void HandleLilypadCollected()
     {
+        _canReset = true;
         _jumpsRemaining = MaximumJumps;
     }
 }

@@ -8,16 +8,20 @@ public class Checkpoint : MonoBehaviour
     //------- Private Variables -------//
     Animator _animator;
 
+    public static event System.Action OnCheckpointActivated;
+
+
     //------- Unity Methods -------//
     void Start()
     {
         _animator = GetComponent<Animator>();
     }
-    
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
+            OnCheckpointActivated?.Invoke();
 
             if (collision.TryGetComponent<Player>(out var player))
             {
