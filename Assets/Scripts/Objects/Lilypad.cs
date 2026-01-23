@@ -1,18 +1,18 @@
-using System;
 using UnityEngine;
 
 public class Lilypad : MonoBehaviour
 {
 
     //------ Events ------//
-    public static event Action<Lilypad> OnLilypadCollected;
+
+    public static event System.Action OnLilypadCollected;
 
     //------- Unity Methods -------//
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            OnLilypadCollected?.Invoke(this);
+            OnLilypadCollected?.Invoke();
 
             //Disable lilypad when player lands on it
             gameObject.SetActive(false);
