@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour
 
     private GameObject _activeCharacter;
 
-    private void Start()
+    private void Awake()
     {
         string frogColor = PlayerPrefs.GetString("FrogColor");
+
 
         if (frogColor == "Green")
         {
@@ -46,7 +47,10 @@ public class GameManager : MonoBehaviour
 
             _activeCharacter = RedCharacter;
         }
+    }
 
+    private void Start()
+    {
         if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
         {
             float x = PlayerPrefs.GetFloat("SpawnX");
