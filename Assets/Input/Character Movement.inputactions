@@ -28,17 +28,6 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "81fb647f-39ca-4074-a6d4-67eea36bb0ce",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "c8dcdb6d-0e73-4aaf-8c08-28af78529a48",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
@@ -74,39 +63,6 @@
                     "name": "right",
                     "id": "aefd90ec-6ae7-4a5f-8935-6c9d41d06793",
                     "path": "<Gamepad>/dpad/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "10c473b5-bead-4a07-824a-f6dd5f32a02e",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "left",
-                    "id": "ff06b812-dfa5-4f41-8e62-1f45212e1607",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "16d59aa2-d5bd-44ee-809d-1a63bc874a2f",
-                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

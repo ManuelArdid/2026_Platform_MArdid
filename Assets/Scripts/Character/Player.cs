@@ -30,6 +30,7 @@ public abstract class Player : MonoBehaviour
 
     //------ Events ------//
     public static event System.Action OnPlayerReset;
+    public static event System.Action OnPlayerJump;
 
     //------- Private Variables -------//
     private Coroutine _currentCoyoteTimeCoroutine = null;
@@ -184,6 +185,14 @@ public abstract class Player : MonoBehaviour
         SpawnPoint.position = spawnPosition;
     }
 
+    /// <summary>
+    /// Gets the maximum number of jumps for the player.
+    /// </summary>
+    public int GetMaximumJumps()
+    {
+        return MaximumJumps;
+    }
+
     //------- Protected Methods -------//
     /// <summary>
     /// Handles character movement based on player input.
@@ -198,6 +207,8 @@ public abstract class Player : MonoBehaviour
     protected virtual void HandleJump()
     {
         if (!_jumpRequested) return;
+
+        OnPlayerJump?.Invoke();
 
         _rb.linearVelocityY = 0f;
         _jumpsRemaining--;
@@ -286,7 +297,7 @@ public abstract class Player : MonoBehaviour
     /// Handles lilypad collected event.
     ///  Resets jumps remaining.
     /// </summary>
-    private void HandleLilypadCollected(Lilypad lilypad)
+    private void HandleLilypadCollected()
     {
         _jumpsRemaining = MaximumJumps;
     }

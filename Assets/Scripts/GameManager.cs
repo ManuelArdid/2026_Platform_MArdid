@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameObject greenCharacter;
-    [SerializeField] private GameObject redCharacter;
-    [SerializeField] private GameObject greenCharacterUtils;
-    [SerializeField] private GameObject redCharacterUtils;
+    [Header("Green Charactter config")]
+    [SerializeField] private GameObject GreenCharacter;
+    [SerializeField] private GameObject GreenCamera;
+    [SerializeField] private GameObject GreenGameBar;
+
+    [Header("Red Charactter config")]
+    [SerializeField] private GameObject RedCharacter;
+    [SerializeField] private GameObject RedCamera;
+    [SerializeField] private GameObject RedGameBar;
 
     private GameObject _activeCharacter;
 
@@ -15,21 +20,31 @@ public class GameManager : MonoBehaviour
 
         if (frogColor == "Green")
         {
-            greenCharacter.SetActive(true);
-            redCharacter.SetActive(false);
-            greenCharacterUtils.SetActive(true);
-            redCharacterUtils.SetActive(false);
+            //Green activation
+            GreenCharacter.SetActive(true);
+            GreenCamera.SetActive(true);
+            GreenGameBar.SetActive(true);
 
-            _activeCharacter = greenCharacter;
+            //Red deactivation
+            RedCharacter.SetActive(false);
+            RedCamera.SetActive(false);
+            RedGameBar.SetActive(false);
+
+            _activeCharacter = GreenCharacter;
         }
         else if (frogColor == "Red")
         {
-            greenCharacter.SetActive(false);
-            redCharacter.SetActive(true);
-            greenCharacterUtils.SetActive(false);
-            redCharacterUtils.SetActive(true);
+            //Red activation
+            RedCharacter.SetActive(true);
+            RedCamera.SetActive(true);
+            RedGameBar.SetActive(true);
 
-            _activeCharacter = redCharacter;
+            //Green deactivation
+            GreenCharacter.SetActive(false);
+            GreenCamera.SetActive(false);
+            GreenGameBar.SetActive(false);
+
+            _activeCharacter = RedCharacter;
         }
 
         if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
