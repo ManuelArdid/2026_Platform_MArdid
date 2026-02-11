@@ -21,14 +21,17 @@ public class Lilypad : MonoBehaviour
 
     void OnEnable()
     {
-        Player.OnPlayerReset -= ResetLilypad;
         Player.OnPlayerReset += ResetLilypad;
+        OnLilypadCollected += ResetLilypad;
+        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
     }
 
 
     void OnDestroy()
     {
         Player.OnPlayerReset -= ResetLilypad;
+        OnLilypadCollected -= ResetLilypad;
+        Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
     }
 
 
@@ -40,5 +43,14 @@ public class Lilypad : MonoBehaviour
     private void ResetLilypad()
     {
         gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Handles checkpoint activated event by resetting the lilypad.
+    /// </summary>
+    /// <param name="checkpoint">The activated checkpoint.</param>
+    private void HandleCheckpointActivated()
+    {
+        ResetLilypad();
     }
 }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2562958135081869765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4708426701028224014}
+  m_Layer: 0
+  m_Name: GroundCollisionPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4708426701028224014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2562958135081869765}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.334, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6826275124441921217}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8794024856747203993
 GameObject:
   m_ObjectHideFlags: 0
@@ -33,7 +64,8 @@ Transform:
   m_LocalPosition: {x: -8.5, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4708426701028224014}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6084262025705461906
@@ -165,7 +197,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3, y: 0.4}
+  m_Size: {x: 0.28, y: 0.4}
   m_EdgeRadius: 0
 --- !u!95 &4804823659530130452
 Animator:
@@ -206,9 +238,18 @@ MonoBehaviour:
   Deceleration: 30
   JumpForce: 20
   JumpCutMultiplier: 0.5
-  CoyoteTime: 0.2
+  CoyoteTime: 0.15
+  LilypadTime: 0.2
   MaximumJumps: 5
   DoubleJumpReduction: 0.1
+  JumpCooldown: 0.1
+  ParryWindow: 0.05
+  ParryCooldown: 0.1
+  ParryJumpMultiplier: 1.5
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  GroundCollisionPoint: {fileID: 4708426701028224014}
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   SpawnPoint: {fileID: 0}

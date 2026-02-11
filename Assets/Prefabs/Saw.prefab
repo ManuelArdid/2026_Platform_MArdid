@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: TurnPoint
   m_TagString: SawTurnPoint
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -209,8 +209,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e6db70747e80641bc0eb26fd0efe7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Saw
-  TurnPoint: {fileID: 2970968089434325437}
+  TurningPoint: {fileID: 2970968089434325437}
+  UseDirectionAndDistance: 0
+  InitialDirection: {x: 1, y: 0}
+  TravelDistance: 5
   Speed: 5
+  TurnBack: 1
 --- !u!95 &5610035919195963414
 Animator:
   serializedVersion: 7

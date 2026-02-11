@@ -17,5 +17,6 @@ public class Player1 : Player
         );
 
         _rb.linearVelocityX = _currentVelocity.x;
+        
     }
 }

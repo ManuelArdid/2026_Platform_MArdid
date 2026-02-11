@@ -8,8 +8,8 @@ public class Checkpoint : MonoBehaviour
     //------- Private Variables -------//
     Animator _animator;
 
+    //------- Events -------//
     public static event System.Action OnCheckpointActivated;
-
 
     //------- Unity Methods -------//
     void Start()
@@ -22,11 +22,13 @@ public class Checkpoint : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             OnCheckpointActivated?.Invoke();
+            // Deactivate checkpoints collider to prevent multiple triggers
+            GetComponent<Collider2D>().enabled = false;
 
             if (collision.TryGetComponent<Player>(out var player))
             {
                 // Set new spawn point in Player script
-                player.SetSpawnPoint(transform.position);
+                player.PlayerSetSpawnPoint(transform.position);
 
                 // Savwe spawn point to PlayerPrefs
                 Vector3 pos = transform.position;
@@ -36,9 +38,6 @@ public class Checkpoint : MonoBehaviour
                 PlayerPrefs.SetFloat("SpawnZ", pos.z);
                 PlayerPrefs.Save();
             }
-
-            // Deactivate checkpoints collider to prevent multiple triggers
-            GetComponent<Collider2D>().enabled = false;
 
             //Animation
             _animator.SetTrigger("PerformActivate");

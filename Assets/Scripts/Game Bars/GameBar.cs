@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 public class GameBar : MonoBehaviour
 {
@@ -32,11 +32,13 @@ public class GameBar : MonoBehaviour
 
     void OnEnable()
     {
-        //Lilypad Collection Event
+        //Lilypad or checkpoint Collection Event
         Lilypad.OnLilypadCollected += HandleLilypadsReset;
+        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
 
         //Player Reset Event
         Player.OnPlayerReset += HandleLilypadsReset;
+        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
 
         //Player Jump Event
         Player.OnPlayerJump += HandlePlayerJump;
@@ -44,11 +46,13 @@ public class GameBar : MonoBehaviour
 
     void OnDisable()
     {
-        //Lilypad Collection Event
+        //Lilypad or checkpoint Collection Event
         Lilypad.OnLilypadCollected -= HandleLilypadsReset;
+        Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
 
         //Player Reset Event
         Player.OnPlayerReset -= HandleLilypadsReset;
+        Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
 
         //Player Jump Event
         Player.OnPlayerJump -= HandlePlayerJump;
@@ -89,7 +93,18 @@ public class GameBar : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles lilypad reset events.
+    /// </summary>
     private void HandleLilypadsReset()
+    {
+        ResetLilypads();
+    }
+
+    /// <summary>
+    /// Handles checkpoint activated event.
+    /// </summary>
+    private void HandleCheckpointActivated()
     {
         ResetLilypads();
     }

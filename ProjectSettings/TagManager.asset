@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Platform
   - SawTurnPoint
+  - PlatformTurningPoint
   layers:
   - Default
   - TransparentFX

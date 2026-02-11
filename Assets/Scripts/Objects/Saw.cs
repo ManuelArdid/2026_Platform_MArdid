@@ -1,38 +1,21 @@
 using UnityEngine;
-
-[RequireComponent(typeof(SpriteRenderer))]
-public class Saw : MonoBehaviour
+public class Saw : HorizontalMovement
 {
-    [SerializeField] private Transform TurnPoint;
-    [SerializeField] private float Speed = 5f;
+    //------ CLASS VARIABLES ------//
+    private SpriteRenderer _spriteRenderer;
 
-    SpriteRenderer _spriteRenderer;
-    Vector3 _startPosition;
-    Vector3 _currentTarget;
-    Vector3 _lastPosition;
-
-    void Start()
+    //------ UNITY METHODS ------//
+    protected override void Start()
     {
+        base.Start();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _startPosition = transform.position;
-        _currentTarget = TurnPoint.position;
-        _lastPosition = transform.position;
         FlipBasedOnDirection();
     }
 
-    void Update()
+    protected override void Update()
     {
-        _lastPosition = transform.position;
-        transform.position = Vector2.MoveTowards(transform.position, _currentTarget, Speed * Time.deltaTime);
-
-        Vector3 toTarget = _currentTarget - _lastPosition;
-        Vector3 moved = transform.position - _lastPosition;
-
-        if (Vector3.Dot(toTarget, moved) <= 0f)
-        {
-            _currentTarget = _currentTarget == TurnPoint.position ? _startPosition : TurnPoint.position;
-            FlipBasedOnDirection();
-        }
+        base.Update();
+        FlipBasedOnDirection();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -41,7 +24,7 @@ public class Saw : MonoBehaviour
         {
             if (collision.TryGetComponent<Player>(out var player))
             {
-                player.SendPlayerToSpawnPoint();
+                player.PlayerSendToSpawnPoint();
             }
         }
     }
@@ -50,4 +33,5 @@ public class Saw : MonoBehaviour
     {
         _spriteRenderer.flipX = _currentTarget.x > transform.position.x;
     }
+
 }

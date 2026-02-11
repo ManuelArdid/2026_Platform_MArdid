@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject GreenCamera;
     [SerializeField] private GameObject GreenGameBar;
 
-    [Header("Red Charactter config")]
-    [SerializeField] private GameObject RedCharacter;
-    [SerializeField] private GameObject RedCamera;
-    [SerializeField] private GameObject RedGameBar;
+   // [Header("Red Charactter config")]
+   // [SerializeField] private GameObject RedCharacter;
+   // [SerializeField] private GameObject RedCamera;
+   // [SerializeField] private GameObject RedGameBar;
 
     private GameObject _activeCharacter;
 
@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     {
         string frogColor = PlayerPrefs.GetString("FrogColor");
 
+        //DEBUG: force green
+        frogColor = "Green";
+        PlayerPrefs.DeleteAll();
 
         if (frogColor == "Green")
         {
@@ -27,26 +30,26 @@ public class GameManager : MonoBehaviour
             GreenGameBar.SetActive(true);
 
             //Red deactivation
-            RedCharacter.SetActive(false);
-            RedCamera.SetActive(false);
-            RedGameBar.SetActive(false);
+           // RedCharacter.SetActive(false);
+           // RedCamera.SetActive(false);
+           // RedGameBar.SetActive(false);
 
             _activeCharacter = GreenCharacter;
         }
-        else if (frogColor == "Red")
-        {
-            //Red activation
-            RedCharacter.SetActive(true);
-            RedCamera.SetActive(true);
-            RedGameBar.SetActive(true);
-
-            //Green deactivation
-            GreenCharacter.SetActive(false);
-            GreenCamera.SetActive(false);
-            GreenGameBar.SetActive(false);
-
-            _activeCharacter = RedCharacter;
-        }
+       /// else if (frogColor == "Red")
+       /// {
+       ///     //Red activation
+       ///     RedCharacter.SetActive(true);
+       ///     RedCamera.SetActive(true);
+       ///     RedGameBar.SetActive(true);
+///
+       ///     //Green deactivation
+       ///     GreenCharacter.SetActive(false);
+       ///     GreenCamera.SetActive(false);
+       ///     GreenGameBar.SetActive(false);
+///
+       ///     _activeCharacter = RedCharacter;
+       /// }
     }
 
     private void Start()
@@ -57,7 +60,9 @@ public class GameManager : MonoBehaviour
             float y = PlayerPrefs.GetFloat("SpawnY");
             float z = PlayerPrefs.GetFloat("SpawnZ");
 
-            _activeCharacter.transform.position = new Vector3(x, y, z);
+            _activeCharacter.GetComponent<Player>().PlayerSetSpawnPoint(new Vector3(x, y, z));
+
+            _activeCharacter.GetComponent<Player>().PlayerSendToSpawnPoint();
         }
     }
 }
