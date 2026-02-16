@@ -12,9 +12,9 @@ public class Saw : HorizontalMovement
         FlipBasedOnDirection();
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
+        base.FixedUpdate();
         FlipBasedOnDirection();
     }
 

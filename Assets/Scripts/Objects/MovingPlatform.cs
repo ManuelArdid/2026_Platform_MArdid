@@ -2,25 +2,24 @@ using UnityEngine;
 
 public class MovingPlatform : HorizontalMovement
 {
+    //------ UNITY EDITOR ---------//   
     [Header("Platform options")]
     [SerializeField] private bool UnparentOnExit = true;
 
-    protected override void Start()
-    {
-        base.Start();
-    }
+    //------ CLASS VARIABLES ------//
+    Player _playerOnPlatform = null;
 
-    protected override void Update()
-    {
-        base.Update();
-    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Attach the player to the platform so it moves together
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.transform.SetParent(transform);
+            _playerOnPlatform = collision.gameObject.GetComponent<Player>();
+
+            Vector2 direction = (_currentTarget - transform.position).normalized;
+            Vector2 externalVelocity = direction * Speed;
+
+            _playerOnPlatform.PlayerSetExternalVelocityY(externalVelocity);
         }
     }
 
@@ -29,8 +28,8 @@ public class MovingPlatform : HorizontalMovement
         // Detach the player when leaving the platform
         if (UnparentOnExit && collision.gameObject.CompareTag("Player"))
         {
-            if (collision.transform.parent == transform)
-                collision.transform.SetParent(null);
+            _playerOnPlatform.PlayerSetExternalVelocityY(Vector2.zero);
+            _playerOnPlatform = null;
         }
     }
 }

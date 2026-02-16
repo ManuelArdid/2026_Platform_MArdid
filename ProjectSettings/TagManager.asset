@@ -41,6 +41,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Platforms
+    uniqueID: 1790546635
+    locked: 0
+  - name: Collectibles
+    uniqueID: 1720588283
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

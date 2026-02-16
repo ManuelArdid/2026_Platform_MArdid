@@ -16,11 +16,11 @@ public class Bubble : HorizontalMovement
         base.Start();
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
         if (_playerInside)
         {
-            base.Update();
+            base.FixedUpdate();
         }
     }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class HorizontalMovement : MonoBehaviour
 {
     [Header("Movement source (choose one)")]
@@ -18,10 +19,13 @@ public class HorizontalMovement : MonoBehaviour
     protected Vector3 _lastPosition;
     protected Vector3 _calculatedTarget;
 
+    protected Rigidbody2D _rb;
+
     //------ UNITY METHODS ------//
     protected virtual void Start()
     {
         _startPosition = transform.position;
+        _rb = GetComponent<Rigidbody2D>();
 
         // Decide how the target is calculated
         if (UseDirectionAndDistance)
@@ -43,16 +47,19 @@ public class HorizontalMovement : MonoBehaviour
         _lastPosition = transform.position;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         _lastPosition = transform.position;
 
         // Move towards the current target
-        transform.position = Vector3.MoveTowards(
-            transform.position,
+        Vector2 newPosition = Vector2.MoveTowards(
+            _rb.position,
             _currentTarget,
-            Speed * Time.deltaTime
+            Speed * Time.fixedDeltaTime
         );
+
+        _rb.MovePosition(newPosition);
+
 
         CheckIfReachedTargetAndTurn();
     }
@@ -86,7 +93,7 @@ public class HorizontalMovement : MonoBehaviour
         const float arriveThreshold = 0.01f;
 
         // Distance-based check for better stability
-        if (TurnBack && Vector3.Distance(transform.position, _currentTarget) <= arriveThreshold)
+        if (TurnBack && Vector2.Distance(_rb.position, _currentTarget) <= arriveThreshold)
         {
             TurnBackMethod();
         }

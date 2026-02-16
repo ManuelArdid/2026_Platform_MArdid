@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(SpriteRenderer))]
 public abstract class Player : MonoBehaviour
 {
-    //------- Unity Editor Variables -------//
+    //------- UNITY EDITOR -------//
+
     [Header("Movement Settings")]
     [SerializeField] protected float MoveSpeed = 5f;
     [SerializeField] protected float Acceleration = 10f;
@@ -41,17 +42,11 @@ public abstract class Player : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] protected Transform SpawnPoint;
 
-    //------ Events ------//
-    public static event Action OnPlayerReset;
-    public static event Action OnPlayerJump;
+    ///------- PUBLIC PROPERTIES -------//
+    public bool PlayerIsParrying { get; private set; }
 
-    //------- Private Variables -------//
-    private Coroutine _currentCoyoteTimeCoroutine = null;
+    //------- PROTECTED VARIABLES -------//
 
-    // Added private timestamp to avoid re-enabling coyote immediately after a grounded jump
-    private float _lastGroundedJumpTime = -10f;
-
-    //------- Protected Variables -------//
     protected Rigidbody2D _rb;
     protected Animator _animator;
     protected SpriteRenderer _spriteRenderer;
@@ -73,14 +68,17 @@ public abstract class Player : MonoBehaviour
 
 
     protected float _originalGravityScale;
-
-    // Added: timer to ignore jump cut for a short duration after a parry
     private float _ignoreJumpCutTimer = 0f;
 
-    ///------- Public Properties -------//
-    public bool PlayerIsParrying { get; private set; }
+    //------- CLASS VARIABLES -------//
 
-    //------- Unity Methods -------//
+    private Coroutine _currentCoyoteTimeCoroutine = null;
+    private float _lastGroundedJumpTime = -10f;
+
+    private Vector2 _externalVelocityY = Vector2.zero;
+
+    //------- UNITY METHODS -----------------------------------------------------------------------------------------------------------------------//
+
     protected virtual void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -103,42 +101,6 @@ public abstract class Player : MonoBehaviour
 
         //Set player to spawn point
         transform.position = SpawnPoint.position;
-    }
-
-    protected virtual void Update()
-    {
-        // Animations
-        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
-        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping && !IsGrounded());
-        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping && !IsGrounded());
-
-
-        // Flip sprite
-        if (_currentVelocity.x > 0)
-            _spriteRenderer.flipX = false;
-        else if (_currentVelocity.x < 0)
-            _spriteRenderer.flipX = true;
-
-        // Decrement ignore-jump-cut timer (added)
-        if (_ignoreJumpCutTimer > 0f)
-            _ignoreJumpCutTimer -= Time.deltaTime;
-    }
-
-    protected virtual void FixedUpdate()
-    {
-        //RESET CHECK
-        if (_jumpsRemaining < 0)
-        {
-            StartCoroutine(LilypadTimeCoroutine());
-
-            if (_canReset)
-                PlayerSendToSpawnPoint();
-        }
-
-
-        HandleMovement();
-        HandleJump();
-
     }
 
     void OnEnable()
@@ -179,6 +141,41 @@ public abstract class Player : MonoBehaviour
         Parryable.OnSuccessfulParry -= HandleSuccessfulParry;
     }
 
+    protected virtual void Update()
+    {
+        // Animations
+        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping && !IsGrounded());
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping && !IsGrounded());
+
+
+        // Flip sprite
+        if (_currentVelocity.x > 0)
+            _spriteRenderer.flipX = false;
+        else if (_currentVelocity.x < 0)
+            _spriteRenderer.flipX = true;
+
+        // Decrement ignore-jump-cut timer (added)
+        if (_ignoreJumpCutTimer > 0f)
+            _ignoreJumpCutTimer -= Time.deltaTime;
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        //RESET CHECK
+        if (_jumpsRemaining < 0)
+        {
+            StartCoroutine(LilypadTimeCoroutine());
+
+            if (_canReset)
+                PlayerSendToSpawnPoint();
+        }
+
+
+        HandleMovement();
+        HandleJump();
+    }
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Platform"))
@@ -212,7 +209,12 @@ public abstract class Player : MonoBehaviour
         }
     }
 
-    //------- Public Methods -------//
+    //------- PUBLIC METHODS -----------------------------------------------------------------------------------------------------------------------//
+
+    public void PlayerSetExternalVelocityY(Vector2 newVelocity)
+    {
+        _externalVelocityY = newVelocity;
+    }
 
     /// <summary>
     /// Enables or disables player control.
@@ -279,7 +281,8 @@ public abstract class Player : MonoBehaviour
         return MaximumJumps;
     }
 
-    //------- Protected Methods -------//
+    //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
+
     /// <summary>
     /// Handles character movement based on player input.
     /// </summary>
@@ -312,18 +315,12 @@ public abstract class Player : MonoBehaviour
         );
     }
 
-    //------- Private Methods -------//
-    /// <summary>
-    /// Handles character jump based on player input.
-    /// </summary>
+    //------- PRIVATE METHODS -----------------------------------------------------------------------------------------------------------------------//
+
     private void Jump(InputAction.CallbackContext context)
     {
         _jumpRequested = true;
     }
-
-    /// <summary>
-    /// Handles jump cut for variable jump height.
-    /// </summary>
     private void JumpCancelled(InputAction.CallbackContext context)
     {
         if (_rb.linearVelocityY > 0f)
@@ -338,44 +335,25 @@ public abstract class Player : MonoBehaviour
             _rb.linearVelocityY *= JumpCutMultiplier;
         }
     }
-
-    /// <summary>
-    /// Calculates the divisor for double jump based on the number of double jumps already performed.
-    /// </summary>
     private float CalculateDoubleJumpDivisor()
     {
         return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
     }
-
-    /// <summary>
-    /// Handles lilypad collected event.
-    ///  Resets jumps remaining.
-    /// </summary>
     private void HandleLilypadCollected()
     {
         _canReset = true;
         _jumpsRemaining = MaximumJumps;
     }
-
-    /// <summary>
-    /// Handles checkpoint activated event.
-    /// Resets jumps remaining.
-    /// </summary>
     private void HandleCheckpointActivated()
     {
         HandleLilypadCollected();
     }
-
-    /// <summary>
-    /// Enables ignore-jump-cut for a short duration.
-    /// </summary>
-    /// <param name="duration">Duration to ignore jump cut.</param>
     private void EnableJumpCutIgnore(float duration = 0.1f)
     {
         _ignoreJumpCutTimer = duration;
     }
 
-    //------- COROUTINES -------//
+    //------- COROUTINES -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
     /// Coyote Time Coroutine
@@ -431,9 +409,36 @@ public abstract class Player : MonoBehaviour
         _isJumpingAvailable = true;
     }
 
-    //------- EVENT HANDLERS -------//
+    //------ EVENTS -----------------------------------------------------------------------------------------------------------------------//
 
-    protected virtual void HandleMovement() { }
+    public static event Action OnPlayerReset;
+    public static event Action OnPlayerJump;
+
+
+    //------- EVENT HANDLERS -----------------------------------------------------------------------------------------------------------------------//
+
+    /// <summary>
+    /// Handles character movement based on player input, applying acceleration and deceleration for smooth movement.
+    /// </summary>
+    protected virtual void HandleMovement()
+    {
+        Vector2 targetVelocity = _rawMovementInput * MoveSpeed;
+
+        float currentAcceleration = _rawMovementInput == Vector2.zero
+            ? Deceleration
+            : Acceleration;
+
+        _currentVelocity = Vector2.MoveTowards(
+            _currentVelocity,
+            targetVelocity,
+            currentAcceleration * Time.fixedDeltaTime
+        );
+
+        _rb.linearVelocity = new Vector2(
+            _currentVelocity.x + _externalVelocityY.x,
+            _rb.linearVelocity.y + _externalVelocityY.y
+        );
+    }
 
     /// <summary>
     /// Handles character jump logic.
@@ -507,4 +512,6 @@ public abstract class Player : MonoBehaviour
         //player is no longer parrying
         PlayerIsParrying = false;
     }
+
+    //------- DEBUG -----------------------------------------------------------------------------------------------------------------------//
 }
