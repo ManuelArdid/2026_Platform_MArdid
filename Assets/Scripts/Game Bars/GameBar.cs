@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class GameBar : MonoBehaviour
 {
+
+    //------- UNITY EDITOR -------//
+
     [SerializeField] private GameObject CurrentPlayer;
     [SerializeField] private GameObject RestartButton;
     [SerializeField] private List<GameObject> Lilypads;
@@ -17,27 +21,27 @@ public class GameBar : MonoBehaviour
     [SerializeField] private Sprite RestartButtonSprite;
     [SerializeField] private Sprite SelectedRestartButtonSprite;
 
-    //------- Private Variables -------//
+    //------- PRIVATE VARIABLES -------//
 
     private int _liLypadsCount = 0;
     private int _currentLilypadIndex = 0;
-    //------- Unity Methods -------//
 
+    //------- UNITY METHODS -------//
 
     void Start()
     {
         _liLypadsCount = Lilypads.Count;
-        ResetLilypads();
+        ResetAllLilypads();
     }
 
     void OnEnable()
     {
         //Lilypad or checkpoint Collection Event
-        Lilypad.OnLilypadCollected += HandleLilypadsReset;
+        Lilypad.OnLilypadCollected += HandleOnLilypadCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
 
         //Player Reset Event
-        Player.OnPlayerReset += HandleLilypadsReset;
+        Player.OnPlayerReset += HandlePlayerReset;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
 
         //Player Jump Event
@@ -47,11 +51,11 @@ public class GameBar : MonoBehaviour
     void OnDisable()
     {
         //Lilypad or checkpoint Collection Event
-        Lilypad.OnLilypadCollected -= HandleLilypadsReset;
+        Lilypad.OnLilypadCollected -= HandleOnLilypadCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
 
         //Player Reset Event
-        Player.OnPlayerReset -= HandleLilypadsReset;
+        Player.OnPlayerReset -= HandlePlayerReset;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
 
         //Player Jump Event
@@ -59,46 +63,74 @@ public class GameBar : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// Resets lilypad index and sprites to the initial state.
-    /// </summary>
-    private void ResetLilypads()
+    //------- PRIVATE METHODS -------//
+    private void ResetOneLilypad()
     {
-        // Reset lilypad index
-        _currentLilypadIndex = _liLypadsCount - 1;
+        Image img;
 
-        // Reset lilypad sprites (UI Images)
+        if (_currentLilypadIndex >= 0)
+        {
+            //Reset current lilypad to default sprite
+            img = Lilypads[_currentLilypadIndex].GetComponent<Image>();
+            img.sprite = LilypadSprite;
+        }
+
+        _currentLilypadIndex++;
+        _currentLilypadIndex = Mathf.Clamp(_currentLilypadIndex, 0, _liLypadsCount - 1);
+
+        //New current lilypad to selected sprite
+        img = Lilypads[_currentLilypadIndex].GetComponent<Image>();
+        img.sprite = SelectedLilypadSprite;
+
+    }
+
+    private void ResetAllLilypads()
+    {
         for (int i = 0; i < _liLypadsCount; i++)
         {
             Image img = Lilypads[i].GetComponent<Image>();
-            if (img != null)
+            img.sprite = LilypadSprite;
+
+            //Set last lilypad to selected sprite
+            if (i == _liLypadsCount - 1)
             {
-                img.sprite = (i == _currentLilypadIndex) ? SelectedLilypadSprite : LilypadSprite;
+                img.sprite = SelectedLilypadSprite;
             }
-            else
-            {
-                Debug.LogWarning($"[GameBar] Lilypad at index {i} has no Image component.");
-            }
+        }
+
+        _currentLilypadIndex = _liLypadsCount - 1;
+    }
+
+    //------- HANDLE METHODS -------//
+
+    /// <summary>
+    /// Handles lilypad collected events,
+    /// </summary>
+    private void HandleOnLilypadCollected(Lilypad.LilyPadType type)
+    {
+
+        //COMPLETE LILYPAD: Reset all lilypads to default sprite
+        if (type == Lilypad.LilyPadType.Complete)
+        {
+            ResetAllLilypads();
+        }
+        //SINGLE LILYPAD: Reset only the current lilypad sprite
+        else if (type == Lilypad.LilyPadType.Single)
+        {
+            ResetOneLilypad();
         }
 
         // Reset restart button sprite (UI Image)
         Image restartImg = RestartButton.GetComponent<Image>();
-        if (restartImg != null)
-        {
-            restartImg.sprite = RestartButtonSprite;
-        }
-        else
-        {
-            Debug.LogWarning("[GameBar] RestartButton has no Image component.");
-        }
+        restartImg.sprite = RestartButtonSprite;
     }
 
     /// <summary>
     /// Handles lilypad reset events.
     /// </summary>
-    private void HandleLilypadsReset()
+    private void HandlePlayerReset()
     {
-        ResetLilypads();
+        HandleOnLilypadCollected(Lilypad.LilyPadType.Complete);
     }
 
     /// <summary>
@@ -106,7 +138,7 @@ public class GameBar : MonoBehaviour
     /// </summary>
     private void HandleCheckpointActivated()
     {
-        ResetLilypads();
+        ResetAllLilypads();
     }
 
     private void HandlePlayerJump()
@@ -115,10 +147,8 @@ public class GameBar : MonoBehaviour
 
         //Change current lilypad to used sprite
         Image usedImg = Lilypads[_currentLilypadIndex].GetComponent<Image>();
-        if (usedImg != null)
-        {
-            usedImg.sprite = UsedLilypadSprite;
-        }
+
+        usedImg.sprite = UsedLilypadSprite;
 
         //Move to next lilypad
         _currentLilypadIndex--;
@@ -126,20 +156,16 @@ public class GameBar : MonoBehaviour
         {
             //Change next lilypad to selected sprite
             Image nextImg = Lilypads[_currentLilypadIndex].GetComponent<Image>();
-            if (nextImg != null)
-            {
-                nextImg.sprite = SelectedLilypadSprite;
-            }
+
+            nextImg.sprite = SelectedLilypadSprite;
         }
 
         //If no lilypads left, change restart button to selected sprite
         if (_currentLilypadIndex < 0)
         {
             Image restartImg = RestartButton.GetComponent<Image>();
-            if (restartImg != null)
-            {
-                restartImg.sprite = SelectedRestartButtonSprite;
-            }
+
+            restartImg.sprite = SelectedRestartButtonSprite;
         }
     }
 }

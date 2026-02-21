@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -339,15 +340,27 @@ public abstract class Player : MonoBehaviour
     {
         return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
     }
-    private void HandleLilypadCollected()
+
+    private void HandleLilypadCollected(Lilypad.LilyPadType type)
     {
         _canReset = true;
-        _jumpsRemaining = MaximumJumps;
+
+        if (type == Lilypad.LilyPadType.Complete)
+            _jumpsRemaining = MaximumJumps;
+
+        else if (type == Lilypad.LilyPadType.Single)
+        {
+            _jumpsRemaining++;
+            _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
+
+        }
     }
+
     private void HandleCheckpointActivated()
     {
-        HandleLilypadCollected();
+        HandleLilypadCollected(Lilypad.LilyPadType.Complete);
     }
+
     private void EnableJumpCutIgnore(float duration = 0.1f)
     {
         _ignoreJumpCutTimer = duration;

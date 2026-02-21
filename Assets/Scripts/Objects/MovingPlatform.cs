@@ -8,28 +8,46 @@ public class MovingPlatform : HorizontalMovement
 
     //------ CLASS VARIABLES ------//
     Player _playerOnPlatform = null;
+    Vector2 _externalVelocity;
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    //------ UNITY METHODS ------//
+    void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             _playerOnPlatform = collision.gameObject.GetComponent<Player>();
 
-            Vector2 direction = (_currentTarget - transform.position).normalized;
-            Vector2 externalVelocity = direction * Speed;
-
-            _playerOnPlatform.PlayerSetExternalVelocityY(externalVelocity);
+            UpdatePlayerVelocity();
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && _playerOnPlatform != null)
+        {
+            UpdatePlayerVelocity();
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
     {
         // Detach the player when leaving the platform
         if (UnparentOnExit && collision.gameObject.CompareTag("Player"))
         {
             _playerOnPlatform.PlayerSetExternalVelocityY(Vector2.zero);
             _playerOnPlatform = null;
+        }
+    }
+
+    //------ PRIVATE METHODS ------//
+    private void UpdatePlayerVelocity()
+    {
+        if (_playerOnPlatform != null)
+        {
+            Vector2 direction = (_currentTarget - transform.position).normalized;
+            _externalVelocity = direction * Speed;
+
+            _playerOnPlatform.PlayerSetExternalVelocityY(_externalVelocity);
         }
     }
 }

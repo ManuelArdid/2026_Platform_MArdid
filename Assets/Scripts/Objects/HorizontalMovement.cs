@@ -64,9 +64,23 @@ public class HorizontalMovement : MonoBehaviour
         CheckIfReachedTargetAndTurn();
     }
 
-    //------------- PUBLIC METHODS ----------------//
+    //------------- PROTECTED METHODS ----------------//
     /// <summary>
-    /// Reverses movement direction between start and target.
+    /// Checks if the object reached the target and turns back if needed.
+    /// </summary>
+    protected virtual void CheckIfReachedTargetAndTurn()
+    {
+        const float arriveThreshold = 0.01f;
+
+        // Distance-based check for better stability
+        if (TurnBack && Vector2.Distance(_rb.position, _currentTarget) <= arriveThreshold)
+        {
+            TurnBackMethod();
+        }
+    }
+
+    /// <summary>
+    /// Handles the logic for turning back to the start or target position.
     /// </summary>
     public virtual void TurnBackMethod()
     {
@@ -81,21 +95,6 @@ public class HorizontalMovement : MonoBehaviour
             _currentTarget = _currentTarget == TurningPoint.position
                 ? _startPosition
                 : TurningPoint.position;
-        }
-    }
-
-    //------------- PROTECTED METHODS ----------------//
-    /// <summary>
-    /// Checks if the object reached the target and turns back if needed.
-    /// </summary>
-    protected virtual void CheckIfReachedTargetAndTurn()
-    {
-        const float arriveThreshold = 0.01f;
-
-        // Distance-based check for better stability
-        if (TurnBack && Vector2.Distance(_rb.position, _currentTarget) <= arriveThreshold)
-        {
-            TurnBackMethod();
         }
     }
 }
