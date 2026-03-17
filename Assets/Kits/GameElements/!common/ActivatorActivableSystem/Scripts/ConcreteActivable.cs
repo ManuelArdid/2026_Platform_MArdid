@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class Activable: MonoBehaviour, IActivable
+public class ConcreteActivable: MonoBehaviour, IActivable
 {
     public bool IsActivated { get; set; }
 
-    public void Activate()
+    public virtual void Activate()
     {
         IsActivated = true;
     }
 
-    public void Deactivate()
+    public virtual void Deactivate()
     {
         IsActivated = false;
     }

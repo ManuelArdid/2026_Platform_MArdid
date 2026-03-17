@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class Activator : MonoBehaviour, IActivator
+public class ConcreteActivator : MonoBehaviour, IActivator
 {
     //--------- UNITY EDITOR ---------//
 
-    [SerializeField] Activable[] Activables;
+    [SerializeField] protected ConcreteActivable[] Activables;
 
     //--------- CLASS VARIABLES ---------//
     int _currentIndex = 0;
@@ -13,7 +13,7 @@ public class Activator : MonoBehaviour, IActivator
     /// <summary>
     /// Activates all activables in the array.
     /// </summary>
-    public void ActivateAll()
+    public virtual void ActivateAll()
     {
         foreach (var activable in Activables)
         {
@@ -24,7 +24,7 @@ public class Activator : MonoBehaviour, IActivator
     /// <summary>
     /// Activates the next activable in the array, looping back to the start if necessary
     /// </summary>
-    public void ActivateNext()
+    public virtual void ActivateNext()
     {
         if (Activables.Length == 0) return;
 
@@ -34,7 +34,7 @@ public class Activator : MonoBehaviour, IActivator
 
     /// <summary> Activates a random activable from the array.
     /// </summary> <remarks> If the array is empty, the method does nothing.</remarks>
-    public void ActivateRandom()
+    public virtual void ActivateRandom()
     {
         if (Activables.Length == 0) return;
 
@@ -45,7 +45,7 @@ public class Activator : MonoBehaviour, IActivator
     /// <summary>
     /// Deactivates all activables in the array.
     /// </summary>  
-    public void DeactivateAll()
+    public virtual void DeactivateAll()
     {
         foreach (var activable in Activables)
         {
@@ -56,7 +56,7 @@ public class Activator : MonoBehaviour, IActivator
     /// <summary>
     /// Deactivates the previous activable in the array, looping back to the end if necessary.
     /// </summary> <remarks> If the array is empty, the method does nothing.</remarks>
-    public void DeactivatePrevious()
+    public virtual void DeactivatePrevious()
     {
         if (Activables.Length == 0) return;
 
@@ -67,7 +67,7 @@ public class Activator : MonoBehaviour, IActivator
     /// <summary>
     /// Deactivates a random activable from the array.
     /// </summary> <remarks> If the array is empty, the method does nothing.</remarks>
-    public void DeactivateRandom()
+    public virtual void DeactivateRandom()
     {
         if (Activables.Length == 0) return;
 
