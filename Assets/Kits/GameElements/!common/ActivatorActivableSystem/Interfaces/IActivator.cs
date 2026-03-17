@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public interface IActivator
 {
     public void ActivateAll();
