@@ -23,7 +23,7 @@ public class PopUpPlatform : ConcreteActivable
     }
 
     //------------ UNITY METHODS ------------//
-    void Start()
+    void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _collider = GetComponent<Collider2D>();
@@ -64,15 +64,15 @@ public class PopUpPlatform : ConcreteActivable
     {
         if (state == PopUpPlatformButton.ButtonState.Red && Type == PlatfromType.Red)
         {
-            Activate();
+            Deactivate();
         }
         else if (state == PopUpPlatformButton.ButtonState.Blue && Type == PlatfromType.Blue)
         {
-            Activate();
+            Deactivate();
         }
         else
         {
-            Deactivate();
+            Activate();
         }
     }
 }

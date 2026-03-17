@@ -28,6 +28,31 @@ public class PopUpPlatformButton : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentState = InitialState;
+
+        //Set initial sprite based on the initial state
+        switch (InitialState)
+        {
+            case ButtonState.Red:
+                _spriteRenderer.sprite = SpriteRed;
+                _currentState = ButtonState.Red;
+                OnPopUpPlatformButtonSwitched?.Invoke(ButtonState.Red);
+                break;
+            case ButtonState.Blue:
+                _spriteRenderer.sprite = SpriteBlue;
+                _currentState = ButtonState.Blue;
+                OnPopUpPlatformButtonSwitched?.Invoke(ButtonState.Blue);
+                break;
+        }
+    }
+
+    void OnEnable()
+    {
+        OnPopUpPlatformButtonSwitched += HandleOnPopUpPlatformButtonSwitched;
+    }
+
+    void OnDisable()
+    {
+        OnPopUpPlatformButtonSwitched -= HandleOnPopUpPlatformButtonSwitched;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -39,9 +64,12 @@ public class PopUpPlatformButton : MonoBehaviour
     }
 
     //------------ PUBLIC METHODS ------------//
+
+    /// <summary>
+    /// Switches the button state between Red and Blue, updates the sprite accordingly, and invokes the OnPopUpPlatformButtonSwitched event with the new state.
+    /// </summary>
     public void SwitchButtonState()
     {
-        OnPopUpPlatformButtonSwitched?.Invoke(_currentState);
 
         switch (_currentState)
         {
@@ -58,5 +86,25 @@ public class PopUpPlatformButton : MonoBehaviour
                 break;
         }
 
+        OnPopUpPlatformButtonSwitched?.Invoke(_currentState);
+    }
+
+    //------------ HANDLERS ------------//
+    /// <summary>
+    /// Handles the OnPopUpPlatformButtonSwitched event by updating the button's sprite based on the new state. If the new state is Red and the current state is Blue, it switches to the Red sprite. If the new state is Blue and the current state is Red, it switches to the Blue sprite. The method ensures that the button's visual representation always matches its current state.
+    /// </summary>
+    /// <param name="state"></param>
+    private void HandleOnPopUpPlatformButtonSwitched(ButtonState state)
+    {
+        if (state == ButtonState.Blue)
+        {
+            _spriteRenderer.sprite = SpriteBlue;
+            _currentState = ButtonState.Blue;
+        }
+        else if (state == ButtonState.Red)
+        {
+            _spriteRenderer.sprite = SpriteRed;
+            _currentState = ButtonState.Red;
+        }
     }
 }
