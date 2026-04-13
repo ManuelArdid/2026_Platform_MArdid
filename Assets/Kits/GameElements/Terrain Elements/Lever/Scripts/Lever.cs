@@ -19,6 +19,7 @@ public class Lever : MonoBehaviour
 
     //------------ CLASS FIELDS ------------//
     private Rigidbody2D _rb;
+    private float _originalRotation;
     private bool _moving = false;
     private float _targetAngle;
     private float _motorDirection = 1f;
@@ -31,6 +32,17 @@ public class Lever : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _originalRotation = _rb.rotation;
+    }
+
+    void OnEnable()
+    {
+        Player.OnPlayerReset += ResetLever;
+    }
+
+    void OnDisable()
+    {
+        Player.OnPlayerReset -= ResetLever;
     }
 
     void FixedUpdate()
@@ -57,17 +69,20 @@ public class Lever : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        TryActivate(collision);
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        TryActivate(collision);
+    }
+
+    void TryActivate(Collision2D collision)
+    {
         if (!collision.gameObject.CompareTag("Player") || _moving) return;
+        Vector2 r = transform.InverseTransformPoint(collision.transform.position);
+        _motorDirection = (r.x * r.y >= 0) ? -1f : 1f;
 
-        Vector2 relativePos = collision.transform.position - transform.position;
-        Vector2 hitVelocity = collision.relativeVelocity;
-
-        // Determine the direction of rotation based on the cross product of the relative position and hit velocity
-        float cross = relativePos.x * hitVelocity.y - relativePos.y * hitVelocity.x;
-
-        _motorDirection = cross > 0 ? 1f : -1f;
-
-        // Check turn limits before allowing the lever to move
         if (ApplyTurnLimits)
         {
             if (_motorDirection > 0 && _turnsRight >= MaxRightTurns) return;
@@ -77,7 +92,6 @@ public class Lever : MonoBehaviour
             {
                 _turnsRight++;
                 _turnsLeft--;
-
             }
             else
             {
@@ -87,14 +101,23 @@ public class Lever : MonoBehaviour
         }
 
         float currentAngle = _rb.rotation;
-        // Snap the current angle to the nearest 90 degrees to ensure consistent rotation increments
         float baseAngle = Mathf.Round(currentAngle / 90f) * 90f;
 
         _targetAngle = baseAngle + (90f * _motorDirection);
-
         _moving = true;
     }
 
+    //------------ PUBLIC METHODS ------------//
+    public void ResetLever()
+    {
+        _rb.MoveRotation(_originalRotation);
+
+        _turnsRight = 0;
+        _turnsLeft = 0;
+    }
+
+
+    //----------- DEBUG -----------//
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
