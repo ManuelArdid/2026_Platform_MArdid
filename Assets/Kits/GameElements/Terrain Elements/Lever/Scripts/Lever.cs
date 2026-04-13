@@ -1,12 +1,11 @@
 using UnityEngine;
-using NUnit.Framework;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Tlever : MonoBehaviour
+public class Lever : MonoBehaviour
 {
     //------------ UNITY EDITOR ------------//
     [Header("General Settings")]
