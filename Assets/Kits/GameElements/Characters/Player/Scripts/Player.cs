@@ -13,6 +13,8 @@ public abstract class Player : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] protected float MoveSpeed = 5f;
+    [SerializeField][Tooltip("This will be multiplied by the move speed (and jump force) and that will be the maximum speed for the character.")]
+    protected float MaxSpeedMultiplier = 1.5f;
     [SerializeField] protected float Acceleration = 10f;
     [SerializeField] protected float Deceleration = 60f;
 
@@ -144,6 +146,24 @@ public abstract class Player : MonoBehaviour
 
     protected virtual void Update()
     {
+        //Max Speed check in x
+        if (Mathf.Abs(_rb.linearVelocity.x) > MoveSpeed * MaxSpeedMultiplier)
+        {
+            _rb.linearVelocity = new Vector2(
+                Mathf.Sign(_rb.linearVelocity.x) * MoveSpeed * MaxSpeedMultiplier,
+                _rb.linearVelocity.y
+            );
+        }
+
+        //Max Speed check in y 
+        if (Mathf.Abs(_rb.linearVelocity.y) > JumpForce * MaxSpeedMultiplier)
+        {
+            _rb.linearVelocity = new Vector2(
+                _rb.linearVelocity.x,
+                Mathf.Sign(_rb.linearVelocity.y) * JumpForce * MaxSpeedMultiplier
+            );
+        }
+
         // Animations
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
         _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping && !IsGrounded());
