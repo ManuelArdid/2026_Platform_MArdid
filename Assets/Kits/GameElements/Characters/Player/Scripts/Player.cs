@@ -294,15 +294,15 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// Sets the spawn point position for the player.
     /// </summary>
-    public void PlayerSetSpawnPoint(Vector3 spawnPosition)
+    public void PlayerSetSpawnPoint(Transform spawnPosition)
     {
         if (SpawnPoint == null)
         {
-            GameObject temp = new GameObject("RuntimeSpawnPoint");
+            GameObject temp = new("RuntimeSpawnPoint");
             SpawnPoint = temp.transform;
         }
 
-        SpawnPoint.position = spawnPosition;
+        SpawnPoint = spawnPosition;
     }
 
     /// <summary>

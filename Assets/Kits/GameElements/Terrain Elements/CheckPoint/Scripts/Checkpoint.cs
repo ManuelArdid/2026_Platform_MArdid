@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Animator))]
@@ -7,15 +8,19 @@ public class Checkpoint : MonoBehaviour
 
     //------- Private Variables -------//
     Animator _animator;
+    Vector3 _originalPosition;
 
     //------- Events -------//
     public static event System.Action OnCheckpointActivated;
 
     //------- Unity Methods -------//
-    void Start()
+    void Awake()
     {
+        _originalPosition = transform.position;
         _animator = GetComponent<Animator>();
+
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -28,14 +33,14 @@ public class Checkpoint : MonoBehaviour
             if (collision.TryGetComponent<Player>(out var player))
             {
                 // Set new spawn point in Player script
-                player.PlayerSetSpawnPoint(transform.position);
+                player.PlayerSetSpawnPoint(transform);
 
-                // Savwe spawn point to PlayerPrefs
+                // Save spawn point to PlayerPrefs
                 Vector3 pos = transform.position;
 
-                PlayerPrefs.SetFloat("SpawnX", pos.x);
-                PlayerPrefs.SetFloat("SpawnY", pos.y);
-                PlayerPrefs.SetFloat("SpawnZ", pos.z);
+                PlayerPrefs.SetFloat("SpawnX", _originalPosition.x);
+                PlayerPrefs.SetFloat("SpawnY", _originalPosition.y);
+                PlayerPrefs.SetFloat("SpawnZ", _originalPosition.z);
                 PlayerPrefs.Save();
             }
 

@@ -60,7 +60,10 @@ public class GameManager : MonoBehaviour
             float y = PlayerPrefs.GetFloat("SpawnY");
             float z = PlayerPrefs.GetFloat("SpawnZ");
 
-            _activeCharacter.GetComponent<Player>().PlayerSetSpawnPoint(new Vector3(x, y, z));
+            Transform newTransform = new GameObject("TempSpawnPoint").transform;
+            newTransform.position = new Vector3(x, y, z);
+            
+            _activeCharacter.GetComponent<Player>().PlayerSetSpawnPoint(newTransform);
 
             _activeCharacter.GetComponent<Player>().PlayerSendToSpawnPoint();
         }
