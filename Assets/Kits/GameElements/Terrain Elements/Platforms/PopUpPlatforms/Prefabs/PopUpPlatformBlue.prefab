@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PopUpPlatformBlue
       objectReference: {fileID: 0}
+    - target: {fileID: 350826924550325930, guid: d386013df4cd6ee4e94a9a87214ee0d6, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 883382563162776552, guid: d386013df4cd6ee4e94a9a87214ee0d6, type: 3}
       propertyPath: Type
       value: 1

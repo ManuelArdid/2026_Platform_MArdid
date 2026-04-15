@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2815693314384091704}
   - component: {fileID: 8715235418972211641}
   - component: {fileID: 883382563162776552}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: PopUpPlatformRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
