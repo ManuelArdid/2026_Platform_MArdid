@@ -42,6 +42,7 @@ public abstract class Player : MonoBehaviour
     [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
     [SerializeField] protected InputActionReference JumpInputAction;
+    [SerializeField] protected InputActionReference RestartInputAction;
 
     [Header("Spawn Settings")]
     [SerializeField] protected Transform SpawnPoint;
@@ -111,6 +112,7 @@ public abstract class Player : MonoBehaviour
     {
         MovementInputAction.action.Enable();
         JumpInputAction.action.Enable();
+        RestartInputAction.action.Enable();
 
         //callbacks
         MovementInputAction.action.performed += Move;
@@ -119,6 +121,8 @@ public abstract class Player : MonoBehaviour
 
         JumpInputAction.action.started += Jump;
         JumpInputAction.action.canceled += JumpCancelled;
+
+        RestartInputAction.action.performed += Restart;
 
         //event subscriptions
         Lilypad.OnLilypadCollected += HandleLilypadCollected;
@@ -137,8 +141,11 @@ public abstract class Player : MonoBehaviour
         JumpInputAction.action.started -= Jump;
         JumpInputAction.action.canceled -= JumpCancelled;
 
+        RestartInputAction.action.performed -= Restart;
+
         MovementInputAction.action.Disable();
         JumpInputAction.action.Disable();
+        RestartInputAction.action.Disable();
 
         //event unsubscriptions
         Lilypad.OnLilypadCollected -= HandleLilypadCollected;
@@ -368,6 +375,11 @@ public abstract class Player : MonoBehaviour
     private void EnableJumpCutIgnore(float duration = 0.1f)
     {
         _ignoreJumpCutTimer = duration;
+    }
+
+    private void Restart(InputAction.CallbackContext context)
+    {
+        PlayerSendToSpawnPoint();
     }
 
     //------- COROUTINES -----------------------------------------------------------------------------------------------------------------------//
