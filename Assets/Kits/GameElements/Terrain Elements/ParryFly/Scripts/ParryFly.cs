@@ -1,9 +1,15 @@
+using System;
 using UnityEngine;
 
 [UnityEngine.RequireComponent(typeof(Collider2D))]
 [UnityEngine.RequireComponent(typeof(SpriteRenderer))]
 public class ParryFly : Parryable
 {
+
+    //------ Events ------//
+
+    public static event Action OnFlyCollected;
+
     //------- Class Variables -------//
     Collider2D _collider2D;
     SpriteRenderer _spriteRenderer;
@@ -39,6 +45,7 @@ public class ParryFly : Parryable
         {
             _collider2D.enabled = false;
             _spriteRenderer.enabled = false;
+            OnFlyCollected?.Invoke();
         }
     }
 }

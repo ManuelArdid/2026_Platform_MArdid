@@ -13,7 +13,8 @@ public abstract class Player : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] protected float MoveSpeed = 5f;
-    [SerializeField][Tooltip("This will be multiplied by the move speed (and jump force) and that will be the maximum speed for the character.")]
+    [SerializeField]
+    [Tooltip("This will be multiplied by the move speed (and jump force) and that will be the maximum speed for the character.")]
     protected float MaxSpeedMultiplier = 1.5f;
     [SerializeField] protected float Acceleration = 10f;
     [SerializeField] protected float Deceleration = 60f;
@@ -123,6 +124,7 @@ public abstract class Player : MonoBehaviour
         Lilypad.OnLilypadCollected += HandleLilypadCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
         Parryable.OnSuccessfulParry += HandleSuccessfulParry;
+        ParryFly.OnFlyCollected += HandleFlyCollected;
     }
 
     void OnDisable()
@@ -142,6 +144,8 @@ public abstract class Player : MonoBehaviour
         Lilypad.OnLilypadCollected -= HandleLilypadCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
         Parryable.OnSuccessfulParry -= HandleSuccessfulParry;
+        ParryFly.OnFlyCollected -= HandleFlyCollected;
+
     }
 
     protected virtual void Update()
@@ -361,26 +365,6 @@ public abstract class Player : MonoBehaviour
         return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
     }
 
-    private void HandleLilypadCollected(Lilypad.LilyPadType type)
-    {
-        _canReset = true;
-
-        if (type == Lilypad.LilyPadType.Complete)
-            _jumpsRemaining = MaximumJumps;
-
-        else if (type == Lilypad.LilyPadType.Single)
-        {
-            _jumpsRemaining++;
-            _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
-
-        }
-    }
-
-    private void HandleCheckpointActivated()
-    {
-        HandleLilypadCollected(Lilypad.LilyPadType.Complete);
-    }
-
     private void EnableJumpCutIgnore(float duration = 0.1f)
     {
         _ignoreJumpCutTimer = duration;
@@ -546,5 +530,42 @@ public abstract class Player : MonoBehaviour
         PlayerIsParrying = false;
     }
 
+    /// <summary>
+    /// Handles lilypad collected event by resetting jumps or adding a jump depending on the type of lilypad collected.
+    /// </summary>
+    /// <param name="type"></param>
+    private void HandleLilypadCollected(Lilypad.LilyPadType type)
+    {
+        _canReset = true;
+
+        if (type == Lilypad.LilyPadType.Complete)
+            _jumpsRemaining = MaximumJumps;
+
+        else if (type == Lilypad.LilyPadType.Single)
+        {
+            _jumpsRemaining++;
+            _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
+
+        }
+    }
+
+    /// <summary>
+    /// Handles checkpoint activated event by resetting jumps.
+    /// </summary>
+    private void HandleCheckpointActivated()
+    {
+        HandleLilypadCollected(Lilypad.LilyPadType.Complete);
+    }
+
+
+    /// <summary> Handles fly collected event by
+    /// adding a jump
+    /// </summary>
+    private void HandleFlyCollected()
+    {
+        _canReset = true;
+        _jumpsRemaining++;
+        _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
+    }
     //------- DEBUG -----------------------------------------------------------------------------------------------------------------------//
 }

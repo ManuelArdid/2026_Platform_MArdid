@@ -35,9 +35,10 @@ public class GameBar : MonoBehaviour
 
     void OnEnable()
     {
-        //Lilypad or checkpoint Collection Event
+        //Lilypad, checkpoint and fly Collection Event
         Lilypad.OnLilypadCollected += HandleOnLilypadCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
+        ParryFly.OnFlyCollected += HandleFlyCollected;
 
         //Player Reset Event
         Player.OnPlayerReset += HandlePlayerReset;
@@ -49,9 +50,10 @@ public class GameBar : MonoBehaviour
 
     void OnDisable()
     {
-        //Lilypad or checkpoint Collection Event
+        //Lilypad, checkpoint and fly Collection Event
         Lilypad.OnLilypadCollected -= HandleOnLilypadCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
+        ParryFly.OnFlyCollected -= HandleFlyCollected;
 
         //Player Reset Event
         Player.OnPlayerReset -= HandlePlayerReset;
@@ -81,6 +83,8 @@ public class GameBar : MonoBehaviour
         img = Lilypads[_currentLilypadIndex].GetComponent<Image>();
         img.sprite = SelectedLilypadSprite;
 
+        // Reset restart button sprite (UI Image)
+        ResetRestartButton();
     }
 
     private void ResetAllLilypads()
@@ -98,6 +102,15 @@ public class GameBar : MonoBehaviour
         }
 
         _currentLilypadIndex = _liLypadsCount - 1;
+
+        // Reset restart button sprite (UI Image)
+        ResetRestartButton();
+    }
+
+    private void ResetRestartButton()
+    {
+        Image restartImg = RestartButton.GetComponent<Image>();
+        restartImg.sprite = RestartButtonSprite;
     }
 
     //------- HANDLE METHODS -------//
@@ -118,10 +131,22 @@ public class GameBar : MonoBehaviour
         {
             ResetOneLilypad();
         }
+    }
 
-        // Reset restart button sprite (UI Image)
-        Image restartImg = RestartButton.GetComponent<Image>();
-        restartImg.sprite = RestartButtonSprite;
+    /// <summary>
+    /// Handles checkpoint activated event.
+    /// </summary>
+    private void HandleCheckpointActivated()
+    {
+        ResetAllLilypads();
+    }
+
+    /// <summary>
+    /// Handles fly collected events.
+    /// </summary>
+    private void HandleFlyCollected()
+    {
+        ResetOneLilypad();
     }
 
     /// <summary>
@@ -132,13 +157,6 @@ public class GameBar : MonoBehaviour
         HandleOnLilypadCollected(Lilypad.LilyPadType.Complete);
     }
 
-    /// <summary>
-    /// Handles checkpoint activated event.
-    /// </summary>
-    private void HandleCheckpointActivated()
-    {
-        ResetAllLilypads();
-    }
 
     private void HandlePlayerJump()
     {
