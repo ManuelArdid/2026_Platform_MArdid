@@ -313,6 +313,23 @@ public abstract class Player : MonoBehaviour
         return MaximumJumps;
     }
 
+    /// <summary>
+    /// Gets the current number of jumps remaining for the player.
+    /// </summary>
+    public float PlayerGetJumpForce()
+    {
+        return JumpForce;
+    }
+
+    /// <summary>
+    /// Performs the jump action with the specified force.
+    /// </summary>
+    /// <param name="force"></param>
+    public virtual void PerformJump(float force)
+    {
+        _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+    }
+
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
@@ -321,15 +338,6 @@ public abstract class Player : MonoBehaviour
     protected virtual void Move(InputAction.CallbackContext context)
     {
         _rawMovementInput = context.ReadValue<Vector2>();
-    }
-
-    /// <summary>
-    /// Performs the jump action with the specified force.
-    /// </summary>
-    /// <param name="force"></param>
-    protected virtual void PerformJump(float force)
-    {
-        _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
     }
 
     /// <summary>
