@@ -1,22 +1,29 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class SpringBoard : MonoBehaviour
 {
     //-------------------UNITY EDITOR--------------------//
-    [SerializeField] protected float JumpForceMultiplier = 1.5f;
+    [SerializeField] protected float SpringForceLowVelocity = 5f;
+    [SerializeField] protected float SpringForce = 4.3f;
     [SerializeField] protected Sprite SpriteUsed;
 
     //-------------------CLASS VARIABLES--------------------//
     private bool _isUsed = false;
+    private BoxCollider2D _boxCollider;
     private SpriteRenderer _spriteRenderer;
     private Sprite _originalSprite;
+
+    /// Cutrada máxima
+    private float _lowVelocityUmbral = 5.9f;
 
     //-------------------UNITY METHODS--------------------//
     void Start()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _originalSprite = _spriteRenderer.sprite;
+        _boxCollider = GetComponent<BoxCollider2D>();
     }
 
     void OnEnable()
@@ -29,26 +36,56 @@ public class SpringBoard : MonoBehaviour
         Player.OnPlayerReset -= HandlePlayerReset;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (_isUsed)
             return;
 
-        _isUsed = true;
-
         if (collision.gameObject.CompareTag("Player"))
         {
-            
+            // Get player rigidbody and its y velocity
+            Rigidbody2D playerRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
+            float _rawVelocity = playerRigidbody.linearVelocity.y;
+
+            //Ignore if player is moving upwards
+            if (_rawVelocity > 0)
+                return;
+
+            _isUsed = true;
+
+            // Change sprite to used sprite
             _spriteRenderer.sprite = SpriteUsed;
-            MakePlayerJump(collision.gameObject.GetComponent<Player>());
+
+            // Disable collider to prevent multiple triggers
+            _boxCollider.enabled = false;
+
+            // Get player
+            Player player = collision.gameObject.GetComponent<Player>();
+
+            // Get absolute value of player's y velocity
+            float playerYVelocity = Mathf.Abs(_rawVelocity);            
+
+            // Make player jump
+            MakePlayerJump(player, playerYVelocity);
         }
     }
 
     //------------------- PRIVATE METHODS --------------------//
 
-    private void MakePlayerJump(Player player)
+    private void MakePlayerJump(Player player, float velocity)
     {
-        player.PerformJump(player.PlayerGetJumpForce() * JumpForceMultiplier);
+        float _springForceToApply;
+
+        if (velocity < _lowVelocityUmbral)
+        {
+            _springForceToApply = SpringForceLowVelocity;
+        }
+        else
+        {
+            _springForceToApply = SpringForce;
+        }
+
+        player.PerformJump(velocity * _springForceToApply);
     }
 
     //------------------- EVENT HANDLERS --------------------//
@@ -56,5 +93,6 @@ public class SpringBoard : MonoBehaviour
     {
         _spriteRenderer.sprite = _originalSprite;
         _isUsed = false;
+        _boxCollider.enabled = true;
     }
 }
