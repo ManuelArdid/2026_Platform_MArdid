@@ -22,7 +22,7 @@ public class FallingPlatform : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<Collider2D>();
+        _collider = GetComponent<CapsuleCollider2D>();
         _originalPosition = transform.position;
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
