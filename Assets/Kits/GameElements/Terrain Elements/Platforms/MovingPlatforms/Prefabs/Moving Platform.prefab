@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5873296416616275912}
   - component: {fileID: 4375622834775483403}
   - component: {fileID: 4736680858936973125}
-  - component: {fileID: 6716442624573468266}
   - component: {fileID: 8571040081569328302}
+  - component: {fileID: 4949230787994768729}
   m_Layer: 7
   m_Name: Platform
   m_TagString: Platform
@@ -121,8 +121,27 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 6
---- !u!61 &6716442624573468266
-BoxCollider2D:
+--- !u!114 &8571040081569328302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2522718243806344086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee45a9e42cb44654f90d41d229eeba2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  TurningPoint: {fileID: 0}
+  UseDirectionAndDistance: 1
+  InitialDirection: {x: 1, y: 0}
+  TravelDistance: 5
+  Speed: 2
+  TurnBack: 1
+  UnparentOnExit: 1
+--- !u!70 &4949230787994768729
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -155,37 +174,9 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.35}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.25}
-  m_EdgeRadius: 0
---- !u!114 &8571040081569328302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2522718243806344086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee45a9e42cb44654f90d41d229eeba2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  TurningPoint: {fileID: 0}
-  UseDirectionAndDistance: 1
-  InitialDirection: {x: 1, y: 0}
-  TravelDistance: 5
-  Speed: 2
-  TurnBack: 1
-  UnparentOnExit: 1
+  m_Offset: {x: -0.000000043458385, y: -0.3645554}
+  m_Size: {x: 1.0000502, y: 0.27099326}
+  m_Direction: 1
 --- !u!1 &3494977763718447009
 GameObject:
   m_ObjectHideFlags: 0
