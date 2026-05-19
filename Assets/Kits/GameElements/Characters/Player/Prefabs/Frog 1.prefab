@@ -235,11 +235,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player1
   MoveSpeed: 5
+  MaxSpeedMultiplier: 1.5
   Acceleration: 10
   Deceleration: 30
   JumpForce: 20
   JumpCutMultiplier: 0.5
-  CoyoteTime: 0.15
+  CoyoteTime: 0.125
   LilypadTime: 0.2
   MaximumJumps: 5
   DoubleJumpReduction: 0.1
@@ -254,4 +255,5 @@ MonoBehaviour:
   GroundCollisionPoint: {fileID: 4708426701028224014}
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
+  RestartInputAction: {fileID: 0}
   SpawnPoint: {fileID: 0}
