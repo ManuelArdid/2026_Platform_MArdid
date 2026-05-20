@@ -4,95 +4,79 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class SpringBoard : MonoBehaviour
 {
-    //-------------------UNITY EDITOR--------------------//
-    [SerializeField] protected float SpringForceLowVelocity = 5f;
-    [SerializeField] protected float SpringForce = 4.3f;
-    [SerializeField] protected Sprite SpriteUsed;
+    [Header("Sprites")]
+    [SerializeField] private Sprite SpriteUsed;
 
-    //-------------------CLASS VARIABLES--------------------//
+    [Header("Settings")]
+    [SerializeField] private float SpeedMultiplier = 1.2f;
+
     private bool _isUsed = false;
     private BoxCollider2D _boxCollider;
     private SpriteRenderer _spriteRenderer;
     private Sprite _originalSprite;
 
-    /// Cutrada máxima
-    private float _lowVelocityUmbral = 5.9f;
-
-    //-------------------UNITY METHODS--------------------//
-    void Start()
+    private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _originalSprite = _spriteRenderer.sprite;
         _boxCollider = GetComponent<BoxCollider2D>();
+        _originalSprite = _spriteRenderer.sprite;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         Player.OnPlayerReset += HandlePlayerReset;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         Player.OnPlayerReset -= HandlePlayerReset;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (_isUsed)
             return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Get player rigidbody and its y velocity
-            Rigidbody2D playerRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
-            float _rawVelocity = playerRigidbody.linearVelocity.y;
+        if (!collision.CompareTag("Player"))
+            return;
 
-            //Ignore if player is moving upwards
-            if (_rawVelocity > 0)
-                return;
+        Rigidbody2D playerRigidbody = collision.attachedRigidbody;
+        if (playerRigidbody == null)
+            return;
 
-            _isUsed = true;
+        float enterYVelocity = playerRigidbody.linearVelocity.y;
 
-            // Change sprite to used sprite
+        // Only bounce if the player is falling onto the springboard, not if they are jumping up through it.
+        if (enterYVelocity > 0f)
+            return;
+
+        _isUsed = true;
+
+        if (SpriteUsed != null)
             _spriteRenderer.sprite = SpriteUsed;
 
-            // Disable collider to prevent multiple triggers
-            _boxCollider.enabled = false;
+        // Disable the collider to prevent multiple bounces while the player is still in contact with the springboard.
+        _boxCollider.enabled = false;
 
-            // Get player
-            Player player = collision.gameObject.GetComponent<Player>();
-
-            // Get absolute value of player's y velocity
-            float playerYVelocity = Mathf.Abs(_rawVelocity);            
-
-            // Make player jump
-            MakePlayerJump(player, playerYVelocity);
-        }
+        MakePlayerJump(playerRigidbody, enterYVelocity);
     }
 
-    //------------------- PRIVATE METHODS --------------------//
-
-    private void MakePlayerJump(Player player, float velocity)
+    private void MakePlayerJump(Rigidbody2D playerRigidbody, float enterYVelocity)
     {
-        float _springForceToApply;
+        // If the player fell from a height, matching the impact speed
+        // sends them back to roughly the same height.
+        float bounceSpeed = Mathf.Abs(enterYVelocity);
+        bounceSpeed *= SpeedMultiplier;
 
-        if (velocity < _lowVelocityUmbral)
-        {
-            _springForceToApply = SpringForceLowVelocity;
-        }
-        else
-        {
-            _springForceToApply = SpringForce;
-        }
-
-        player.PerformJump(velocity * _springForceToApply);
+        Vector2 velocity = playerRigidbody.linearVelocity;
+        velocity.y = bounceSpeed;
+        playerRigidbody.linearVelocity = velocity;
     }
 
-    //------------------- EVENT HANDLERS --------------------//
     private void HandlePlayerReset()
     {
-        _spriteRenderer.sprite = _originalSprite;
         _isUsed = false;
+        _spriteRenderer.sprite = _originalSprite;
         _boxCollider.enabled = true;
     }
 }
