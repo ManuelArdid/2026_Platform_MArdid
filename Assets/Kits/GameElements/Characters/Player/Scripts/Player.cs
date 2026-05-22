@@ -26,7 +26,7 @@ public abstract class Player : MonoBehaviour
     [SerializeField] protected float CoyoteTime = 0.15f;
     [SerializeField] protected float LilypadTime = 0.2f;
     [SerializeField] protected int MaximumJumps = 5;
-    [SerializeField] protected float DoubleJumpReduction = 0.5f;
+    [SerializeField] protected float AirJumpReduction = 0.5f;
     [SerializeField] protected float JumpCooldown = 0.2f;
     [SerializeField] protected float SkipCoyoteAfterGroundJumpTime = 0.12f;
 
@@ -61,7 +61,7 @@ public abstract class Player : MonoBehaviour
 
     protected bool _jumpRequested = false;
     protected bool _onPlatform = false;
-    protected bool _isDoubleJumping = false;
+    protected bool _isAirJumping = false;
     protected bool _isJumpingAvailable = true;
     protected bool _isParryOnCooldown = false;
     protected bool _canUseCoyoteTime = false;
@@ -69,7 +69,7 @@ public abstract class Player : MonoBehaviour
     protected bool _controlEnabled = true;
 
     protected int _jumpsRemaining;
-    protected int _doubleJumpCounter = 0;
+    protected int _airJumpCounter = 0;
 
 
     protected float _originalGravityScale;
@@ -177,8 +177,8 @@ public abstract class Player : MonoBehaviour
 
         // Animations
         _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
-        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isDoubleJumping && !IsGrounded());
-        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isDoubleJumping && !IsGrounded());
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isAirJumping && !IsGrounded());
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isAirJumping && !IsGrounded());
 
 
         // Flip sprite
@@ -213,9 +213,9 @@ public abstract class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Platform"))
         {
             _onPlatform = true;
-            _isDoubleJumping = false;
+            _isAirJumping = false;
             _canUseCoyoteTime = false;
-            _doubleJumpCounter = 0;
+            _airJumpCounter = 0;
             _isJumpingAvailable = true;
         }
     }
@@ -375,9 +375,9 @@ public abstract class Player : MonoBehaviour
             _rb.linearVelocityY *= JumpCutMultiplier;
         }
     }
-    private float CalculateDoubleJumpDivisor()
+    private float CalculateAirJumpDivisor()
     {
-        return 1f + DoubleJumpReduction * (_doubleJumpCounter * _doubleJumpCounter);
+        return 1f + AirJumpReduction * (_airJumpCounter * _airJumpCounter);
     }
 
     private void EnableJumpCutIgnore(float duration = 0.1f)
@@ -437,7 +437,7 @@ public abstract class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Double Jump Cooldown Coroutine
+    /// Air Jump Cooldown Coroutine
     /// </summary>
     private IEnumerator JumpCooldownCoroutine()
     {
@@ -509,10 +509,10 @@ public abstract class Player : MonoBehaviour
                 // Start parry window
                 StartCoroutine(ParryWindowCoroutine());
 
-            _doubleJumpCounter++;
-            PerformJump(JumpForce / CalculateDoubleJumpDivisor());
-            _animator.SetTrigger("PerformDoubleJump");
-            _isDoubleJumping = true;
+            _airJumpCounter++;
+            PerformJump(JumpForce / CalculateAirJumpDivisor());
+            _animator.SetTrigger("PerformAirJump");
+            _isAirJumping = true;
 
             // Start jump cooldown
             StartCoroutine(JumpCooldownCoroutine());
@@ -527,7 +527,7 @@ public abstract class Player : MonoBehaviour
 
     /// <summary>
     /// Handles successful parry event by resetting jumps
-    /// and double jumpcounter so the player can jump
+    /// and air jumpcounter so the player can jump
     /// as high as a normal jump.
     /// </summary>
     private void HandleSuccessfulParry(Parryable parryable)
@@ -540,10 +540,10 @@ public abstract class Player : MonoBehaviour
         PerformJump(JumpForce * ParryJumpMultiplier);
 
         //Reset air jumps
-        _doubleJumpCounter = 0;
+        _airJumpCounter = 0;
 
-        // If this parry happened during a double jump, enable ignore-cut briefly
-        if (_isDoubleJumping)
+        // If this parry happened during a air jump, enable ignore-cut briefly
+        if (_isAirJumping)
             EnableJumpCutIgnore();
 
         //player is no longer parrying
