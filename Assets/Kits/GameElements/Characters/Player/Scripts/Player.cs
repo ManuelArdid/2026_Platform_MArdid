@@ -60,7 +60,6 @@ public abstract class Player : MonoBehaviour
     protected Vector2 _currentVelocity = Vector2.zero;
 
     protected bool _jumpRequested = false;
-    protected bool _onPlatform = false;
     protected bool _isAirJumping = false;
     protected bool _isJumpingAvailable = true;
     protected bool _isParryOnCooldown = false;
@@ -69,7 +68,7 @@ public abstract class Player : MonoBehaviour
     protected bool _controlEnabled = true;
 
     protected int _jumpsRemaining;
-    protected int _airJumpCounter = 0;
+    public int _airJumpCounter = 0;
 
 
     protected float _originalGravityScale;
@@ -79,7 +78,6 @@ public abstract class Player : MonoBehaviour
 
     private Coroutine _currentCoyoteTimeCoroutine = null;
     private float _lastGroundedJumpTime = -10f;
-
     private Vector2 _externalVelocityY = Vector2.zero;
 
     //------- UNITY METHODS -----------------------------------------------------------------------------------------------------------------------//
@@ -212,19 +210,23 @@ public abstract class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Platform"))
         {
-            _onPlatform = true;
-            _isAirJumping = false;
             _canUseCoyoteTime = false;
-            _airJumpCounter = 0;
             _isJumpingAvailable = true;
+            _isAirJumping = false;
+            _airJumpCounter = 0;
+
+            // Jumping through platforms can cause OnCollisionEnter2D to be called without the player actually landing,
+            // so we check the vertical velocity to confirm a landing before resetting jumps and air jump counter
+            // if (_rb.linearVelocityY <= 0f)
+            // {
+
+            //}
         }
     }
-
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Platform"))
         {
-            _onPlatform = false;
 
             // Avoid re-enabling coyote time immediately after a grounded jump
             if (Time.time - _lastGroundedJumpTime < SkipCoyoteAfterGroundJumpTime)
@@ -489,6 +491,7 @@ public abstract class Player : MonoBehaviour
         _rb.linearVelocityY = 0f;
         _jumpsRemaining--;
 
+        //Ground Jump
         if (IsGrounded() || _canUseCoyoteTime)
         {
             _canUseCoyoteTime = false;
@@ -503,6 +506,7 @@ public abstract class Player : MonoBehaviour
 
             PerformJump(JumpForce);
         }
+        //Aerial Jump
         else
         {
             if (!_isParryOnCooldown)
@@ -588,4 +592,5 @@ public abstract class Player : MonoBehaviour
         _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
     }
     //------- DEBUG -----------------------------------------------------------------------------------------------------------------------//
+
 }

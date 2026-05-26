@@ -7,6 +7,7 @@ TagManager:
   - Platform
   - SawTurnPoint
   - PlatformTurningPoint
+  - OneWayPlatform
   layers:
   - Default
   - TransparentFX

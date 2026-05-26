@@ -36,20 +36,6 @@ public class GameManager : MonoBehaviour
 
             _activeCharacter = GreenCharacter;
         }
-       /// else if (frogColor == "Red")
-       /// {
-       ///     //Red activation
-       ///     RedCharacter.SetActive(true);
-       ///     RedCamera.SetActive(true);
-       ///     RedGameBar.SetActive(true);
-///
-       ///     //Green deactivation
-       ///     GreenCharacter.SetActive(false);
-       ///     GreenCamera.SetActive(false);
-       ///     GreenGameBar.SetActive(false);
-///
-       ///     _activeCharacter = RedCharacter;
-       /// }
     }
 
     private void Start()
