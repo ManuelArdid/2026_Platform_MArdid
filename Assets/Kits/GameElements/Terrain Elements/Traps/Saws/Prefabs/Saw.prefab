@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 2917088607100002042}
   - component: {fileID: 5610035919195963414}
   - component: {fileID: 4534802745688849548}
+  - component: {fileID: 9206789607935764843}
   m_Layer: 0
   m_Name: Blade
   m_TagString: Untagged
@@ -267,6 +268,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &9206789607935764843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795570963852448370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1905d7034dfcc0643ac0b005d696c3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShadowEffector
+  Offset: {x: -0.1, y: -0.1, z: 0}
+  ShadowMaterial: {fileID: 2100000, guid: f6becf88ad722494da3603be37f72b7d, type: 2}
 --- !u!1 &6030809872596702524
 GameObject:
   m_ObjectHideFlags: 0

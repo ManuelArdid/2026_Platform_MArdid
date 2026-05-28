@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class ShadowEffector : MonoBehaviour
+public class ShadowEffect : MonoBehaviour
 {
     [SerializeField] Vector3 Offset = new(-0.1f, -0.1f);
     [SerializeField] Material ShadowMaterial;
