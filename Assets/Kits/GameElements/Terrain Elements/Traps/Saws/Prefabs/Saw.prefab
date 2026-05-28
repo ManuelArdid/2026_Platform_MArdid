@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 8536840692049445052}
   - component: {fileID: 2917088607100002042}
   - component: {fileID: 5610035919195963414}
+  - component: {fileID: 4534802745688849548}
   m_Layer: 0
   m_Name: Blade
   m_TagString: Untagged
@@ -105,6 +106,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &9149608839369365676
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -150,7 +152,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 6
-  m_Sprite: {fileID: 21300000, guid: ca5ce7f3f3ac3bb499d37119b1867d7e, type: 3}
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: -7260475382858525559, guid: 2738d89bce8ea0b4a81219f23d1f2e51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -159,7 +162,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!58 &8536840692049445052
 CircleCollider2D:
@@ -213,8 +215,9 @@ MonoBehaviour:
   UseDirectionAndDistance: 0
   InitialDirection: {x: 1, y: 0}
   TravelDistance: 5
-  Speed: 5
+  Speed: 3
   TurnBack: 1
+  RotationSpeed: 50
 --- !u!95 &5610035919195963414
 Animator:
   serializedVersion: 7
@@ -237,6 +240,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!50 &4534802745688849548
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3795570963852448370}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &6030809872596702524
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,10 @@
 using UnityEngine;
 public class Saw : HorizontalMovement
 {
+
+    [SerializeField]
+    private float RotationSpeed = 180f;
+
     //------ CLASS VARIABLES ------//
     private SpriteRenderer _spriteRenderer;
 
@@ -10,6 +14,11 @@ public class Saw : HorizontalMovement
         base.Start();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         FlipBasedOnDirection();
+    }
+
+    private void Update()
+    {
+        transform.Rotate(0f, 0f, -RotationSpeed * Time.deltaTime);
     }
 
     protected override void FixedUpdate()
