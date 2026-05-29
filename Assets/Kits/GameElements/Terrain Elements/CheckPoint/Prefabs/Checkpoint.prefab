@@ -189,3 +189,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShadowEffector
   Offset: {x: -0.1, y: -0.1, z: 0}
   ShadowMaterial: {fileID: 2100000, guid: f6becf88ad722494da3603be37f72b7d, type: 2}
+  InFront: 0

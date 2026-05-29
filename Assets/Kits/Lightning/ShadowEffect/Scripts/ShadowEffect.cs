@@ -5,6 +5,7 @@ public class ShadowEffect : MonoBehaviour
 {
     [SerializeField] Vector3 Offset = new(-0.1f, -0.1f);
     [SerializeField] Material ShadowMaterial;
+    [SerializeField] bool InFront = true;
 
     GameObject _shadowObject;
     SpriteRenderer _sr;
@@ -22,8 +23,17 @@ public class ShadowEffect : MonoBehaviour
         _shadowSR.sprite = _sr.sprite;
         _shadowSR.material = ShadowMaterial;
 
-        _shadowSR.sortingLayerID = _sr.sortingLayerID;
-        _shadowSR.sortingOrder = _sr.sortingOrder - 1;
+        if (InFront)
+        {
+            _shadowSR.sortingLayerID = _sr.sortingLayerID;
+            _shadowSR.sortingOrder = _sr.sortingOrder - 1;
+        }
+
+        else
+        {
+            _shadowSR.sortingLayerName = "Background";
+            _shadowSR.sortingOrder = 0;
+        }
     }
 
     void LateUpdate()

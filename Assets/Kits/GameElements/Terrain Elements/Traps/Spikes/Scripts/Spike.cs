@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Spike : MonoBehaviour
 {
+    [SerializeField] protected bool PointingDown = false;
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -10,10 +12,21 @@ public class Spike : MonoBehaviour
             {
                 if (player != null)
                 {
+                    //Inverted Spikes
+                    if (PointingDown)
+                    {
+                        if (player.GetComponent<Rigidbody2D>().linearVelocity.y < 0)
+                            return;
 
-                    //only if pl is going down on the spikes, not if he is jumping up through them
-                    if (player.GetComponent<Rigidbody2D>().linearVelocity.y > 0)
-                        return;
+                    }
+
+                    //Regular Spikes
+                    else
+                    {
+                        if (player.GetComponent<Rigidbody2D>().linearVelocity.y > 0)
+                            return;
+
+                    }
 
                     player.PlayerSendToSpawnPoint();
                 }
