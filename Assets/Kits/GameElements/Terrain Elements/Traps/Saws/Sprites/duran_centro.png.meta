@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2738d89bce8ea0b4a81219f23d1f2e51
+guid: 42175fa701c1ee24095758bc2c5d7cd2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7260475382858525559
-    second: Duran_0
+      213: -834247112557078837
+    second: duran_centro_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Duran_0
+      name: duran_centro_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 44
-        width: 1433
-        height: 1425
+        x: 427
+        y: 388
+        width: 737
+        height: 829
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 984df306b1c9d3b90800000000000000
-      internalID: -7260475382858525559
+      spriteID: bc6d321dba82c64f0800000000000000
+      internalID: -834247112557078837
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Duran_0: -7260475382858525559
+      duran_centro_0: -834247112557078837
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
