@@ -1,30 +1,15 @@
 using UnityEngine;
-public class Saw : HorizontalMovement
+public class Saw : MonoBehaviour
 {
 
     [SerializeField]
     private float RotationSpeed = 180f;
 
-    //------ CLASS VARIABLES ------//
-    private SpriteRenderer _spriteRenderer;
-
     //------ UNITY METHODS ------//
-    protected override void Start()
-    {
-        base.Start();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        FlipBasedOnDirection();
-    }
 
-    private void Update()
+    void Update()
     {
         transform.Rotate(0f, 0f, -RotationSpeed * Time.deltaTime);
-    }
-
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-        FlipBasedOnDirection();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -37,10 +22,4 @@ public class Saw : HorizontalMovement
             }
         }
     }
-
-    private void FlipBasedOnDirection()
-    {
-        _spriteRenderer.flipX = _currentTarget.x > transform.position.x;
-    }
-
 }
