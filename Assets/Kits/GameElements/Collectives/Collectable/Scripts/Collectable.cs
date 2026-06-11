@@ -1,16 +1,16 @@
 using System;
 using UnityEngine;
 
-public class BigFly : MonoBehaviour
+public class Collectable : MonoBehaviour
 {
     //------- CLASS VARIABLES -------//
     private SpriteRenderer _spriteRenderer;
     private Collider2D _collider2D;
 
-    private bool _bigFlyCollected = false;
+    private bool _collected = false;
 
     //------- EVENTS -------//
-    public static event Action OnBigFlyCollected;
+    public static event Action OnBigKiwiCollected;
 
     //------- UNITY METHODS -------//
 
@@ -24,7 +24,7 @@ public class BigFly : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            _bigFlyCollected = true;
+            _collected = true;
             _spriteRenderer.enabled = false;
             _collider2D.enabled = false;
         }
@@ -46,23 +46,23 @@ public class BigFly : MonoBehaviour
 
     /// <summary>
     /// Handles checkpoint activated event by checking if the
-    /// associated checkpoint is activated and if the Big Fly has been collected.
+    /// associated checkpoint is activated and if the Big Kiwi has been collected.
     /// </summary>
     private void HandleCheckpointActivated()
     {
-        if (_bigFlyCollected)
+        if (_collected)
         {
-            OnBigFlyCollected?.Invoke();
+            OnBigKiwiCollected?.Invoke();
             StartCoroutine(GeneralUtils.Instance.DeactivateAfterDelay(gameObject, 0.1f));
         }
     }
 
     /// <summary>
-    /// Handles player reset event by resetting the Big Fly state.
+    /// Handles player reset event by resetting the Big Kiwi state.
     /// </summary>
     private void HandlePlayerReset()
     {
-        _bigFlyCollected = false;
+        _collected = false;
         _spriteRenderer.enabled = true;
         _collider2D.enabled = true;
     }

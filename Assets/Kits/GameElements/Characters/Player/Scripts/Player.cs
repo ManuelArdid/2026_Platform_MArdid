@@ -24,7 +24,7 @@ public abstract class Player : MonoBehaviour
     [Tooltip("Multiplier to apply to upward velocity when jump is released early for variable jump height.")]
     [SerializeField] protected float JumpCutMultiplier = 0.5f;
     [SerializeField] protected float CoyoteTime = 0.15f;
-    [SerializeField] protected float LilypadTime = 0.2f;
+    [SerializeField] protected float KiwiTime = 0.2f;
     [SerializeField] protected int MaximumJumps = 5;
     [SerializeField] protected float AirJumpReduction = 0.5f;
     [SerializeField] protected float JumpCooldown = 0.2f;
@@ -123,10 +123,10 @@ public abstract class Player : MonoBehaviour
         RestartInputAction.action.performed += Restart;
 
         //event subscriptions
-        Lilypad.OnLilypadCollected += HandleLilypadCollected;
+        Kiwi.OnKiwiCollected += HandleKiwiCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
         Parryable.OnSuccessfulParry += HandleSuccessfulParry;
-        ParryFly.OnFlyCollected += HandleFlyCollected;
+        ParryRing.OnParryRingCollected += HandleParryRingCollected;
     }
 
     void OnDisable()
@@ -146,10 +146,10 @@ public abstract class Player : MonoBehaviour
         RestartInputAction.action.Disable();
 
         //event unsubscriptions
-        Lilypad.OnLilypadCollected -= HandleLilypadCollected;
+        Kiwi.OnKiwiCollected -= HandleKiwiCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
         Parryable.OnSuccessfulParry -= HandleSuccessfulParry;
-        ParryFly.OnFlyCollected -= HandleFlyCollected;
+        ParryRing.OnParryRingCollected -= HandleParryRingCollected;
 
     }
 
@@ -195,7 +195,7 @@ public abstract class Player : MonoBehaviour
         //RESET CHECK
         if (_jumpsRemaining < 0)
         {
-            StartCoroutine(LilypadTimeCoroutine());
+            StartCoroutine(KiwiTimeCoroutine());
 
             if (_canReset)
                 PlayerSendToSpawnPoint();
@@ -407,11 +407,11 @@ public abstract class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Lilypad Time Coroutine
+    /// Kiwi Time Coroutine
     /// </summary>
-    private IEnumerator LilypadTimeCoroutine()
+    private IEnumerator KiwiTimeCoroutine()
     {
-        yield return new WaitForSecondsRealtime(LilypadTime);
+        yield return new WaitForSecondsRealtime(KiwiTime);
 
         if (_jumpsRemaining < 0)
             _canReset = true;
@@ -555,17 +555,17 @@ public abstract class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles lilypad collected event by resetting jumps or adding a jump depending on the type of lilypad collected.
+    /// Handles kiwi collected event by resetting jumps or adding a jump depending on the type of kiwi collected.
     /// </summary>
     /// <param name="type"></param>
-    private void HandleLilypadCollected(Lilypad.LilyPadType type)
+    private void HandleKiwiCollected(Kiwi.KiwiType type)
     {
         _canReset = true;
 
-        if (type == Lilypad.LilyPadType.Complete)
+        if (type == Kiwi.KiwiType.Complete)
             _jumpsRemaining = MaximumJumps;
 
-        else if (type == Lilypad.LilyPadType.Single)
+        else if (type == Kiwi.KiwiType.Single)
         {
             _jumpsRemaining++;
             _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
@@ -578,14 +578,14 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     private void HandleCheckpointActivated()
     {
-        HandleLilypadCollected(Lilypad.LilyPadType.Complete);
+        HandleKiwiCollected(Kiwi.KiwiType.Complete);
     }
 
 
-    /// <summary> Handles fly collected event by
+    /// <summary> Handles parry ring collected event by
     /// adding a jump
     /// </summary>
-    private void HandleFlyCollected()
+    private void HandleParryRingCollected()
     {
         _canReset = true;
         _jumpsRemaining++;

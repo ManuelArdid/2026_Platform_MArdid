@@ -5,9 +5,9 @@ public class GameManager : Singleton<GameManager>
     //------- UNITY EDITOR --------------------//
 
     [Header("Green Charactter config")]
-    [SerializeField] private GameObject GreenCharacter;
-    [SerializeField] private GameObject GreenCamera;
-    [SerializeField] private GameObject GreenGameBar;
+    [SerializeField] private GameObject Character;
+    [SerializeField] private GameObject Camera;
+    [SerializeField] private GameObject GameBar;
 
     //---- CLASS VARIABLES -------------------//
 
@@ -26,16 +26,16 @@ public class GameManager : Singleton<GameManager>
         if (frogColor == "Green")
         {
             //Green activation
-            GreenCharacter.SetActive(true);
-            GreenCamera.SetActive(true);
-            GreenGameBar.SetActive(true);
+            Character.SetActive(true);
+            Camera.SetActive(true);
+            GameBar.SetActive(true);
 
             //Red deactivation
             // RedCharacter.SetActive(false);
             // RedCamera.SetActive(false);
             // RedGameBar.SetActive(false);
 
-            _activeCharacter = GreenCharacter;
+            _activeCharacter = Character;
         }
     }
 

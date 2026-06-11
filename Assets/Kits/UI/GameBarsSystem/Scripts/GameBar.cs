@@ -9,12 +9,12 @@ public class GameBar : MonoBehaviour
 
     [SerializeField] private GameObject CurrentPlayer;
     [SerializeField] private GameObject RestartButton;
-    [SerializeField] private List<GameObject> Lilypads;
+    [SerializeField] private List<GameObject> KiwisHudSections;
 
-    [Header("Lilypad Images")]
-    [SerializeField] private Sprite LilypadSprite;
-    [SerializeField] private Sprite SelectedLilypadSprite;
-    [SerializeField] private Sprite UsedLilypadSprite;
+    [Header("Kiwi Images")]
+    [SerializeField] private Sprite KiwiSprite;
+    [SerializeField] private Sprite SelectedKiwiSprite;
+    [SerializeField] private Sprite UsedKiwiSprite;
 
     [Header("Restart Button Images")]
     [SerializeField] private Sprite RestartButtonSprite;
@@ -23,22 +23,22 @@ public class GameBar : MonoBehaviour
     //------- PRIVATE VARIABLES -------//
 
     private int _liLypadsCount = 0;
-    private int _currentLilypadIndex = 0;
+    private int _currentKiwiIndex = 0;
 
     //------- UNITY METHODS -------//
 
     void Start()
     {
-        _liLypadsCount = Lilypads.Count;
-        ResetAllLilypads();
+        _liLypadsCount = KiwisHudSections.Count;
+        ResetAllKiwis();
     }
 
     void OnEnable()
     {
-        //Lilypad, checkpoint and fly Collection Event
-        Lilypad.OnLilypadCollected += HandleOnLilypadCollected;
+        //Kiwi, checkpoint and fly Collection Event
+        Kiwi.OnKiwiCollected += HandleOnKiwiCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
-        ParryFly.OnFlyCollected += HandleFlyCollected;
+        ParryRing.OnParryRingCollected += HandleParryRingCollected;
 
         //Player Reset Event
         Player.OnPlayerReset += HandlePlayerReset;
@@ -50,10 +50,10 @@ public class GameBar : MonoBehaviour
 
     void OnDisable()
     {
-        //Lilypad, checkpoint and fly Collection Event
-        Lilypad.OnLilypadCollected -= HandleOnLilypadCollected;
+        //Kiwi, checkpoint and fly Collection Event
+        Kiwi.OnKiwiCollected -= HandleOnKiwiCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
-        ParryFly.OnFlyCollected -= HandleFlyCollected;
+        ParryRing.OnParryRingCollected -= HandleParryRingCollected;
 
         //Player Reset Event
         Player.OnPlayerReset -= HandlePlayerReset;
@@ -65,43 +65,43 @@ public class GameBar : MonoBehaviour
     }
 
     //------- PRIVATE METHODS -------//
-    private void ResetOneLilypad()
+    private void ResetOneKiwi()
     {
         Image img;
 
-        if (_currentLilypadIndex >= 0)
+        if (_currentKiwiIndex >= 0)
         {
-            //Reset current lilypad to default sprite
-            img = Lilypads[_currentLilypadIndex].GetComponent<Image>();
-            img.sprite = LilypadSprite;
+            //Reset current kiwi to default sprite
+            img = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+            img.sprite = KiwiSprite;
         }
 
-        _currentLilypadIndex++;
-        _currentLilypadIndex = Mathf.Clamp(_currentLilypadIndex, 0, _liLypadsCount - 1);
+        _currentKiwiIndex++;
+        _currentKiwiIndex = Mathf.Clamp(_currentKiwiIndex, 0, _liLypadsCount - 1);
 
-        //New current lilypad to selected sprite
-        img = Lilypads[_currentLilypadIndex].GetComponent<Image>();
-        img.sprite = SelectedLilypadSprite;
+        //New current kiwi to selected sprite
+        img = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+        img.sprite = SelectedKiwiSprite;
 
         // Reset restart button sprite (UI Image)
         ResetRestartButton();
     }
 
-    private void ResetAllLilypads()
+    private void ResetAllKiwis()
     {
         for (int i = 0; i < _liLypadsCount; i++)
         {
-            Image img = Lilypads[i].GetComponent<Image>();
-            img.sprite = LilypadSprite;
+            Image img = KiwisHudSections[i].GetComponent<Image>();
+            img.sprite = KiwiSprite;
 
-            //Set last lilypad to selected sprite
+            //Set last kiwi to selected sprite
             if (i == _liLypadsCount - 1)
             {
-                img.sprite = SelectedLilypadSprite;
+                img.sprite = SelectedKiwiSprite;
             }
         }
 
-        _currentLilypadIndex = _liLypadsCount - 1;
+        _currentKiwiIndex = _liLypadsCount - 1;
 
         // Reset restart button sprite (UI Image)
         ResetRestartButton();
@@ -116,20 +116,20 @@ public class GameBar : MonoBehaviour
     //------- HANDLE METHODS -------//
 
     /// <summary>
-    /// Handles lilypad collected events,
+    /// Handles kiwi collected events,
     /// </summary>
-    private void HandleOnLilypadCollected(Lilypad.LilyPadType type)
+    private void HandleOnKiwiCollected(Kiwi.KiwiType type)
     {
 
-        //COMPLETE LILYPAD: Reset all lilypads to default sprite
-        if (type == Lilypad.LilyPadType.Complete)
+        //COMPLETE LILYPAD: Reset all kiwis to default sprite
+        if (type == Kiwi.KiwiType.Complete)
         {
-            ResetAllLilypads();
+            ResetAllKiwis();
         }
-        //SINGLE LILYPAD: Reset only the current lilypad sprite
-        else if (type == Lilypad.LilyPadType.Single)
+        //SINGLE LILYPAD: Reset only the current kiwi sprite
+        else if (type == Kiwi.KiwiType.Single)
         {
-            ResetOneLilypad();
+            ResetOneKiwi();
         }
     }
 
@@ -138,47 +138,47 @@ public class GameBar : MonoBehaviour
     /// </summary>
     private void HandleCheckpointActivated()
     {
-        ResetAllLilypads();
+        ResetAllKiwis();
     }
 
     /// <summary>
     /// Handles fly collected events.
     /// </summary>
-    private void HandleFlyCollected()
+    private void HandleParryRingCollected()
     {
-        ResetOneLilypad();
+        ResetOneKiwi();
     }
 
     /// <summary>
-    /// Handles lilypad reset events.
+    /// Handles kiwi reset events.
     /// </summary>
     private void HandlePlayerReset()
     {
-        HandleOnLilypadCollected(Lilypad.LilyPadType.Complete);
+        HandleOnKiwiCollected(Kiwi.KiwiType.Complete);
     }
 
 
     private void HandlePlayerJump()
     {
-        if (_currentLilypadIndex < 0) return;
+        if (_currentKiwiIndex < 0) return;
 
-        //Change current lilypad to used sprite
-        Image usedImg = Lilypads[_currentLilypadIndex].GetComponent<Image>();
+        //Change current kiwi to used sprite
+        Image usedImg = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
 
-        usedImg.sprite = UsedLilypadSprite;
+        usedImg.sprite = UsedKiwiSprite;
 
-        //Move to next lilypad
-        _currentLilypadIndex--;
-        if (_currentLilypadIndex >= 0)
+        //Move to next kiwi
+        _currentKiwiIndex--;
+        if (_currentKiwiIndex >= 0)
         {
-            //Change next lilypad to selected sprite
-            Image nextImg = Lilypads[_currentLilypadIndex].GetComponent<Image>();
+            //Change next kiwi to selected sprite
+            Image nextImg = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
 
-            nextImg.sprite = SelectedLilypadSprite;
+            nextImg.sprite = SelectedKiwiSprite;
         }
 
-        //If no lilypads left, change restart button to selected sprite
-        if (_currentLilypadIndex < 0)
+        //If no kiwis left, change restart button to selected sprite
+        if (_currentKiwiIndex < 0)
         {
             Image restartImg = RestartButton.GetComponent<Image>();
 

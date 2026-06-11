@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class NewGameGreen : MonoBehaviour
 {
-    // Called by Green button in UI
-    public void OnGreenButtonPressed()
+    public void OnNewGameButtonPressed()
     {
         GameManager.Instance.ResetGameData();
         GameManager.Instance.LoadGameScene();        

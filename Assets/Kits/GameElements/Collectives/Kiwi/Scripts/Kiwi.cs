@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class Lilypad : MonoBehaviour
+public class Kiwi : MonoBehaviour
 {
     //------- UNITY EDITOR -------//
-    [SerializeField] protected LilyPadType Type = LilyPadType.Complete;
+    [SerializeField] protected KiwiType Type = KiwiType.Complete;
 
     //------ Events ------//
 
-    public static event System.Action<LilyPadType> OnLilypadCollected;
+    public static event System.Action<KiwiType> OnKiwiCollected;
 
     //------- Enums -------//
-    public enum LilyPadType
+    public enum KiwiType
     {
         Single,
         Complete
@@ -21,9 +21,9 @@ public class Lilypad : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            OnLilypadCollected?.Invoke(Type);
+            OnKiwiCollected?.Invoke(Type);
 
-            //Disable lilypad when player lands on it
+            //Disable kiwi when player lands on it
             gameObject.SetActive(false);
         }
     }
@@ -31,7 +31,7 @@ public class Lilypad : MonoBehaviour
     void OnEnable()
     {
         Player.OnPlayerReset += HandlePlayerReset;
-        OnLilypadCollected += HandleLilypadCollected;
+        OnKiwiCollected += HandleKiwiCollected;
         Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
     }
 
@@ -39,7 +39,7 @@ public class Lilypad : MonoBehaviour
     void OnDestroy()
     {
         Player.OnPlayerReset -= HandlePlayerReset;
-        OnLilypadCollected -= HandleLilypadCollected;
+        OnKiwiCollected -= HandleKiwiCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
     }
 
@@ -47,21 +47,21 @@ public class Lilypad : MonoBehaviour
     //------- Private Methods -------//
 
     /// <summary>
-    /// Resets the lilypad to be active again.
+    /// Resets the kiwi to be active again.
     /// </summary>
     private void HandlePlayerReset()
     {
         gameObject.SetActive(true);
     }
 
-    private void HandleLilypadCollected(LilyPadType type)
+    private void HandleKiwiCollected(KiwiType type)
     {
-        if (type == LilyPadType.Complete)
+        if (type == KiwiType.Complete)
             gameObject.SetActive(true);
     }
 
     /// <summary>
-    /// Handles checkpoint activated event by resetting the lilypad.
+    /// Handles checkpoint activated event by resetting the kiwi.
     /// </summary>
     /// <param name="checkpoint">The activated checkpoint.</param>
     private void HandleCheckpointActivated()
