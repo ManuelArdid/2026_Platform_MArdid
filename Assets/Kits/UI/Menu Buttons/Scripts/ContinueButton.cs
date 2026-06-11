@@ -20,7 +20,6 @@ public class ContinueButton : MonoBehaviour
 
     public void OnContinueButtonPressed()
     {
-        // Load the main scene
-        SceneManager.LoadScene(1);
+        GameManager.Instance.LoadGameScene();
     }
 }

@@ -81,7 +81,20 @@ public class GameManager : Singleton<GameManager>
     }
 
     //-- SCENES ------------------///
+    public void LoadGameScene()
+    {
+        // Load the main gameplay scene (index 1 in Build Settings)
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+    }
 
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
+    }
 
     //-- UI ----------------------///
 
@@ -90,5 +103,14 @@ public class GameManager : Singleton<GameManager>
     //-- AUDIO -------------------///
 
     //-- DATA --------------------///
+    public void ResetGameData()
+    {
+        // Reset saved game data
+        PlayerPrefs.DeleteAll();
+
+        // Set frog color to Green
+        PlayerPrefs.SetString("FrogColor", "Green");
+        PlayerPrefs.Save();
+    }
 
 }
