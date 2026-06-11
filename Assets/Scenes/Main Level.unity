@@ -85272,6 +85272,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 519420028}
+    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
+      propertyPath: GameBar
+      value: 
+      objectReference: {fileID: 1625380657}
+    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
+      propertyPath: Character
+      value: 
+      objectReference: {fileID: 2291954065313934357}
+    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
       propertyPath: GreenCamera
       value: 
       objectReference: {fileID: 58156407}

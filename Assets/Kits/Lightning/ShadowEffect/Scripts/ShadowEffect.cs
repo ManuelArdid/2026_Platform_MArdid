@@ -17,6 +17,7 @@ public class ShadowEffect : MonoBehaviour
 
         _shadowObject = new GameObject("Shadow");
         _shadowObject.transform.parent = transform;
+        _shadowObject.transform.localScale = Vector3.one;
 
         _shadowSR = _shadowObject.AddComponent<SpriteRenderer>();
 
