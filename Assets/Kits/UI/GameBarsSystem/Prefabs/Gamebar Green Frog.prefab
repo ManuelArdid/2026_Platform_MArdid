@@ -324,7 +324,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5804732547286876090}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -356,15 +356,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameBar
   CurrentPlayer: {fileID: 0}
   RestartButton: {fileID: 8523779748841959739}
-  Lilypads:
+  KiwiHudSections:
   - {fileID: 3230752751754189339}
   - {fileID: 1982486888515356338}
   - {fileID: 7358974406477978499}
   - {fileID: 317565158261670765}
   - {fileID: 3414057036649240680}
-  LilypadSprite: {fileID: 7878997791755719967, guid: 3a6e6bb86069649429b3b85c379728e4, type: 3}
-  SelectedLilypadSprite: {fileID: 3893761895807435602, guid: ee7e7273c7486974f8084c243a18c05e, type: 3}
-  UsedLilypadSprite: {fileID: 6470717156972788976, guid: 1dc92f7d272618744a4015a930a8f9cf, type: 3}
+  KiwiSprite: {fileID: 7878997791755719967, guid: 3a6e6bb86069649429b3b85c379728e4, type: 3}
+  SelectedKiwiSprite: {fileID: 3893761895807435602, guid: ee7e7273c7486974f8084c243a18c05e, type: 3}
+  UsedKiwiSprite: {fileID: 6470717156972788976, guid: 1dc92f7d272618744a4015a930a8f9cf, type: 3}
   RestartButtonSprite: {fileID: 8660372434445599189, guid: 0151822c8a7b83a4ea29c8d7104f349d, type: 3}
   SelectedRestartButtonSprite: {fileID: -3461599810373835871, guid: 55ec46b2e0dcb3749aef5c12f941c154, type: 3}
 --- !u!1 &7358974406477978499

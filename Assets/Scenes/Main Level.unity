@@ -85153,10 +85153,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Gamebar Green Frog
       objectReference: {fileID: 0}
-    - target: {fileID: 5804732547286876090, guid: 4bbad74c21adadf429902fc8047e0380, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -9,7 +9,7 @@ public class GameBar : MonoBehaviour
 
     [SerializeField] private GameObject CurrentPlayer;
     [SerializeField] private GameObject RestartButton;
-    [SerializeField] private List<GameObject> KiwisHudSections;
+    [SerializeField] private List<GameObject> KiwiHudSections;
 
     [Header("Kiwi Images")]
     [SerializeField] private Sprite KiwiSprite;
@@ -22,14 +22,14 @@ public class GameBar : MonoBehaviour
 
     //------- PRIVATE VARIABLES -------//
 
-    private int _liLypadsCount = 0;
+    private int _kiwiSectionsCount = 0;
     private int _currentKiwiIndex = 0;
 
     //------- UNITY METHODS -------//
 
     void Start()
     {
-        _liLypadsCount = KiwisHudSections.Count;
+        _kiwiSectionsCount = KiwiHudSections.Count;
         ResetAllKiwis();
     }
 
@@ -72,15 +72,15 @@ public class GameBar : MonoBehaviour
         if (_currentKiwiIndex >= 0)
         {
             //Reset current kiwi to default sprite
-            img = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+            img = KiwiHudSections[_currentKiwiIndex].GetComponent<Image>();
             img.sprite = KiwiSprite;
         }
 
         _currentKiwiIndex++;
-        _currentKiwiIndex = Mathf.Clamp(_currentKiwiIndex, 0, _liLypadsCount - 1);
+        _currentKiwiIndex = Mathf.Clamp(_currentKiwiIndex, 0, _kiwiSectionsCount - 1);
 
         //New current kiwi to selected sprite
-        img = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+        img = KiwiHudSections[_currentKiwiIndex].GetComponent<Image>();
         img.sprite = SelectedKiwiSprite;
 
         // Reset restart button sprite (UI Image)
@@ -89,19 +89,19 @@ public class GameBar : MonoBehaviour
 
     private void ResetAllKiwis()
     {
-        for (int i = 0; i < _liLypadsCount; i++)
+        for (int i = 0; i < _kiwiSectionsCount; i++)
         {
-            Image img = KiwisHudSections[i].GetComponent<Image>();
+            Image img = KiwiHudSections[i].GetComponent<Image>();
             img.sprite = KiwiSprite;
 
             //Set last kiwi to selected sprite
-            if (i == _liLypadsCount - 1)
+            if (i == _kiwiSectionsCount - 1)
             {
                 img.sprite = SelectedKiwiSprite;
             }
         }
 
-        _currentKiwiIndex = _liLypadsCount - 1;
+        _currentKiwiIndex = _kiwiSectionsCount - 1;
 
         // Reset restart button sprite (UI Image)
         ResetRestartButton();
@@ -163,7 +163,7 @@ public class GameBar : MonoBehaviour
         if (_currentKiwiIndex < 0) return;
 
         //Change current kiwi to used sprite
-        Image usedImg = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+        Image usedImg = KiwiHudSections[_currentKiwiIndex].GetComponent<Image>();
 
         usedImg.sprite = UsedKiwiSprite;
 
@@ -172,7 +172,7 @@ public class GameBar : MonoBehaviour
         if (_currentKiwiIndex >= 0)
         {
             //Change next kiwi to selected sprite
-            Image nextImg = KiwisHudSections[_currentKiwiIndex].GetComponent<Image>();
+            Image nextImg = KiwiHudSections[_currentKiwiIndex].GetComponent<Image>();
 
             nextImg.sprite = SelectedKiwiSprite;
         }
