@@ -66,17 +66,17 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     /// <param name="player"></param>
     /// <param name="checkpointPosition"></param>
-    public void CheckpointActivated(Player player, Vector3 checkpointPosition)
+    public void CheckpointActivated(Player player, Transform checkpointTransform)
     {
         // Set new spawn point in Player script
-        player.PlayerSetSpawnPoint(transform);
+        player.PlayerSetSpawnPoint(checkpointTransform);
 
         // Save spawn point to PlayerPrefs
-        Vector3 pos = transform.position;
+        Vector3 pos = checkpointTransform.position;
 
-        PlayerPrefs.SetFloat("SpawnX", checkpointPosition.x);
-        PlayerPrefs.SetFloat("SpawnY", checkpointPosition.y);
-        PlayerPrefs.SetFloat("SpawnZ", checkpointPosition.z);
+        PlayerPrefs.SetFloat("SpawnX", pos.x);
+        PlayerPrefs.SetFloat("SpawnY", pos.y);
+        PlayerPrefs.SetFloat("SpawnZ", pos.z);
         PlayerPrefs.Save();
     }
 

@@ -32,7 +32,7 @@ public class Checkpoint : MonoBehaviour
 
             if (collision.TryGetComponent<Player>(out var player))
             {
-                GameManager.Instance.CheckpointActivated(player, transform.position);
+                GameManager.Instance.CheckpointActivated(player, transform);
             }
 
             //Animation
