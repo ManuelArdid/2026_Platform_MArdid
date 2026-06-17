@@ -9,9 +9,6 @@ public class Collectable : MonoBehaviour
 
     private bool _collected = false;
 
-    //------- EVENTS -------//
-    public static event Action OnBigKiwiCollected;
-
     //------- UNITY METHODS -------//
 
     void Start()
@@ -52,7 +49,6 @@ public class Collectable : MonoBehaviour
     {
         if (_collected)
         {
-            OnBigKiwiCollected?.Invoke();
             StartCoroutine(GeneralUtils.Instance.DeactivateAfterDelay(gameObject, 0.1f));
         }
     }

@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6826275124441921217
 Transform:
   m_ObjectHideFlags: 0
@@ -235,25 +235,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player1
   MoveSpeed: 5
-  MaxSpeedMultiplier: 1.5
+  MaxSpeedMultiplier: 1.2
   Acceleration: 10
   Deceleration: 30
   JumpForce: 20
   JumpCutMultiplier: 0.5
-  CoyoteTime: 0.125
-  LilypadTime: 0.2
+  CoyoteTime: 0.07
+  KiwiTime: 0.2
   MaximumJumps: 5
-  DoubleJumpReduction: 0.1
+  AirJumpReduction: 0.1
   JumpCooldown: 0.1
   SkipCoyoteAfterGroundJumpTime: 0.12
   ParryWindow: 0.05
   ParryCooldown: 0.1
-  ParryJumpMultiplier: 1.5
+  ParryJumpMultiplier: 1.25
   GroundLayer:
     serializedVersion: 2
     m_Bits: 128
   GroundCollisionPoint: {fileID: 4708426701028224014}
   MovementInputAction: {fileID: 5167989865963071332, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
-  RestartInputAction: {fileID: 0}
+  RestartInputAction: {fileID: 4628103521864765669, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   SpawnPoint: {fileID: 0}
+  _airJumpCounter: 0

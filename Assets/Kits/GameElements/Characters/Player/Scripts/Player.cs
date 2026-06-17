@@ -80,6 +80,10 @@ public abstract class Player : MonoBehaviour
     private float _lastGroundedJumpTime = -10f;
     private Vector2 _externalVelocityY = Vector2.zero;
 
+    //------- EVENTS -------//
+    public static event Action OnPlayerReset;
+    public static event Action OnPlayerJump;
+
     //------- UNITY METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     protected virtual void Start()
@@ -91,19 +95,6 @@ public abstract class Player : MonoBehaviour
 
         //Initialize jumps
         _jumpsRemaining = MaximumJumps;
-
-        //Load spawn point from PlayerPrefs
-        if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
-        {
-            SpawnPoint.position = new Vector3(
-                PlayerPrefs.GetFloat("SpawnX"),
-                PlayerPrefs.GetFloat("SpawnY"),
-                PlayerPrefs.GetFloat("SpawnZ")
-            );
-        }
-
-        //Set player to spawn point
-        transform.position = SpawnPoint.position;
     }
 
     void OnEnable()
@@ -323,16 +314,16 @@ public abstract class Player : MonoBehaviour
         return JumpForce;
     }
 
+    //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
+
     /// <summary>
     /// Performs the jump action with the specified force.
     /// </summary>
     /// <param name="force"></param>
-    public virtual void PerformJump(float force)
+    protected virtual void PerformJump(float force)
     {
         _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
     }
-
-    //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
     /// Handles character movement based on player input.
@@ -447,12 +438,6 @@ public abstract class Player : MonoBehaviour
         yield return new WaitForSecondsRealtime(JumpCooldown);
         _isJumpingAvailable = true;
     }
-
-    //------ EVENTS -----------------------------------------------------------------------------------------------------------------------//
-
-    public static event Action OnPlayerReset;
-    public static event Action OnPlayerJump;
-
 
     //------- EVENT HANDLERS -----------------------------------------------------------------------------------------------------------------------//
 

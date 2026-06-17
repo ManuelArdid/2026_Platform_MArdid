@@ -121,16 +121,18 @@ public class GameBar : MonoBehaviour
     private void HandleOnKiwiCollected(Kiwi.KiwiType type)
     {
 
+        ResetAllKiwis();
+
         //COMPLETE LILYPAD: Reset all kiwis to default sprite
-        if (type == Kiwi.KiwiType.Complete)
-        {
-            ResetAllKiwis();
-        }
-        //SINGLE LILYPAD: Reset only the current kiwi sprite
-        else if (type == Kiwi.KiwiType.Single)
-        {
-            ResetOneKiwi();
-        }
+        // if (type == Kiwi.KiwiType.Complete)
+        // {
+        //     ResetAllKiwis();
+        // }
+        // //SINGLE LILYPAD: Reset only the current kiwi sprite
+        // else if (type == Kiwi.KiwiType.Single)
+        // {
+        //     ResetOneKiwi();
+        // }
     }
 
     /// <summary>

@@ -4,39 +4,18 @@ public class GameManager : Singleton<GameManager>
 {
     //------- UNITY EDITOR --------------------//
 
-    [Header("Green Charactter config")]
+    [Header("Player Character config")]
     [SerializeField] private GameObject Character;
     [SerializeField] private GameObject Camera;
     [SerializeField] private GameObject GameBar;
-
-    //---- CLASS VARIABLES -------------------//
-
-    private GameObject _activeCharacter;
 
     //------- UNITY METHODS ------------------//
 
     private void Awake()
     {
-        string frogColor = PlayerPrefs.GetString("FrogColor");
-
-        //DEBUG: force green
-        frogColor = "Green";
+        //DEBUG
         PlayerPrefs.DeleteAll();
 
-        if (frogColor == "Green")
-        {
-            //Green activation
-            Character.SetActive(true);
-            Camera.SetActive(true);
-            GameBar.SetActive(true);
-
-            //Red deactivation
-            // RedCharacter.SetActive(false);
-            // RedCamera.SetActive(false);
-            // RedGameBar.SetActive(false);
-
-            _activeCharacter = Character;
-        }
     }
 
     private void Start()
@@ -50,16 +29,38 @@ public class GameManager : Singleton<GameManager>
             Transform newTransform = new GameObject("TempSpawnPoint").transform;
             newTransform.position = new Vector3(x, y, z);
 
-            _activeCharacter.GetComponent<Player>().PlayerSetSpawnPoint(newTransform);
+            Character.GetComponent<Player>().PlayerSetSpawnPoint(newTransform);
 
-            _activeCharacter.GetComponent<Player>().PlayerSendToSpawnPoint();
+            Character.GetComponent<Player>().PlayerSendToSpawnPoint();
         }
     }
 
     //------- PUBLIC METHODS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
+    /// <summary>
+    ///  Sets the player character, camera, and game bar references in the GameManager. Called by Player script when player character is initialized. This allows GameManager to manage player-related functionality and UI elements throughout the game.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="camera"></param>
+    /// <param name="gameBar"></param>
+    public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
+    {
+        Character = character;
+        Camera = camera;
+        GameBar = gameBar;
+    }
 
     //-- GAMEPLAY------------------///
+
+    /// <summary>
+    /// Activates the player character, camera, and game bar. Called by Player script when player character is initialized. This allows the player to start playing the game after the character has been set up and references have been assigned in the GameManager.
+    /// </summary>
+    public void ActivatePlayableCharacter()
+    {
+        Character.SetActive(true);
+        Camera.SetActive(true);
+        GameBar.SetActive(true);
+    }
 
     /// <summary>
     /// Called by Checkpoint script when player activates a checkpoint. Sets new spawn point in Player script and saves it to PlayerPrefs.
@@ -85,15 +86,16 @@ public class GameManager : Singleton<GameManager>
     {
         // Load the main gameplay scene (index 1 in Build Settings)
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        ActivatePlayableCharacter();
     }
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
-        #endif
+#endif
     }
 
     //-- UI ----------------------///

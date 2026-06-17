@@ -1,15 +1,23 @@
 @startuml
+
+class "Singleton<T>" as Singleton {
+    - static T _instance
+    + static T Instance
+}
+
 class GameManager {
-    + CharacterCamera : GameObject
-    - _activeCharacter : GameObject
+    + GameObject Character
+    + GameObject Camera
+    + GameObject GameBar
+    - GameObject _activeCharacter
 
-    + CheckpointActivated(player : Player, checkpointPosition : Vector3) : void
-
+    + CheckpointActivated(player : Player, checkpointTransform : Transform) : void
     + LoadGameScene() : void
     + QuitGame() : void
-
     + ResetGameData() : void
 }
+
+Singleton <|-- GameManager
 
 class GameBar {
 
