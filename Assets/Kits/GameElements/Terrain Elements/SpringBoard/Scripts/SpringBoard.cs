@@ -44,7 +44,7 @@ public class SpringBoard : MonoBehaviour
         if (playerRigidbody == null)
             return;
 
-        float enterYVelocity = playerRigidbody.linearVelocity.y;
+        float enterYVelocity = collision.gameObject.GetComponent<Player>().PlayerGetLastFallSpeed();
 
         // Only bounce if the player is falling onto the springboard, not if they are jumping up through it.
         if (enterYVelocity > 0f)
@@ -52,8 +52,7 @@ public class SpringBoard : MonoBehaviour
 
         _isUsed = true;
 
-        if (SpriteUsed != null)
-            _spriteRenderer.sprite = SpriteUsed;
+        _spriteRenderer.sprite = SpriteUsed;
 
         // Disable the collider to prevent multiple bounces while the player is still in contact with the springboard.
         _boxCollider.enabled = false;

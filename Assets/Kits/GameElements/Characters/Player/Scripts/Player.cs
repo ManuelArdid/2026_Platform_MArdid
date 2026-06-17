@@ -81,6 +81,7 @@ public abstract class Player : MonoBehaviour
     private Coroutine _currentCoyoteTimeCoroutine = null;
     private float _lastGroundedJumpTime = -10f;
     private Vector2 _externalVelocityY = Vector2.zero;
+    private float _lastFallSpeed = 0f;
 
     //------- EVENTS -------//
     public static event Action OnPlayerReset;
@@ -197,6 +198,9 @@ public abstract class Player : MonoBehaviour
 
         HandleMovement();
         HandleJump();
+
+        // Save last fall speed for potential use in springboard or other mechanics
+        _lastFallSpeed = _rb.linearVelocityY;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -314,6 +318,14 @@ public abstract class Player : MonoBehaviour
     public float PlayerGetJumpForce()
     {
         return JumpForce;
+    }
+    
+    /// <summary>
+    /// Gets the last fall speed of the player
+    /// </summary>
+    public float PlayerGetLastFallSpeed()
+    {
+        return _lastFallSpeed;
     }
 
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
