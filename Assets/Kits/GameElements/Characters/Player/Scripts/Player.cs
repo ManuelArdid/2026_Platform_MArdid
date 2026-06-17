@@ -38,6 +38,8 @@ public abstract class Player : MonoBehaviour
     [Header("Ground Detection")]
     [SerializeField] protected LayerMask GroundLayer;
     [SerializeField] protected Transform GroundCollisionPoint;
+    [SerializeField] protected float GroundCheckSize;
+
 
     [Header("Input Actions")]
     [SerializeField] protected InputActionReference MovementInputAction;
@@ -341,7 +343,7 @@ public abstract class Player : MonoBehaviour
     {
         return Physics2D.CircleCast(
             GroundCollisionPoint.position,
-            0.15f,
+            GroundCheckSize,
             Vector2.down,
             0,
             GroundLayer
@@ -576,6 +578,14 @@ public abstract class Player : MonoBehaviour
         _jumpsRemaining++;
         _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
     }
+
     //------- DEBUG -----------------------------------------------------------------------------------------------------------------------//
+    private void OnDrawGizmos()
+    {
+        if (GroundCollisionPoint == null) return;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(GroundCollisionPoint.position, GroundCheckSize);
+    }
 
 }
