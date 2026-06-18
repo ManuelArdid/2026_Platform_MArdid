@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 public class Checkpoint : MonoBehaviour
 {
 
+    //------- Unity Editor -------//
+    [SerializeField] private ParticleEmitter ParticleEmitterReference;
+
     //------- Private Variables -------//
     Animator _animator;
     Vector3 _originalPosition;
@@ -37,6 +40,9 @@ public class Checkpoint : MonoBehaviour
 
             //Animation
             _animator.SetTrigger("PerformActivate");
+
+            // Play particle effect
+            ParticleEmitterReference.Play();
         }
     }
 }
