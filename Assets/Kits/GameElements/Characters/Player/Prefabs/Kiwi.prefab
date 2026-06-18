@@ -68,7 +68,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4708426701028224014}
-  - {fileID: 4162124699706773534}
+  - {fileID: 1593972738506475946}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6084262025705461906
@@ -299,7 +299,7 @@ MonoBehaviour:
   CenterBoxWidth: 0.29
   CenterBoxHeight: 0.8
   CenterBoxYOffset: 0.41
---- !u!1001 &6722989816235441385
+--- !u!1001 &8255344408950154589
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -309,19 +309,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3539581233617969059, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
       propertyPath: m_Name
-      value: Kiwi emitter
+      value: Kiwi Reset emitter
       objectReference: {fileID: 0}
-    - target: {fileID: 4423170364624277349, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
-      propertyPath: playerReference
-      value: 
-      objectReference: {fileID: 8794024856747203993}
     - target: {fileID: 7245743981616622839, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7245743981616622839, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.35
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7245743981616622839, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
       propertyPath: m_LocalPosition.z
@@ -360,8 +356,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
---- !u!4 &4162124699706773534 stripped
+--- !u!4 &1593972738506475946 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7245743981616622839, guid: 8930e35684294644e8a4eb0a4b0dfe47, type: 3}
-  m_PrefabInstance: {fileID: 6722989816235441385}
+  m_PrefabInstance: {fileID: 8255344408950154589}
   m_PrefabAsset: {fileID: 0}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class KiwiEmitter : ParticleEmitter
+public class PlayerJumpParticleEmitter : ParticleEmitter
 {
     //----------- UNITY EDITOR -----------//
     [SerializeField] GameObject playerReference;
