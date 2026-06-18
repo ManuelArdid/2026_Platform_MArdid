@@ -82,6 +82,7 @@ public abstract class Player : MonoBehaviour
     private float _lastGroundedJumpTime = -10f;
     private Vector2 _externalVelocityY = Vector2.zero;
     private float _lastFallSpeed = 0f;
+    private Vector2 _lastDirection = Vector2.zero;
 
     //------- EVENTS -------//
     public static event Action OnPlayerReset;
@@ -182,6 +183,10 @@ public abstract class Player : MonoBehaviour
         // Decrement ignore-jump-cut timer (added)
         if (_ignoreJumpCutTimer > 0f)
             _ignoreJumpCutTimer -= Time.deltaTime;
+
+        // Store last direction
+        if (_currentVelocity.x != 0)
+            _lastDirection = new Vector2(Mathf.Sign(_currentVelocity.x), 0f);
     }
 
     protected virtual void FixedUpdate()
@@ -319,7 +324,7 @@ public abstract class Player : MonoBehaviour
     {
         return JumpForce;
     }
-    
+
     /// <summary>
     /// Gets the last fall speed of the player
     /// </summary>
@@ -328,6 +333,13 @@ public abstract class Player : MonoBehaviour
         return _lastFallSpeed;
     }
 
+    /// <summary>
+    /// Gets the last direction the player was moving in.
+    /// </summary>
+    public Vector2 PlayerGetLastDirection()
+    {
+        return _lastDirection;
+    }
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
