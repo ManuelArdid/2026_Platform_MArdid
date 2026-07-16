@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -49,6 +48,9 @@ public abstract class Player : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] protected Transform SpawnPoint;
 
+    [Header("Camera Settings")]
+    [SerializeField] protected GameObject CameraFollowGameObject;
+
     ///------- PUBLIC PROPERTIES -------//
     public bool PlayerIsParrying { get; private set; }
 
@@ -68,9 +70,10 @@ public abstract class Player : MonoBehaviour
     protected bool _canUseCoyoteTime = false;
     protected bool _canReset = false;
     protected bool _controlEnabled = true;
+    protected bool _isFacingRight = true;
 
     protected int _jumpsRemaining;
-    public int _airJumpCounter = 0;
+    protected int _airJumpCounter = 0;
 
 
     protected float _originalGravityScale;
@@ -83,6 +86,7 @@ public abstract class Player : MonoBehaviour
     private Vector2 _externalVelocityY = Vector2.zero;
     private float _lastFallSpeed = 0f;
     private Vector2 _lastDirection = Vector2.zero;
+    private CameraFollowObject _cameraFollowObject;
 
     //------- EVENTS -------//
     public static event Action OnPlayerReset;
@@ -96,9 +100,11 @@ public abstract class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _originalGravityScale = _rb.gravityScale;
+        _cameraFollowObject = CameraFollowGameObject.GetComponent<CameraFollowObject>();
 
         //Initialize jumps
         _jumpsRemaining = MaximumJumps;
+
     }
 
     void OnEnable()
@@ -173,13 +179,6 @@ public abstract class Player : MonoBehaviour
         _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isAirJumping && !IsGrounded());
         _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isAirJumping && !IsGrounded());
 
-
-        // Flip sprite
-        if (_currentVelocity.x > 0)
-            _spriteRenderer.flipX = false;
-        else if (_currentVelocity.x < 0)
-            _spriteRenderer.flipX = true;
-
         // Decrement ignore-jump-cut timer (added)
         if (_ignoreJumpCutTimer > 0f)
             _ignoreJumpCutTimer -= Time.deltaTime;
@@ -191,6 +190,10 @@ public abstract class Player : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
+        // Flip sprite
+        Turn();
+
+
         //RESET CHECK
         if (_jumpsRemaining < 0)
         {
@@ -340,6 +343,16 @@ public abstract class Player : MonoBehaviour
     {
         return _lastDirection;
     }
+
+    /// <summary>
+    /// Checks if the player is facing right.
+    /// </summary>
+    /// <returns>True if facing right, otherwise false.</returns>
+    public bool PlayerIsFacingRight()
+    {
+        return _isFacingRight;
+    }
+
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
@@ -372,6 +385,29 @@ public abstract class Player : MonoBehaviour
             0,
             GroundLayer
         );
+    }
+
+    /// <summary>
+    /// Flips the character's facing direction based on movement input.
+    /// </summary>
+    /// <returns>True if the character is facing right, otherwise false.</returns>
+    protected bool Turn()
+    {
+        if (_currentVelocity.x > 0)
+        {
+            Vector3 rotator = new(transform.position.x, 0, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+            _isFacingRight = true;
+        }
+
+        else if (_currentVelocity.x < 0)
+        {
+            Vector3 rotator = new(transform.position.x, 180f, transform.rotation.z);
+            transform.rotation = Quaternion.Euler(rotator);
+            _isFacingRight = false;
+        }
+
+        return _isFacingRight;
     }
 
     //------- PRIVATE METHODS -----------------------------------------------------------------------------------------------------------------------//
