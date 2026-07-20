@@ -9,6 +9,7 @@ public class ManualCamera : MonoBehaviour
     [Header("Cameras")]
     [SerializeField] private CinemachineCamera CameraNormal;
     [SerializeField] private CinemachineCamera CameraManual;
+    [SerializeField] private Player TargetObject;
 
     [Header("Input")]
     [SerializeField] private InputActionReference _cameraInput;
@@ -19,13 +20,19 @@ public class ManualCamera : MonoBehaviour
     [SerializeField] private float _moveSpeed = 8f;
     [SerializeField] private float _returnSpeed = 16f;
 
+    [Header("Auto Camera Offset")]
+    [SerializeField] private float _lookAheadOffset = 0.55f;
+    [SerializeField] private float _lookAheadSpeed = 6f;
+
     //-- CLASS VARIABLES -------------------------------------------------------------------//
 
     private Vector2 _input;
     private bool _manualControl;
     private bool _manualCameraActive;
-
-    private Vector3 _basePosition;
+    private Vector3 _cameraOffset;
+    private float _currentLookAhead;
+    private CinemachinePositionComposer _normalComposer;
+    private bool _lastFacingRight;
 
     //-- UNITY METHODS ----------------------------------------------------------------------//
 
@@ -33,35 +40,68 @@ public class ManualCamera : MonoBehaviour
     {
         CameraNormal.Priority.Value = 10;
         CameraManual.Priority.Value = 0;
+
+        _normalComposer = CameraNormal.GetComponent<CinemachinePositionComposer>();
+        _lastFacingRight = TargetObject.PlayerIsFacingRight();
     }
 
     private void LateUpdate()
     {
+        Vector3 targetPosition = TargetObject.transform.position + _cameraOffset;
+
+        //LOOKAHEAD BY CHANGING CINEMACHINE OFFSET
+        if (!_manualCameraActive)
+        {
+            bool facingRight = TargetObject.PlayerIsFacingRight();
+
+            if (facingRight != _lastFacingRight)
+            {
+                _currentLookAhead = 0f;
+                _lastFacingRight = facingRight;
+            }
+
+            float targetLookAhead = facingRight
+                ? _lookAheadOffset
+                : -_lookAheadOffset;
+
+            _currentLookAhead = Mathf.Lerp(
+                _currentLookAhead,
+                targetLookAhead,
+                _lookAheadSpeed * Time.deltaTime);
+
+            Vector3 offset = _normalComposer.TargetOffset;
+            offset.x = _currentLookAhead;
+            _normalComposer.TargetOffset = offset;
+        }
+
+        //MANUAL CAMERA CONTROL
         if (_manualControl)
         {
             if (!_manualCameraActive)
                 ActivateManualCamera();
 
-            Vector3 targetPosition = _basePosition + new Vector3(
+            Vector3 desiredPosition = targetPosition + new Vector3(
                 _input.x * _horizontalLimit,
                 _input.y * _verticalLimit,
                 0f);
 
             CameraManual.transform.position = Vector3.Lerp(
                 CameraManual.transform.position,
-                targetPosition,
+                desiredPosition,
                 _moveSpeed * Time.deltaTime);
         }
+
+        // RETURN TO NORMAL CAMERA POSITION
         else if (_manualCameraActive)
         {
-            CameraManual.transform.position = Vector3.Lerp(
+            CameraManual.transform.position = Vector3.MoveTowards(
                 CameraManual.transform.position,
-                _basePosition,
+                targetPosition,
                 _returnSpeed * Time.deltaTime);
 
-            if (Vector3.Distance(CameraManual.transform.position, _basePosition) < 0.01f)
+            if (Vector3.Distance(CameraManual.transform.position, targetPosition) < 0.01f)
             {
-                CameraManual.transform.position = _basePosition;
+                CameraManual.transform.position = targetPosition;
                 DeactivateManualCamera();
             }
         }
@@ -78,7 +118,8 @@ public class ManualCamera : MonoBehaviour
             current.position,
             current.rotation);
 
-        _basePosition = current.position;
+        // Guarda el offset entre la cámara y el objetivo
+        _cameraOffset = current.position - TargetObject.transform.position;
 
         CameraManual.Priority.Value = 20;
     }

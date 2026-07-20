@@ -86,7 +86,6 @@ public abstract class Player : MonoBehaviour
     private Vector2 _externalVelocityY = Vector2.zero;
     private float _lastFallSpeed = 0f;
     private Vector2 _lastDirection = Vector2.zero;
-    private CameraFollowObject _cameraFollowObject;
 
     //------- EVENTS -------//
     public static event Action OnPlayerReset;
@@ -100,7 +99,6 @@ public abstract class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _originalGravityScale = _rb.gravityScale;
-        _cameraFollowObject = CameraFollowGameObject.GetComponent<CameraFollowObject>();
 
         //Initialize jumps
         _jumpsRemaining = MaximumJumps;
