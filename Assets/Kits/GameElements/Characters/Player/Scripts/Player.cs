@@ -395,15 +395,13 @@ public abstract class Player : MonoBehaviour
     {
         if (_currentVelocity.x > 0)
         {
-            Vector3 rotator = new(transform.position.x, 0, transform.rotation.z);
-            transform.rotation = Quaternion.Euler(rotator);
+            _spriteRenderer.flipX = false;
             _isFacingRight = true;
         }
 
         else if (_currentVelocity.x < 0)
         {
-            Vector3 rotator = new(transform.position.x, 180f, transform.rotation.z);
-            transform.rotation = Quaternion.Euler(rotator);
+            _spriteRenderer.flipX = true;
             _isFacingRight = false;
         }
 

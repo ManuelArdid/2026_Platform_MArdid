@@ -55,4 +55,19 @@ public class CameraFollowDelayOnReset : MonoBehaviour
 
         _delayCoroutine = null;
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+
+        // Vertical
+        Gizmos.DrawLine(
+            transform.position + Vector3.up * 100f,
+            transform.position + Vector3.down * 100f);
+
+        // Horizontal
+        Gizmos.DrawLine(
+            transform.position + Vector3.left * 100f,
+            transform.position + Vector3.right * 100f);
+    }
 }

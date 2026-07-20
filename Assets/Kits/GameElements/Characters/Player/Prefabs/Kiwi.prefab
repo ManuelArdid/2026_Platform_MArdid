@@ -1,5 +1,55 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1203652973380465764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 387331070735039270}
+  - component: {fileID: 3514851900320615686}
+  m_Layer: 0
+  m_Name: KibiCameraFollowObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387331070735039270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203652973380465764}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 5.3499603, y: 20.97605, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6826275124441921217}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3514851900320615686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203652973380465764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06f491a75e09d324794963b79e63a4f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollowObject
+  _playerTransform: {fileID: 6826275124441921217}
+  _manualHorizontalLimit: 2
+  _manualVerticalLimit: 2
+  _manualMoveSpeed: 8
+  _manualReturnSpeed: 20
+  _cameraInput: {fileID: 2377193204752566612, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
 --- !u!1 &2562958135081869765
 GameObject:
   m_ObjectHideFlags: 0
@@ -69,6 +119,7 @@ Transform:
   m_Children:
   - {fileID: 4708426701028224014}
   - {fileID: 1593972738506475946}
+  - {fileID: 387331070735039270}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6084262025705461906
@@ -191,7 +242,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.04, y: 0.03}
+  m_Offset: {x: -0.04, y: 0.04}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -201,7 +252,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.37, y: 0.4}
+  m_Size: {x: 0.37, y: 0.45}
   m_EdgeRadius: 0
 --- !u!95 &4804823659530130452
 Animator:
@@ -261,7 +312,7 @@ MonoBehaviour:
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   RestartInputAction: {fileID: 4628103521864765669, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   SpawnPoint: {fileID: 0}
-  _airJumpCounter: 0
+  CameraFollowGameObject: {fileID: 1203652973380465764}
 --- !u!114 &7690772094534013595
 MonoBehaviour:
   m_ObjectHideFlags: 0
