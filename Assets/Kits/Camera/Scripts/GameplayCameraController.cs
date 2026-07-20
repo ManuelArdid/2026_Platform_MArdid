@@ -2,7 +2,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ManualCamera : MonoBehaviour
+public class GameplayCameraController : MonoBehaviour
 {
     //-- UNITY EDITOR -----------------------------------------------------------------------//
 
