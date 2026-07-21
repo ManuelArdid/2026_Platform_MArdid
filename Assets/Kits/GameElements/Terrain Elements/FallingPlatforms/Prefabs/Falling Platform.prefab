@@ -83,7 +83,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1790546635
   m_SortingLayer: -2
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300230, guid: 962e67ff7370f0c4492dca70b64f89e9, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -180,8 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bc410a0de62cab4cbdf3d3f633a34d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingPlatform
-  FallDelay: 0.3
-  DeactivationDelay: 2
+  FallDelay: 0.2
+  DeactivationDelay: 1.5
   GravityScale: 5
 --- !u!70 &8356301801433175655
 CapsuleCollider2D:

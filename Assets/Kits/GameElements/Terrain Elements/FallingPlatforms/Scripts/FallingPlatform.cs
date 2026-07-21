@@ -12,9 +12,8 @@ public class FallingPlatform : MonoBehaviour
     //------ CLASS VARIABLES ------//
     private Rigidbody2D _rb;
     private Vector3 _originalPosition;
-    private Collider2D _collider;
-    private SpriteRenderer _spriteRenderer;
-
+    private SpriteRenderer[] _spriteRenderers;
+    private Collider2D[] _colliders;
     private Coroutine _currentFallAfterDelayCoroutine;
     private Coroutine _currentHideSpriteAfterDelayCoroutine;
 
@@ -22,9 +21,9 @@ public class FallingPlatform : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<CapsuleCollider2D>();
         _originalPosition = transform.position;
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        _colliders = GetComponentsInChildren<Collider2D>(true);
     }
 
     void OnEnable()
@@ -63,7 +62,10 @@ public class FallingPlatform : MonoBehaviour
             _rb.gravityScale = GravityScale;
 
             //Deactivate the collider to prevent further interactions
-            _collider.enabled = false;
+            foreach (var collider in _colliders)
+            {
+                collider.enabled = false;
+            }
         }
     }
 
@@ -77,7 +79,10 @@ public class FallingPlatform : MonoBehaviour
     private System.Collections.IEnumerator HideSpriteAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
-        _spriteRenderer.enabled = false;
+        foreach (var sprite in _spriteRenderers)
+        {
+            sprite.enabled = false;
+        }
 
         StopFalling();
     }
@@ -96,8 +101,15 @@ public class FallingPlatform : MonoBehaviour
         StopAllCoroutines();
         StopFalling();
 
-        _collider.enabled = true;
-        _spriteRenderer.enabled = true;
+        foreach (var collider in _colliders)
+        {
+            collider.enabled = true;
+        }
+
+        foreach (var sprite in _spriteRenderers)
+        {
+            sprite.enabled = true;
+        }
 
         transform.position = _originalPosition;
     }
