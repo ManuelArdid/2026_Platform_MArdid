@@ -86,6 +86,7 @@ public abstract class Player : MonoBehaviour
     private Vector2 _externalVelocityY = Vector2.zero;
     private float _lastFallSpeed = 0f;
     private Vector2 _lastDirection = Vector2.zero;
+    private Vector2 _lastPositionBeforeJump = Vector2.zero;
 
     //------- EVENTS -------//
     public static event Action OnPlayerReset;
@@ -173,9 +174,9 @@ public abstract class Player : MonoBehaviour
         }
 
         // Animations
-        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && IsGrounded());
-        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isAirJumping && !IsGrounded());
-        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isAirJumping && !IsGrounded());
+        _animator.SetBool("IsRunning", _currentVelocity.x != 0 && PlayerIsGrounded());
+        _animator.SetBool("IsFalling", _rb.linearVelocityY < 0f && !_isAirJumping && !PlayerIsGrounded());
+        _animator.SetBool("IsJumping", _rb.linearVelocityY > 0f && !_isAirJumping && !PlayerIsGrounded());
 
         // Decrement ignore-jump-cut timer (added)
         if (_ignoreJumpCutTimer > 0f)
@@ -184,6 +185,14 @@ public abstract class Player : MonoBehaviour
         // Store last direction
         if (_currentVelocity.x != 0)
             _lastDirection = new Vector2(Mathf.Sign(_currentVelocity.x), 0f);
+
+        // Reset last position before jump if grounded
+        if (PlayerIsGrounded())
+            _lastPositionBeforeJump = transform.position;
+
+
+        ////////////////////////DEBUG
+        Debug.Log($"Jump Height: {PlayerGetCurrentJumpHeight()}");  
     }
 
     protected virtual void FixedUpdate()
@@ -351,6 +360,42 @@ public abstract class Player : MonoBehaviour
         return _isFacingRight;
     }
 
+    /// <summary>
+    /// Checks if the character is grounded.
+    /// </summary>
+    /// <returns>True if grounded, otherwise false.</returns>
+    public bool PlayerIsGrounded()
+    {
+        return Physics2D.CircleCast(
+            GroundCollisionPoint.position,
+            GroundCheckSize,
+            Vector2.down,
+            0,
+            GroundLayer
+        );
+    }
+
+    /// <summary>
+    /// Checks if the character is grounded.
+    /// </summary>
+    /// <returns>True if grounded, otherwise false.</returns>
+    public bool PlayerIsJumping()
+    {
+        return !PlayerIsGrounded() && (transform.position.y > _lastPositionBeforeJump.y);
+    }
+
+    /// <summary>
+    /// Gets the current jump height of the player.
+    /// </summary>
+    /// <returns>The current jump height if in the air, otherwise 0.</returns>
+    public float PlayerGetCurrentJumpHeight()
+    {
+        if (PlayerIsGrounded())
+            return 0f;
+
+        return transform.position.y - _lastPositionBeforeJump.y;
+    }
+
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
@@ -359,6 +404,7 @@ public abstract class Player : MonoBehaviour
     /// <param name="force"></param>
     protected virtual void PerformJump(float force)
     {
+        _lastPositionBeforeJump = transform.position;
         _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
     }
 
@@ -368,21 +414,6 @@ public abstract class Player : MonoBehaviour
     protected virtual void Move(InputAction.CallbackContext context)
     {
         _rawMovementInput = context.ReadValue<Vector2>();
-    }
-
-    /// <summary>
-    /// Checks if the character is grounded.
-    /// </summary>
-    /// <returns>True if grounded, otherwise false.</returns>
-    protected bool IsGrounded()
-    {
-        return Physics2D.CircleCast(
-            GroundCollisionPoint.position,
-            GroundCheckSize,
-            Vector2.down,
-            0,
-            GroundLayer
-        );
     }
 
     /// <summary>
@@ -535,7 +566,7 @@ public abstract class Player : MonoBehaviour
         _jumpsRemaining--;
 
         //Ground Jump
-        if (IsGrounded() || _canUseCoyoteTime)
+        if (PlayerIsGrounded() || _canUseCoyoteTime)
         {
             _canUseCoyoteTime = false;
 

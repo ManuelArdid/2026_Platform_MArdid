@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,104 +10,118 @@ public class GameplayCameraController : MonoBehaviour
     [Header("Cameras")]
     [SerializeField] private CinemachineCamera CameraNormal;
     [SerializeField] private CinemachineCamera CameraManual;
-    [SerializeField] private Player TargetObject;
+    [SerializeField] private Player TargetPlayer;
 
     [Header("Input")]
-    [SerializeField] private InputActionReference _cameraInput;
+    [SerializeField] private InputActionReference CameraInput;
 
     [Header("Settings")]
-    [SerializeField] private float _horizontalLimit = 2f;
-    [SerializeField] private float _verticalLimit = 2f;
-    [SerializeField] private float _moveSpeed = 8f;
-    [SerializeField] private float _returnSpeed = 16f;
+    [SerializeField] private float HorizontalLimit = 2f;
+    [SerializeField] private float VerticalLimit = 2f;
+    [SerializeField] private float MoveSpeed = 8f;
+    [SerializeField] private float ReturnSpeed = 16f;
 
     [Header("Auto Camera Offset")]
-    [SerializeField] private float _lookAheadOffset = 0.55f;
-    [SerializeField] private float _lookAheadSpeed = 6f;
+    [SerializeField] private float LookAheadOffset = 0.55f;
+    [SerializeField] private float LookAheadSpeed = 6f;
+
+    [Header("Auto Zoomout")]
+    [SerializeField] private bool CameraAutoZoomDisabled = false;
+    [SerializeField] private float CameraAutoZoomOutHeightTreshold = 5f;
+    [SerializeField] private float CameraAutoZoomOutSpeed = 5f;
+    [SerializeField] private float CameraAutoZoomInSpeed = 10f;
 
     //-- CLASS VARIABLES -------------------------------------------------------------------//
 
     private Vector2 _input;
+
+    private Vector3 _cameraOffset;
+
+
     private bool _manualControl;
     private bool _manualCameraActive;
-    private Vector3 _cameraOffset;
-    private float _currentLookAhead;
-    private CinemachinePositionComposer _normalComposer;
     private bool _lastFacingRight;
+    private bool _originalAutoZoomOption;
+
+    private float _currentLookAhead;
+    private float _originalOrtogrpaphicSize;
+    private float _temporalAutoZoomDeactivationTime = 1f;
+
+    private int _mediumPriority = 10;
+    private int _highPriority = 20;
+
+    private CinemachinePositionComposer _normalComposer;
+
+    private Coroutine _delayCoroutine;
 
     //-- UNITY METHODS ----------------------------------------------------------------------//
 
     private void Awake()
     {
-        CameraNormal.Priority.Value = 10;
+        // Set the initial priorities of the cameras
+        CameraNormal.Priority.Value = _mediumPriority;
         CameraManual.Priority.Value = 0;
 
+        // Get the CinemachinePositionComposer component from the normal camera
         _normalComposer = CameraNormal.GetComponent<CinemachinePositionComposer>();
-        _lastFacingRight = TargetObject.PlayerIsFacingRight();
+        _lastFacingRight = TargetPlayer.PlayerIsFacingRight();
+
+        // Store the original orthographic sizes of the cameras
+        _originalOrtogrpaphicSize = CameraNormal.GetComponent<CinemachineCamera>().Lens.OrthographicSize;
+
+        // Store the original selection state of the auto zoom feature
+        _originalAutoZoomOption = CameraAutoZoomDisabled;
+
+        if (_originalOrtogrpaphicSize != CameraManual.GetComponent<CinemachineCamera>().Lens.OrthographicSize)
+        {
+            Debug.LogWarning("The original orthographic sizes of the normal and manual cameras are not equal. This may cause issues with camera zooming.");
+        }
     }
 
     private void LateUpdate()
     {
-        Vector3 targetPosition = TargetObject.transform.position + _cameraOffset;
-
         //LOOKAHEAD BY CHANGING CINEMACHINE OFFSET
-        if (!_manualCameraActive)
-        {
-            bool facingRight = TargetObject.PlayerIsFacingRight();
+        HandleCameraLookAhead();
 
-            if (facingRight != _lastFacingRight)
-            {
-                _currentLookAhead = 0f;
-                _lastFacingRight = facingRight;
-            }
+        //HANDLE CAMERA SELECTION BETWEEN MANUAL AND AUTOMATIC
+        HandleCameraSelection();
 
-            float targetLookAhead = facingRight
-                ? _lookAheadOffset
-                : -_lookAheadOffset;
+        //INCREASE THE CAMERA SIZE PROPORTIONALLY TO THE PLAYER'S JUMP HEIGHT
+        if (!CameraAutoZoomDisabled)
+            HandleCameraZoom();
 
-            _currentLookAhead = Mathf.Lerp(
-                _currentLookAhead,
-                targetLookAhead,
-                _lookAheadSpeed * Time.deltaTime);
-
-            Vector3 offset = _normalComposer.TargetOffset;
-            offset.x = _currentLookAhead;
-            _normalComposer.TargetOffset = offset;
-        }
-
-        //MANUAL CAMERA CONTROL
-        if (_manualControl)
-        {
-            if (!_manualCameraActive)
-                ActivateManualCamera();
-
-            Vector3 desiredPosition = targetPosition + new Vector3(
-                _input.x * _horizontalLimit,
-                _input.y * _verticalLimit,
-                0f);
-
-            CameraManual.transform.position = Vector3.Lerp(
-                CameraManual.transform.position,
-                desiredPosition,
-                _moveSpeed * Time.deltaTime);
-        }
-
-        // RETURN TO NORMAL CAMERA POSITION
-        else if (_manualCameraActive)
-        {
-            CameraManual.transform.position = Vector3.MoveTowards(
-                CameraManual.transform.position,
-                targetPosition,
-                _returnSpeed * Time.deltaTime);
-
-            if (Vector3.Distance(CameraManual.transform.position, targetPosition) < 0.01f)
-            {
-                CameraManual.transform.position = targetPosition;
-                DeactivateManualCamera();
-            }
-        }
     }
 
+    private void OnEnable()
+    {
+        CameraInput.action.Enable();
+
+        CameraInput.action.started += OnCameraStarted;
+        CameraInput.action.performed += OnCameraPerformed;
+        CameraInput.action.canceled += OnCameraCanceled;
+
+        Player.OnPlayerReset += HandleOnPlayerReset;
+    }
+
+    private void OnDisable()
+    {
+        CameraInput.action.started -= OnCameraStarted;
+        CameraInput.action.performed -= OnCameraPerformed;
+        CameraInput.action.canceled -= OnCameraCanceled;
+
+        Player.OnPlayerReset -= HandleOnPlayerReset;
+
+        CameraInput.action.Disable();
+    }
+
+
+    //-- PUBLIC METHODS ---------------------------------------------------------------------//
+    public CinemachineCamera GetActiveCamera()
+    {
+        return _manualCameraActive ? CameraManual : CameraNormal;
+    }
+
+    //-- CAMERA CONTROL PRIVATE METHODS ------------------------------------------------------------//
     private void ActivateManualCamera()
     {
         _manualCameraActive = true;
@@ -119,9 +134,9 @@ public class GameplayCameraController : MonoBehaviour
             current.rotation);
 
         // Guarda el offset entre la cámara y el objetivo
-        _cameraOffset = current.position - TargetObject.transform.position;
+        _cameraOffset = current.position - TargetPlayer.transform.position;
 
-        CameraManual.Priority.Value = 20;
+        CameraManual.Priority.Value = _highPriority;
     }
 
     private void DeactivateManualCamera()
@@ -130,24 +145,6 @@ public class GameplayCameraController : MonoBehaviour
 
         // Update the priorities to switch back to the normal camera.
         CameraManual.Priority.Value = 0;
-    }
-
-    private void OnEnable()
-    {
-        _cameraInput.action.Enable();
-
-        _cameraInput.action.started += OnCameraStarted;
-        _cameraInput.action.performed += OnCameraPerformed;
-        _cameraInput.action.canceled += OnCameraCanceled;
-    }
-
-    private void OnDisable()
-    {
-        _cameraInput.action.started -= OnCameraStarted;
-        _cameraInput.action.performed -= OnCameraPerformed;
-        _cameraInput.action.canceled -= OnCameraCanceled;
-
-        _cameraInput.action.Disable();
     }
 
     //-- CAMERA INPUT HANDLERS --------------------------------------------------------------//
@@ -167,5 +164,116 @@ public class GameplayCameraController : MonoBehaviour
     {
         _manualControl = false;
         _input = Vector2.zero;
+    }
+
+    private void HandleCameraZoom()
+    {
+        if (!TargetPlayer.PlayerIsGrounded())
+        {
+            float jumpHeight = TargetPlayer.PlayerGetCurrentJumpHeight();
+            jumpHeight = Mathf.Abs(jumpHeight); // Ensure jumpHeight is positive
+
+            if (jumpHeight > CameraAutoZoomOutHeightTreshold)
+            {
+
+                float newSize = _originalOrtogrpaphicSize + jumpHeight * 0.5f;
+
+                GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize = Mathf.Lerp(
+                    GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize,
+                    newSize,
+                    Time.deltaTime * CameraAutoZoomOutSpeed);
+            }
+        }
+        else
+        {
+            GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize = Mathf.Lerp(
+                GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize,
+                _originalOrtogrpaphicSize,
+                Time.deltaTime * CameraAutoZoomInSpeed);
+        }
+    }
+
+    private void HandleCameraSelection()
+    {
+        Vector3 targetPosition = TargetPlayer.transform.position + _cameraOffset;
+
+
+        //MANUAL CAMERA CONTROL
+        if (_manualControl)
+        {
+            if (!_manualCameraActive)
+                ActivateManualCamera();
+
+            Vector3 desiredPosition = targetPosition + new Vector3(
+                _input.x * HorizontalLimit,
+                _input.y * VerticalLimit,
+                0f);
+
+            CameraManual.transform.position = Vector3.Lerp(
+                CameraManual.transform.position,
+                desiredPosition,
+                MoveSpeed * Time.deltaTime);
+        }
+
+        // RETURN TO NORMAL CAMERA POSITION
+        else if (_manualCameraActive)
+        {
+            CameraManual.transform.position = Vector3.MoveTowards(
+                CameraManual.transform.position,
+                targetPosition,
+                ReturnSpeed * Time.deltaTime);
+
+            if (Vector3.Distance(CameraManual.transform.position, targetPosition) < 0.01f)
+            {
+                CameraManual.transform.position = targetPosition;
+                DeactivateManualCamera();
+            }
+        }
+    }
+
+    private void HandleCameraLookAhead()
+    {
+        if (!_manualCameraActive)
+        {
+            bool facingRight = TargetPlayer.PlayerIsFacingRight();
+
+            if (facingRight != _lastFacingRight)
+            {
+                _currentLookAhead = 0f;
+                _lastFacingRight = facingRight;
+            }
+
+            float targetLookAhead = facingRight
+                ? LookAheadOffset
+                : -LookAheadOffset;
+
+            _currentLookAhead = Mathf.Lerp(
+                _currentLookAhead,
+                targetLookAhead,
+                LookAheadSpeed * Time.deltaTime);
+
+            Vector3 offset = _normalComposer.TargetOffset;
+            offset.x = _currentLookAhead;
+            _normalComposer.TargetOffset = offset;
+        }
+    }
+
+    //-- EVENT HANDLERS ---------------------------------------------------------------------//
+
+    private void HandleOnPlayerReset()
+    {
+        if (_delayCoroutine != null)
+            StopCoroutine(_delayCoroutine);
+
+        _delayCoroutine = StartCoroutine(TemporaryDeactivateAutoZoom(_temporalAutoZoomDeactivationTime));
+    }
+
+    //-- COROUTINES --------------------------------------------------------------------------//
+
+    public IEnumerator TemporaryDeactivateAutoZoom(float delay)
+    {
+        CameraAutoZoomDisabled = true;
+        yield return new WaitForSecondsRealtime(delay);
+        CameraAutoZoomDisabled = _originalAutoZoomOption;
     }
 }
