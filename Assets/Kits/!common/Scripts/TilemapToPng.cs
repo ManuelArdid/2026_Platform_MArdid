@@ -156,7 +156,7 @@ public class TilemapToPng : MonoBehaviour
              Directory.CreateDirectory(dirPath);
          }
          File.WriteAllBytes(dirPath + name + ".png", bytes);
-        AssetDatabase.Refresh();
+        //AssetDatabase.Refresh();
         Img = null;
      }
 
