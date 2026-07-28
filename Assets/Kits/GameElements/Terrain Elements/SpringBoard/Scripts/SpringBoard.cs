@@ -48,7 +48,9 @@ public class SpringBoard : MonoBehaviour
 
         _isUsed = true;
 
-        _spriteRenderer.sprite = SpriteUsed;
+        //DEBUG
+        //_spriteRenderer.sprite = SpriteUsed;
+        _spriteRenderer.sprite = null;
 
         // Disable the collider to prevent multiple bounces while the player is still in contact with the springboard.
         _boxCollider.enabled = false;
