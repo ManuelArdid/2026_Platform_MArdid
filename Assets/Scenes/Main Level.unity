@@ -97239,6 +97239,10 @@ PrefabInstance:
       value: Bubble
       objectReference: {fileID: 0}
     - target: {fileID: 3801774403783082574, guid: 813d9dd59cdd78e4e8a21dbb50e72f40, type: 3}
+      propertyPath: ResetInputAction
+      value: 
+      objectReference: {fileID: 4628103521864765669, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
+    - target: {fileID: 3801774403783082574, guid: 813d9dd59cdd78e4e8a21dbb50e72f40, type: 3}
       propertyPath: TurningPoints.Array.size
       value: 2
       objectReference: {fileID: 0}

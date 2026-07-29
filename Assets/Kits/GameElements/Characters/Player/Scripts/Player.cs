@@ -484,7 +484,9 @@ public abstract class Player : MonoBehaviour
 
     private void Restart(InputAction.CallbackContext context)
     {
+        GameplayCameraController.Instance.FixCamera();
         PlayerSendToSpawnPoint();
+        GameplayCameraController.Instance.UnfixCamera();
     }
 
     //------- COROUTINES -----------------------------------------------------------------------------------------------------------------------//

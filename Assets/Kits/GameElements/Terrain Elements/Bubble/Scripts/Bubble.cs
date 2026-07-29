@@ -121,6 +121,9 @@ public class Bubble : MovingElement
 
         // Disable player control
         _playerController.PlayerSetMoveControl(false);
+
+        // Fix camera
+        GameplayCameraController.Instance.FixCamera();
     }
 
     private void ReleasePlayer()
@@ -147,6 +150,9 @@ public class Bubble : MovingElement
         _playerController = null;
         _playerRigidbody = null;
         _playerInside = false;
+
+        // Unfix camera
+        GameplayCameraController.Instance.UnfixCamera();
     }
 
 

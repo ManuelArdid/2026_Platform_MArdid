@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameplayCameraController : MonoBehaviour
+public class GameplayCameraController : Singleton<GameplayCameraController>
 {
     //-- UNITY EDITOR -----------------------------------------------------------------------//
 
@@ -37,15 +37,12 @@ public class GameplayCameraController : MonoBehaviour
 
     private Vector3 _cameraOffset;
 
-
     private bool _manualControl;
     private bool _manualCameraActive;
-    private bool _lastFacingRight;
     private bool _originalAutoZoomOption;
 
     private float _currentLookAhead;
     private float _originalOrtogrpaphicSize;
-    private float _temporalAutoZoomDeactivationTime = 1f;
 
     private int _mediumPriority = 10;
     private int _highPriority = 20;
@@ -64,7 +61,6 @@ public class GameplayCameraController : MonoBehaviour
 
         // Get the CinemachinePositionComposer component from the normal camera
         _normalComposer = CameraNormal.GetComponent<CinemachinePositionComposer>();
-        _lastFacingRight = TargetPlayer.PlayerIsFacingRight();
 
         // Store the original orthographic sizes of the cameras
         _originalOrtogrpaphicSize = CameraNormal.GetComponent<CinemachineCamera>().Lens.OrthographicSize;
@@ -80,8 +76,11 @@ public class GameplayCameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        //LOOKAHEAD BY CHANGING CINEMACHINE OFFSET
-        HandleCameraLookAhead();
+        if (TargetPlayer.PlayerGetCurrentVelocityX() != 0)
+        {
+            //LOOKAHEAD BY CHANGING CINEMACHINE OFFSET
+            HandleCameraLookAhead();
+        }
 
         //HANDLE CAMERA SELECTION BETWEEN MANUAL AND AUTOMATIC
         HandleCameraSelection();
@@ -99,8 +98,6 @@ public class GameplayCameraController : MonoBehaviour
         CameraInput.action.started += OnCameraStarted;
         CameraInput.action.performed += OnCameraPerformed;
         CameraInput.action.canceled += OnCameraCanceled;
-
-        Player.OnPlayerReset += HandleOnPlayerReset;
     }
 
     private void OnDisable()
@@ -109,16 +106,67 @@ public class GameplayCameraController : MonoBehaviour
         CameraInput.action.performed -= OnCameraPerformed;
         CameraInput.action.canceled -= OnCameraCanceled;
 
-        Player.OnPlayerReset -= HandleOnPlayerReset;
-
         CameraInput.action.Disable();
     }
 
 
     //-- PUBLIC METHODS ---------------------------------------------------------------------//
+
+    /// <summary>
+    ///  Returns the currently active camera, either the manual camera or the normal camera, based on the current state of the camera controller.
+    /// </summary>
+    /// <returns></returns>
     public CinemachineCamera GetActiveCamera()
     {
         return _manualCameraActive ? CameraManual : CameraNormal;
+    }
+
+    /// <summary>
+    /// Centers the camera on the player by setting the position of the active camera (manual or normal) to the player's position plus the camera offset. It also resets the camera zoom to the original orthographic size.
+    /// </summary>
+    public void CenterCameraOnPlayer()
+    {
+        if (_manualCameraActive)
+        {
+            CameraManual.transform.position = TargetPlayer.transform.position + _cameraOffset;
+        }
+        else
+        {
+            CameraNormal.transform.position = TargetPlayer.transform.position + _cameraOffset;
+        }
+
+        // Reset the camera zoom to the original orthographic size
+        ResetCameraZoom();
+    }
+
+    /// <summary>
+    /// Disables the automatic camera zoom feature, effectively "fixing" the camera in its current state. This can be useful in scenarios where you want to maintain a specific camera view without it automatically adjusting based on the player's actions or position.
+    /// </summary>
+    public void FixCamera()
+    {
+        CameraAutoZoomDisabled = true;
+    }
+
+    /// <summary>
+    /// Re-enables the automatic camera zoom feature, allowing the camera to adjust its zoom level based on the player's actions or position. This method should be called after using FixCamera() to restore the camera's dynamic behavior.
+    /// </summary>
+    public void UnfixCamera()
+    {
+        CameraAutoZoomDisabled = false;
+    }
+
+    /// <summary>
+    /// Temporarily disables the automatic camera zoom feature for a specified duration. After the delay,
+    /// the automatic zoom will be re-enabled, restoring the camera's dynamic behavior. This can be useful in scenarios where you want to maintain a specific camera view for a short period without it automatically adjusting based on the player's actions or position.
+    /// </summary>
+    public void TemporarilyDisableAutoZoom(float delay)
+    {
+        if (_delayCoroutine != null)
+        {
+            StopCoroutine(_delayCoroutine);
+        }
+
+        _delayCoroutine = StartCoroutine(TemporaryDeactivateAutoZoom(delay));
     }
 
     //-- CAMERA CONTROL PRIVATE METHODS ------------------------------------------------------------//
@@ -193,6 +241,11 @@ public class GameplayCameraController : MonoBehaviour
         }
     }
 
+    private void ResetCameraZoom()
+    {
+        GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize = _originalOrtogrpaphicSize;
+    }
+
     private void HandleCameraSelection()
     {
         Vector3 targetPosition = TargetPlayer.transform.position + _cameraOffset;
@@ -237,15 +290,10 @@ public class GameplayCameraController : MonoBehaviour
         {
             bool facingRight = TargetPlayer.PlayerIsFacingRight();
 
-            if (facingRight != _lastFacingRight)
-            {
-                _currentLookAhead = 0f;
-                _lastFacingRight = facingRight;
-            }
-
             float targetLookAhead = facingRight
                 ? LookAheadOffset
                 : -LookAheadOffset;
+
 
             _currentLookAhead = Mathf.Lerp(
                 _currentLookAhead,
@@ -258,19 +306,9 @@ public class GameplayCameraController : MonoBehaviour
         }
     }
 
-    //-- EVENT HANDLERS ---------------------------------------------------------------------//
-
-    private void HandleOnPlayerReset()
-    {
-        if (_delayCoroutine != null)
-            StopCoroutine(_delayCoroutine);
-
-        _delayCoroutine = StartCoroutine(TemporaryDeactivateAutoZoom(_temporalAutoZoomDeactivationTime));
-    }
-
     //-- COROUTINES --------------------------------------------------------------------------//
 
-    public IEnumerator TemporaryDeactivateAutoZoom(float delay)
+    private IEnumerator TemporaryDeactivateAutoZoom(float delay)
     {
         CameraAutoZoomDisabled = true;
         yield return new WaitForSecondsRealtime(delay);
