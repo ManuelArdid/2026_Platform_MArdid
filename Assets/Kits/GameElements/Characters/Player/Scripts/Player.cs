@@ -69,7 +69,7 @@ public abstract class Player : MonoBehaviour
     protected bool _isParryOnCooldown = false;
     protected bool _canUseCoyoteTime = false;
     protected bool _canReset = false;
-    protected bool _controlEnabled = true;
+    protected bool _moveControlEnabled = true;
     protected bool _isFacingRight = true;
 
     protected int _jumpsRemaining;
@@ -189,10 +189,6 @@ public abstract class Player : MonoBehaviour
         // Reset last position before jump if grounded
         if (PlayerIsGrounded())
             _lastPositionBeforeJump = transform.position;
-
-
-        ////////////////////////DEBUG
-        Debug.Log($"Jump Height: {PlayerGetCurrentJumpHeight()}");  
     }
 
     protected virtual void FixedUpdate()
@@ -209,7 +205,6 @@ public abstract class Player : MonoBehaviour
             if (_canReset)
                 PlayerSendToSpawnPoint();
         }
-
 
         HandleMovement();
         HandleJump();
@@ -256,6 +251,14 @@ public abstract class Player : MonoBehaviour
     }
 
     //------- PUBLIC METHODS -----------------------------------------------------------------------------------------------------------------------//
+    /// <summary>
+    /// Returns the current horizontal velocity of the player.
+    /// </summary>
+    /// <returns></returns>
+    public float PlayerGetCurrentVelocityX()
+    {
+        return _currentVelocity.x;
+    }
 
     public void PlayerSetExternalVelocityY(Vector2 newVelocity)
     {
@@ -265,9 +268,9 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// Enables or disables player control.
     /// </summary>
-    public void PlayerSetControl(bool enabled)
+    public void PlayerSetMoveControl(bool enabled)
     {
-        _controlEnabled = enabled;
+        _moveControlEnabled = enabled;
     }
 
     /// <summary>
@@ -275,7 +278,7 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     public bool PlayerIsControlEnabled()
     {
-        return _controlEnabled;
+        return _moveControlEnabled;
     }
 
     /// <summary>
@@ -299,9 +302,10 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     public void PlayerSendToSpawnPoint()
     {
-        _rb.linearVelocity = Vector2.zero;
+        PlayerStopAllMovement();
         transform.position = SpawnPoint.position;
         _jumpsRemaining = MaximumJumps;
+        GameplayCameraController.Instance.CenterCameraOnPlayer();
         OnPlayerReset?.Invoke();
     }
 
@@ -396,6 +400,17 @@ public abstract class Player : MonoBehaviour
         return transform.position.y - _lastPositionBeforeJump.y;
     }
 
+    /// <summary>
+    /// Stops all player movement by resetting velocity and external forces.
+    /// </summary>
+    public void PlayerStopAllMovement()
+    {
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        _externalVelocityY = Vector2.zero;
+        _currentVelocity = Vector2.zero;
+        _rawMovementInput = Vector2.zero;
+    }
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
@@ -535,6 +550,8 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     protected virtual void HandleMovement()
     {
+        if (!_moveControlEnabled) return;
+
         Vector2 targetVelocity = _rawMovementInput * MoveSpeed;
 
         float currentAcceleration = _rawMovementInput == Vector2.zero

@@ -1,13 +1,19 @@
 using UnityEngine;
-public class Bubble : HorizontalMovement
-{
+using UnityEngine.InputSystem;
 
+public class Bubble : MovingElement
+{
+    [Header("Bubble Settings")]
     [SerializeField] protected bool Pops = true;
+    [SerializeField] protected InputActionReference JumpInputAction;
+    [SerializeField] protected InputActionReference ResetInputAction;
 
     //------------- CLASS VARIABLES ----------------//
     private bool _playerInside = false;
+    private GameObject _player;
+    private Player _playerController;
     private Rigidbody2D _playerRigidbody;
-    private float _originalGravityScale;
+    private RigidbodyType2D _originalBodyType;
 
     //------------- UNITY METHODS ----------------//
 
@@ -18,63 +24,57 @@ public class Bubble : HorizontalMovement
 
     protected override void FixedUpdate()
     {
+
         if (_playerInside)
         {
             base.FixedUpdate();
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnEnable()
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (JumpInputAction != null)
         {
-            _playerInside = true;
-            collision.gameObject.transform.SetParent(transform);
-
-            //Deactivate player control while inside the bubble
-            _playerRigidbody = collision.GetComponent<Rigidbody2D>();
-            _originalGravityScale = _playerRigidbody.gravityScale;
-            _playerRigidbody.GetComponent<Player>().PlayerSetControl(false);
-            _playerRigidbody.GetComponent<Player>().PlayerSetGravityScale(0f);
+            JumpInputAction.action.started += HandleJump;
+            ResetInputAction.action.started += HandleReset;
         }
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void OnDisable()
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (JumpInputAction != null)
         {
-            _playerInside = false;
-            collision.gameObject.transform.SetParent(null);
-
-            //Reactivate player control when exiting the bubble
-            if (_playerRigidbody != null)
-            {
-                _playerRigidbody.GetComponent<Player>().PlayerSetControl(true);
-                _playerRigidbody.GetComponent<Player>().PlayerSetGravityScale(_originalGravityScale);
-                _playerRigidbody = null;
-            }
+            JumpInputAction.action.started -= HandleJump;
+            ResetInputAction.action.started -= HandleReset;
         }
     }
 
-    //------------- PUBLIC METHODS ----------------//
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            AbductPlayer(collision.gameObject);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            ReleasePlayer();
+        }
+    }
+
+    //------------- PROTECTED METHODS ----------------//
 
     /// <summary>
     /// Overrides the TurnBackMethod to destroy the bubble if Pops is true; otherwise, it calls the base method to reverse direction.
     /// </summary>
-    override public void TurnBackMethod()
+    protected override void TurnBackMethod()
     {
         if (Pops)
         {
-            if (_playerRigidbody != null)
-            {
-                _playerRigidbody.GetComponent<Player>().PlayerSetControl(true);
-                _playerRigidbody.GetComponent<Player>().PlayerSetGravityScale(_originalGravityScale);
-            }
-
-            //Move bubble back to original position
-            transform.position = _startPosition;
-            _playerInside = false;
-            _playerRigidbody = null;
+            Pop();
         }
         else
         {
@@ -82,4 +82,82 @@ public class Bubble : HorizontalMovement
         }
     }
 
+    //-------------- PRIVATE METHODS ----------------//
+
+    private void Pop()
+    {
+        if (!_playerInside) return;
+        
+        ReleasePlayer();
+        ResetTurningPointsIndex();
+        // Move bubble back to original position
+        transform.position = _startPosition;
+
+    }
+
+    private void AbductPlayer(GameObject player)
+    {
+        _playerRigidbody = player.GetComponent<Rigidbody2D>();
+        _playerController = player.GetComponent<Player>();
+
+        if (_playerRigidbody == null || _playerController == null)
+        {
+            Debug.LogError($"Bubble: Missing required components on {player.name}.");
+            return;
+        }
+
+        // Stop any existing movement
+        _playerController.PlayerStopAllMovement();
+
+        // Save and change body type
+        _originalBodyType = _playerRigidbody.bodyType;
+        _playerRigidbody.bodyType = RigidbodyType2D.Kinematic;
+
+        // Set the player as a child of the bubble
+        _playerInside = true;
+        _player = player;
+        _player.transform.SetParent(transform);
+        _player.transform.localPosition = Vector3.zero;
+
+        // Disable player control
+        _playerController.PlayerSetMoveControl(false);
+    }
+
+    private void ReleasePlayer()
+    {
+        if (!_playerInside)
+            return;
+
+        if (_player != null)
+        {
+            _player.transform.SetParent(null);
+        }
+
+        if (_playerController != null)
+        {
+            _playerController.PlayerSetMoveControl(true);
+        }
+
+        if (_playerRigidbody != null)
+        {
+            _playerRigidbody.bodyType = _originalBodyType;
+        }
+
+        _player = null;
+        _playerController = null;
+        _playerRigidbody = null;
+        _playerInside = false;
+    }
+
+
+    //------------- INPUT HANDLERS ----------------//
+    private void HandleJump(InputAction.CallbackContext context)
+    {
+        Pop();
+    }
+
+    private void HandleReset(InputAction.CallbackContext context)
+    {
+        Pop();
+    }
 }

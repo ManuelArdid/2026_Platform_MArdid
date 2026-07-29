@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MovingPlatform : HorizontalMovement
+public class MovingPlatform : MovingElement
 {
     //------ UNITY EDITOR ---------//   
     [Header("Platform options")]
