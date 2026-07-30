@@ -409,7 +409,7 @@ public abstract class Player : MonoBehaviour
         _rb.angularVelocity = 0f;
         _externalVelocityY = Vector2.zero;
         _currentVelocity = Vector2.zero;
-        _rawMovementInput = Vector2.zero;
+        //_rawMovementInput = Vector2.zero;
     }
     //------- PROTECTED METHODS -----------------------------------------------------------------------------------------------------------------------//
 
