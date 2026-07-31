@@ -7,7 +7,7 @@ public class MovingElement : MonoBehaviour
 
     [Header("Movement Source")]
     [SerializeField] protected bool UseDirectionAndDistance = false;
-    [SerializeField] protected Transform[] TurningPoints;
+    [SerializeField] protected Transform[] TurningPoints = null;
     [SerializeField] protected Vector2 InitialDirection = Vector2.right;
     [SerializeField] protected float TravelDistance = 5f;
 
@@ -135,6 +135,11 @@ public class MovingElement : MonoBehaviour
 
     protected virtual void ResetTurningPointsIndex()
     {
+        if(UseDirectionAndDistance)
+        {
+            _currentTarget = _calculatedTarget;
+            return;
+        }
         _currentTurningPointIndex = 0;
         _currentTarget = TurningPoints[0].position;
     } 

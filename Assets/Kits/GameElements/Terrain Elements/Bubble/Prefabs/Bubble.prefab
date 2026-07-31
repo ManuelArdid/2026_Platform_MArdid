@@ -179,6 +179,7 @@ MonoBehaviour:
   TurnBack: 1
   Pops: 1
   JumpInputAction: {fileID: -799075740703767706, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
+  ResetInputAction: {fileID: 4628103521864765669, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
 --- !u!58 &8266305318395016570
 CircleCollider2D:
   m_ObjectHideFlags: 0
