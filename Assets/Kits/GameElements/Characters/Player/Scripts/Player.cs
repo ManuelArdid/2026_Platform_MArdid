@@ -82,6 +82,10 @@ public abstract class Player : MonoBehaviour
     //------- CLASS VARIABLES -------//
 
     private Coroutine _currentCoyoteTimeCoroutine = null;
+    private Coroutine _currentParryWindowCoroutine = null;
+    private Coroutine _currentParryCooldownCoroutine = null;
+    private Coroutine _currentJumpCooldownCoroutine = null;
+    private Coroutine _currentKiwiTimeCoroutine = null;
     private float _lastGroundedJumpTime = -10f;
     private Vector2 _externalVelocityY = Vector2.zero;
     private float _lastFallSpeed = 0f;
@@ -200,10 +204,14 @@ public abstract class Player : MonoBehaviour
         //RESET CHECK
         if (_jumpsRemaining < 0)
         {
+            if (_currentKiwiTimeCoroutine != null)
+                StopCoroutine(_currentKiwiTimeCoroutine);
             StartCoroutine(KiwiTimeCoroutine());
 
-            if (_canReset)
+            if (_canReset){
                 PlayerSendToSpawnPoint();
+                _canReset = false;
+            }
         }
 
         HandleMovement();
@@ -239,14 +247,11 @@ public abstract class Player : MonoBehaviour
             if (Time.time - _lastGroundedJumpTime < SkipCoyoteAfterGroundJumpTime)
                 return;
 
-            // Start Coyote Time Coroutine if component is enabled
-            if (enabled)
-            {
-                if (_currentCoyoteTimeCoroutine != null)
-                    StopCoroutine(_currentCoyoteTimeCoroutine);
+            if (_currentCoyoteTimeCoroutine != null)
+                StopCoroutine(_currentCoyoteTimeCoroutine);
 
-                _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
-            }
+            _currentCoyoteTimeCoroutine = StartCoroutine(CoyoteTimeCoroutine());
+
         }
     }
 
@@ -604,7 +609,9 @@ public abstract class Player : MonoBehaviour
         {
             if (!_isParryOnCooldown)
                 // Start parry window
-                StartCoroutine(ParryWindowCoroutine());
+                if (_currentParryWindowCoroutine != null)
+                    StopCoroutine(_currentParryWindowCoroutine);
+            StartCoroutine(ParryWindowCoroutine());
 
             _airJumpCounter++;
             PerformJump(JumpForce / CalculateAirJumpDivisor());
@@ -612,11 +619,15 @@ public abstract class Player : MonoBehaviour
             _isAirJumping = true;
 
             // Start jump cooldown
+            if (_currentJumpCooldownCoroutine != null)
+                StopCoroutine(_currentJumpCooldownCoroutine);
             StartCoroutine(JumpCooldownCoroutine());
 
             if (!_isParryOnCooldown)
                 // Start parry cooldown
-                StartCoroutine(ParryCooldownCoroutine());
+                if (_currentParryCooldownCoroutine != null)
+                    StopCoroutine(_currentParryCooldownCoroutine);
+            StartCoroutine(ParryCooldownCoroutine());
         }
 
         _jumpRequested = false;
