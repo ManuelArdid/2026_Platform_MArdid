@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 3053e7af69cacb548bba7773bac50f72
+guid: 333c2a4fe1f225b4ba0a0f40a4bd525e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4871998324203318754
-    second: banderilla_5_borde_0
+      213: 4898322113012627136
+    second: flag_wave2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: banderilla_5_borde_0
+      name: flag_wave2_0
       rect:
         serializedVersion: 2
-        x: 131
-        y: 92
-        width: 1205
-        height: 3214
+        x: 45
+        y: 43
+        width: 1445
+        height: 3251
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2edef64b9a0dc9340800000000000000
-      internalID: 4871998324203318754
+      spriteID: 0c6fe8562065af340800000000000000
+      internalID: 4898322113012627136
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      banderilla_5_borde_0: 4871998324203318754
+      flag_wave2_0: 4898322113012627136
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
