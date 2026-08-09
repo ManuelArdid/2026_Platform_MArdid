@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: e11c8d27433687d45962a2b361d94951
+guid: 64f8fea2a7986864a997b847737a0e38
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1211724760780128770
-    second: ojos_0
-  - first:
-      213: -2317423685315434350
-    second: ojos_1
+      213: 1424185971620379501
+    second: kiwi_flying2_rotated_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ojos_0
+      name: kiwi_flying2_rotated_0
       rect:
         serializedVersion: 2
-        x: 390
-        y: 395
-        width: 149
-        height: 153
+        x: 129
+        y: 9
+        width: 689
+        height: 776
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 20248dbff39e0d010800000000000000
-      internalID: 1211724760780128770
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ojos_1
-      rect:
-        serializedVersion: 2
-        x: 618
-        y: 418
-        width: 153
-        height: 151
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 29862babf6bd6dfd0800000000000000
-      internalID: -2317423685315434350
+      spriteID: d6bf6847899b3c310800000000000000
+      internalID: 1424185971620379501
       vertices: []
       indices: 
       edges: []
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ojos_0: 1211724760780128770
-      ojos_1: -2317423685315434350
+      kiwi_flying2_rotated_0: 1424185971620379501
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
