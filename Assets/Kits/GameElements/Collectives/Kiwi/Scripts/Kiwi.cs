@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Kiwi : MonoBehaviour
+public class Kiwi : MonoBehaviour, IResetable
 {
     //------- UNITY EDITOR -------//
     [SerializeField] protected KiwiType Type = KiwiType.Complete;
@@ -51,7 +51,7 @@ public class Kiwi : MonoBehaviour
     /// </summary>
     private void HandlePlayerReset()
     {
-        gameObject.SetActive(true);
+        Reset();
     }
 
     private void HandleKiwiCollected(KiwiType type)
@@ -65,6 +65,12 @@ public class Kiwi : MonoBehaviour
     /// </summary>
     /// <param name="checkpoint">The activated checkpoint.</param>
     private void HandleCheckpointActivated()
+    {
+        Reset();
+    }
+
+    //------- INTERFACE IMPLEMENTATION -------//
+    public void Reset()
     {
         gameObject.SetActive(true);
     }

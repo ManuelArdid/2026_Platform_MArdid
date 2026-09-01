@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class IceCube : MonoBehaviour
+public class IceCube : MonoBehaviour, IResetable
 {
 
     //----------------- UNITY EDITOR -----------------//
@@ -67,6 +67,12 @@ public class IceCube : MonoBehaviour
     //----------------- HANDLE METHODS -----------------//
 
     private void HandleOnPlayerReset()
+    {
+        Reset();
+    }
+
+    //----------------- INTERFACE IMPLEMENTATION -----------------//
+    public void Reset()
     {
         IceCubeGoEmpty();
     }

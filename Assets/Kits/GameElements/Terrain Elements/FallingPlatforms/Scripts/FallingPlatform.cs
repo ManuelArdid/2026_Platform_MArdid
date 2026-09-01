@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class FallingPlatform : MonoBehaviour
+public class FallingPlatform : MonoBehaviour, IResetable
 {
     //------ UNITY EDITOR ------//
     [SerializeField] private float FallDelay = 0.5f; // Time before the platform starts falling after being stepped on
@@ -98,6 +98,12 @@ public class FallingPlatform : MonoBehaviour
     //------ EVENT HANDLERS ------//
     private void HandlePlayerReset()
     {
+        Reset();
+    }
+
+    //----- INTERFACE IMPLEMENTATION ------//
+    public void Reset()
+    {
         StopAllCoroutines();
         StopFalling();
 
@@ -112,5 +118,6 @@ public class FallingPlatform : MonoBehaviour
         }
 
         transform.position = _originalPosition;
+
     }
 }

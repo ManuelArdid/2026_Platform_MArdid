@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Collectable : MonoBehaviour
+public class Collectable : MonoBehaviour, IResetable
 {
     //------- CLASS VARIABLES -------//
     private SpriteRenderer _spriteRenderer;
@@ -58,9 +58,14 @@ public class Collectable : MonoBehaviour
     /// </summary>
     private void HandlePlayerReset()
     {
+        Reset();
+    }
+
+    //------- INTERFACE IMPLEMENTATION -------//
+    public void Reset()
+    {
         _collected = false;
         _spriteRenderer.enabled = true;
         _collider2D.enabled = true;
     }
-
 }

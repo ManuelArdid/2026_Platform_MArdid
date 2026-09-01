@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public class SpringBoard : MonoBehaviour
+public class SpringBoard : MonoBehaviour, IResetable
 {
     [Header("Sprites")]
     [SerializeField] private Sprite SpriteUsed;
@@ -75,6 +75,12 @@ public class SpringBoard : MonoBehaviour
     }
 
     private void HandlePlayerReset()
+    {
+        Reset();
+    }
+
+    //------- INTERFACE IMPLEMENTATION ------------------------------------------------------------------------------------------------------//
+    public void Reset()
     {
         _isUsed = false;
         _spriteRenderer.sprite = _originalSprite;

@@ -26,9 +26,7 @@ public class MovingElement : MonoBehaviour, IResetable
     protected Vector3 _calculatedTarget;
     protected Vector3 _lastPosition;
 
-    public Vector3 OriginalPosition { get => _startPosition; set => _startPosition = value; }
-
-    //------ UNITY METHODS ------//
+    //------ UNITY METHODS --------------------------------------------------------------------------------------------------------------------//
 
     protected virtual void Start()
     {
@@ -50,7 +48,17 @@ public class MovingElement : MonoBehaviour, IResetable
         CheckIfReachedTarget();
     }
 
-    //------ PROTECTED METHODS ------//
+    void OnEnable()
+    {
+        Player.OnPlayerReset += HandleOnPlayerReset;
+    }
+
+    void OnDisable()
+    {
+        Player.OnPlayerReset -= HandleOnPlayerReset;
+    }
+
+    //------ PROTECTED METHODS -------------------------------------------------------------------------------------------------------------//
 
     /// <summary>
     /// Moves the object towards the current target.
@@ -143,10 +151,24 @@ public class MovingElement : MonoBehaviour, IResetable
             _currentTarget = _calculatedTarget;
             return;
         }
+
+        if (TurningPoints == null || TurningPoints.Length == 0)
+        {
+            _currentTarget = _startPosition;
+            return;
+        }
+
         _currentTurningPointIndex = 0;
         _currentTarget = TurningPoints[0].position;
     }
 
+    //------ HANDLE METHODS ------//
+    public void HandleOnPlayerReset()
+    {
+        Reset();
+    }
+
+    //------ INTERFACE IMPLEMENTATION ------//
     public void Reset()
     {
         transform.position = _startPosition;

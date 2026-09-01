@@ -3,7 +3,7 @@ using UnityEngine;
 
 [UnityEngine.RequireComponent(typeof(Collider2D))]
 [UnityEngine.RequireComponent(typeof(SpriteRenderer))]
-public class ParryRing : Parryable
+public class ParryRing : Parryable, IResetable
 {
 
     //------ Events ------//
@@ -35,8 +35,7 @@ public class ParryRing : Parryable
 
     private void HandlePlayerReset()
     {
-        _collider2D.enabled = true;
-        _spriteRenderer.enabled = true;
+        Reset();
     }
 
     private void HandleSuccessfulParry(Parryable parryable)
@@ -47,5 +46,12 @@ public class ParryRing : Parryable
             _spriteRenderer.enabled = false;
             OnParryRingCollected?.Invoke();
         }
+    }
+
+    //---- INTERFACE IMPLEMENTATION ------------------------------------------------------------------------------------------------------//
+    public void Reset()
+    {
+        _collider2D.enabled = true;
+        _spriteRenderer.enabled = true;
     }
 }
