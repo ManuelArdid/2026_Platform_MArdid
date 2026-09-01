@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class NewGameGreen : MonoBehaviour
+public class NewGameButton : MonoBehaviour
 {
     public void OnNewGameButtonPressed()
     {
+        //DEBUG
         GameManager.Instance.ResetGameData();
         GameManager.Instance.LoadGameScene();        
     }

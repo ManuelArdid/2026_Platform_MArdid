@@ -43,12 +43,12 @@ public class GameManager : Singleton<GameManager>
     /// <param name="character"></param>
     /// <param name="camera"></param>
     /// <param name="gameBar"></param>
-    public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
-    {
-        Character = character;
-        Camera = camera;
-        GameBar = gameBar;
-    }
+   // public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
+   // {
+   //     Character = character;
+   //     Camera = camera;
+   //     GameBar = gameBar;
+   // }
 
     //-- GAMEPLAY------------------///
 
@@ -86,7 +86,6 @@ public class GameManager : Singleton<GameManager>
     {
         // Load the main gameplay scene (index 1 in Build Settings)
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
-        ActivatePlayableCharacter();
     }
 
     public void QuitGame()
