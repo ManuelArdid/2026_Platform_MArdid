@@ -124982,18 +124982,6 @@ PrefabInstance:
       propertyPath: Character
       value: 
       objectReference: {fileID: 1447581530}
-    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
-      propertyPath: GreenCamera
-      value: 
-      objectReference: {fileID: 58156407}
-    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
-      propertyPath: GreenGameBar
-      value: 
-      objectReference: {fileID: 1625380657}
-    - target: {fileID: 7706249300713828426, guid: f100869cc9a76a84880769dd47f51a2b, type: 3}
-      propertyPath: GreenCharacter
-      value: 
-      objectReference: {fileID: 2291954065313934357}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

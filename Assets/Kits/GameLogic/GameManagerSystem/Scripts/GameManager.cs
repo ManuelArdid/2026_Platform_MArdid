@@ -43,12 +43,12 @@ public class GameManager : Singleton<GameManager>
     /// <param name="character"></param>
     /// <param name="camera"></param>
     /// <param name="gameBar"></param>
-   // public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
-   // {
-   //     Character = character;
-   //     Camera = camera;
-   //     GameBar = gameBar;
-   // }
+    // public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
+    // {
+    //     Character = character;
+    //     Camera = camera;
+    //     GameBar = gameBar;
+    // }
 
     //-- GAMEPLAY------------------///
 
@@ -82,6 +82,19 @@ public class GameManager : Singleton<GameManager>
     }
 
     //-- SCENES ------------------///
+
+    /// <summary>
+    /// Loads the main menu scene (index 0 in Build Settings).
+    /// </summary>
+    public void LoadMainMenuScene()
+    {
+        // Load the main menu scene (index 0 in Build Settings)
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    /// <summary>
+    /// Loads the main gameplay scene (index 1 in Build Settings).
+    /// </summary>
     public void LoadGameScene()
     {
         // Load the main gameplay scene (index 1 in Build Settings)
