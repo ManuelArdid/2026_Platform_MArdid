@@ -30,6 +30,7 @@ public class GameplayCameraController : Singleton<GameplayCameraController>
     [SerializeField] private float CameraAutoZoomOutHeightTreshold = 5f;
     [SerializeField] private float CameraAutoZoomOutSpeed = 5f;
     [SerializeField] private float CameraAutoZoomInSpeed = 10f;
+    [SerializeField] private float CameraAutoZoomOutMaxSize = 10f;
 
     //-- CLASS VARIABLES -------------------------------------------------------------------//
 

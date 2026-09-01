@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class MovingElement : MonoBehaviour
+public class MovingElement : MonoBehaviour, IResetable
 {
+
     //------ UNITY EDITOR ------//
 
     [Header("Movement Source")]
@@ -24,6 +25,8 @@ public class MovingElement : MonoBehaviour
     protected Vector3 _currentTarget;
     protected Vector3 _calculatedTarget;
     protected Vector3 _lastPosition;
+
+    public Vector3 OriginalPosition { get => _startPosition; set => _startPosition = value; }
 
     //------ UNITY METHODS ------//
 
@@ -54,7 +57,7 @@ public class MovingElement : MonoBehaviour
     /// </summary>
     protected virtual void Move()
     {
-        Vector2 newPosition = Vector2.MoveTowards(
+        Vector3 newPosition = Vector3.MoveTowards(
             _rb.position,
             _currentTarget,
             Speed * Time.fixedDeltaTime);
@@ -135,12 +138,19 @@ public class MovingElement : MonoBehaviour
 
     protected virtual void ResetTurningPointsIndex()
     {
-        if(UseDirectionAndDistance)
+        if (UseDirectionAndDistance)
         {
             _currentTarget = _calculatedTarget;
             return;
         }
         _currentTurningPointIndex = 0;
         _currentTarget = TurningPoints[0].position;
-    } 
+    }
+
+    public void Reset()
+    {
+        transform.position = _startPosition;
+        _lastPosition = _startPosition;
+        ResetTurningPointsIndex();
+    }
 }
