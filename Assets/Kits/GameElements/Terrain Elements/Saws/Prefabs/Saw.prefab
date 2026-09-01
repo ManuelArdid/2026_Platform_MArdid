@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 608511173506415946}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.25, y: 0, z: 0}
+  m_LocalPosition: {x: -72, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -201,8 +201,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94891bda0cea5e74d9831a9a2a98d85e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HorizontalMovement
-  TurningPoint: {fileID: 2970968089434325437}
   UseDirectionAndDistance: 0
+  TurningPoints:
+  - {fileID: 2970968089434325437}
   InitialDirection: {x: 1, y: 0}
   TravelDistance: 2.5
   Speed: 2.5
@@ -238,7 +239,7 @@ Transform:
   m_GameObject: {fileID: 3795570963852448370}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.17495413, w: 0.9845766}
-  m_LocalPosition: {x: -0.45387894, y: -0.3660418, z: 0}
+  m_LocalPosition: {x: -0.5, y: -0.3660418, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
