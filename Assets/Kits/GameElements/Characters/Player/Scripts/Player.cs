@@ -175,6 +175,8 @@ public abstract class Player : MonoBehaviour
         Parryable.OnSuccessfulParry -= HandleSuccessfulParry;
         ParryRing.OnParryRingCollected -= HandleParryRingCollected;
 
+        _canUseCoyoteTime = false;
+        _currentCoyoteTimeCoroutine = null;
     }
 
     protected virtual void Update()
@@ -263,6 +265,8 @@ public abstract class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Platform"))
         {
+
+            if (!isActiveAndEnabled) return;
 
             // Avoid re-enabling coyote time immediately after a grounded jump
             if (Time.time - _lastGroundedJumpTime < SkipCoyoteAfterGroundJumpTime)
@@ -529,6 +533,7 @@ public abstract class Player : MonoBehaviour
         yield return new WaitForSecondsRealtime(CoyoteTime);
 
         _canUseCoyoteTime = false;
+        _currentCoyoteTimeCoroutine = null;
     }
 
     /// <summary>
