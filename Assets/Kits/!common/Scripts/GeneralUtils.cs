@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GeneralUtils : Singleton<GeneralUtils>
 {
+
     //---------- COROUTINES ----------//
 
     /// <summary>

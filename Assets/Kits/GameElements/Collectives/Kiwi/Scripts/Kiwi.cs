@@ -17,6 +17,13 @@ public class Kiwi : MonoBehaviour, IResetable
     }
 
     //------- Unity Methods -------//
+    void Awake()
+    {
+        Player.OnPlayerReset += HandlePlayerReset;
+        OnKiwiCollected += HandleKiwiCollected;
+        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -28,21 +35,12 @@ public class Kiwi : MonoBehaviour, IResetable
         }
     }
 
-    void OnEnable()
-    {
-        Player.OnPlayerReset += HandlePlayerReset;
-        OnKiwiCollected += HandleKiwiCollected;
-        Checkpoint.OnCheckpointActivated += HandleCheckpointActivated;
-    }
-
-
     void OnDestroy()
     {
         Player.OnPlayerReset -= HandlePlayerReset;
         OnKiwiCollected -= HandleKiwiCollected;
         Checkpoint.OnCheckpointActivated -= HandleCheckpointActivated;
     }
-
 
     //------- Private Methods -------//
 
@@ -63,7 +61,6 @@ public class Kiwi : MonoBehaviour, IResetable
     /// <summary>
     /// Handles checkpoint activated event by resetting the kiwi.
     /// </summary>
-    /// <param name="checkpoint">The activated checkpoint.</param>
     private void HandleCheckpointActivated()
     {
         Reset();

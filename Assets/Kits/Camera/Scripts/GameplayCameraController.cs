@@ -54,8 +54,9 @@ public class GameplayCameraController : Singleton<GameplayCameraController>
 
     //-- UNITY METHODS ----------------------------------------------------------------------//
 
-    private void Awake()
+    void Awake()
     {
+
         // Set the initial priorities of the cameras
         CameraNormal.Priority.Value = _mediumPriority;
         CameraManual.Priority.Value = 0;

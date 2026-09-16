@@ -9,8 +9,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
 
 
     // ---------- UNITY METHODS ---------- //
-    protected void Awake()
+    void Awake()
     {
+
         DontDestroyOnLoad(gameObject);
     }
 

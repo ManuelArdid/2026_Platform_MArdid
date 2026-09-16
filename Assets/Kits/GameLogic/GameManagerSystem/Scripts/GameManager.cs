@@ -1,24 +1,30 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
 {
     //------- UNITY EDITOR --------------------//
-
-    [Header("Player Character config")]
-    [SerializeField] private GameObject Character;
-    [SerializeField] private GameObject Camera;
-    [SerializeField] private GameObject GameBar;
+    [Header("Input")]
+    [SerializeField] private InputActionReference RestartInputAction;
 
     //------- UNITY METHODS ------------------//
 
-    private void Awake()
+    void Awake()
     {
+
         //DEBUG
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
 
     }
 
-    private void Start()
+    //------- PUBLIC METHODS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+    /// <summary>
+    /// Returns the saved spawn point position if one exists.
+    /// </summary>
+    /// <param name="spawnPosition"></param>
+    /// <returns></returns>
+    public bool TryGetSavedSpawnPoint(out Vector3 spawnPosition)
     {
         if (PlayerPrefs.HasKey("SpawnX") && PlayerPrefs.HasKey("SpawnY") && PlayerPrefs.HasKey("SpawnZ"))
         {
@@ -26,41 +32,17 @@ public class GameManager : Singleton<GameManager>
             float y = PlayerPrefs.GetFloat("SpawnY");
             float z = PlayerPrefs.GetFloat("SpawnZ");
 
-            Transform newTransform = new GameObject("TempSpawnPoint").transform;
-            newTransform.position = new Vector3(x, y, z);
+            spawnPosition = new Vector3(x, y, z);
 
-            Character.GetComponent<Player>().PlayerSetSpawnPoint(newTransform);
-
-            Character.GetComponent<Player>().PlayerSendToSpawnPoint();
+            return true;
         }
+
+        spawnPosition = Vector3.zero;
+
+        return false;
     }
-
-    //------- PUBLIC METHODS --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-    /// <summary>
-    ///  Sets the player character, camera, and game bar references in the GameManager. Called by Player script when player character is initialized. This allows GameManager to manage player-related functionality and UI elements throughout the game.
-    /// </summary>
-    /// <param name="character"></param>
-    /// <param name="camera"></param>
-    /// <param name="gameBar"></param>
-    // public void SetPlayerCharacter(GameObject character, GameObject camera, GameObject gameBar)
-    // {
-    //     Character = character;
-    //     Camera = camera;
-    //     GameBar = gameBar;
-    // }
 
     //-- GAMEPLAY------------------///
-
-    /// <summary>
-    /// Activates the player character, camera, and game bar. Called by Player script when player character is initialized. This allows the player to start playing the game after the character has been set up and references have been assigned in the GameManager.
-    /// </summary>
-    public void ActivatePlayableCharacter()
-    {
-        Character.SetActive(true);
-        Camera.SetActive(true);
-        GameBar.SetActive(true);
-    }
 
     /// <summary>
     /// Called by Checkpoint script when player activates a checkpoint. Sets new spawn point in Player script and saves it to PlayerPrefs.
@@ -110,13 +92,13 @@ public class GameManager : Singleton<GameManager>
 #endif
     }
 
-    //-- UI ----------------------///
+    //-- UI ----------------------//
 
-    //-- INPUT -------------------///
+    //-- INPUT -------------------//
 
-    //-- AUDIO -------------------///
+    //-- AUDIO -------------------//
 
-    //-- DATA --------------------///
+    //-- DATA --------------------//
     public void ResetGameData()
     {
         // Reset saved game data

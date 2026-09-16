@@ -14,7 +14,7 @@ public class Collectable : MonoBehaviour, IResetable
 
     //------- UNITY METHODS -------//
 
-    void Start()
+    void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _collider2D = GetComponent<Collider2D>();

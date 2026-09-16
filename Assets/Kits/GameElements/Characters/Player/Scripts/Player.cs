@@ -103,16 +103,31 @@ public abstract class Player : MonoBehaviour
 
     //------- UNITY METHODS -----------------------------------------------------------------------------------------------------------------------//
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _originalGravityScale = _rb.gravityScale;
 
+        _originalGravityScale = _rb.gravityScale;
+    }
+
+    protected virtual void Start()
+    {
         //Initialize jumps
         _jumpsRemaining = MaximumJumps;
 
+        if (GameManager.Instance != null && GameManager.Instance.TryGetSavedSpawnPoint(out Vector3 spawnPosition))
+        {
+            if (SpawnPoint == null)
+            {
+                GameObject temp = new("RuntimeSpawnPoint");
+                SpawnPoint = temp.transform;
+            }
+
+            SpawnPoint.position = spawnPosition;
+            PlayerSendToSpawnPoint();
+        }
     }
 
     void OnEnable()
@@ -213,7 +228,8 @@ public abstract class Player : MonoBehaviour
                 StopCoroutine(_currentKiwiTimeCoroutine);
             StartCoroutine(KiwiTimeCoroutine());
 
-            if (_canReset){
+            if (_canReset)
+            {
                 PlayerSendToSpawnPoint();
                 _canReset = false;
             }
@@ -368,7 +384,6 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// Checks if the player is facing right.
     /// </summary>
-    /// <returns>True if facing right, otherwise false.</returns>
     public bool PlayerIsFacingRight()
     {
         return _isFacingRight;
@@ -465,7 +480,7 @@ public abstract class Player : MonoBehaviour
         return _isFacingRight;
     }
 
-    //------- PRIVATE METHODS -----------------------------------------------------------------------------------------------------------------------//
+    //------- PRIVATE METHODS -------//
 
     private void Jump(InputAction.CallbackContext context)
     {
@@ -558,7 +573,7 @@ public abstract class Player : MonoBehaviour
         _isJumpingAvailable = true;
     }
 
-    //------- EVENT HANDLERS -----------------------------------------------------------------------------------------------------------------------//
+    //------- EVENT HANDLERS -------//
 
     /// <summary>
     /// Handles character movement based on player input, applying acceleration and deceleration for smooth movement.
