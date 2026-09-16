@@ -225,7 +225,7 @@ public class GameplayCameraController : Singleton<GameplayCameraController>
             if (jumpHeight > CameraAutoZoomOutHeightTreshold)
             {
 
-                float newSize = _originalOrtogrpaphicSize + jumpHeight * 0.5f;
+                float newSize = Mathf.Clamp(_originalOrtogrpaphicSize + jumpHeight * 0.5f, _originalOrtogrpaphicSize, CameraAutoZoomOutMaxSize);
 
                 GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize = Mathf.Lerp(
                     GetActiveCamera().GetComponent<CinemachineCamera>().Lens.OrthographicSize,
