@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour, IResetable
 {
+    //------- UNITY EDITOR VARIABLES -------//
+    [SerializeField] private AudioClip CollectableSound;
+
     //------- CLASS VARIABLES -------//
     private SpriteRenderer _spriteRenderer;
     private Collider2D _collider2D;
@@ -24,6 +27,9 @@ public class Collectable : MonoBehaviour, IResetable
             _collected = true;
             _spriteRenderer.enabled = false;
             _collider2D.enabled = false;
+
+            // Play sound effect
+            SoundFXManager.Instance.PlayFXClip(CollectableSound, transform.position, 0.5f);
         }
     }
 

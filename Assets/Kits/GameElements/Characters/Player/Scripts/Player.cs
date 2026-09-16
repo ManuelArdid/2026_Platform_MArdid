@@ -51,6 +51,11 @@ public abstract class Player : MonoBehaviour
     [Header("Camera Settings")]
     [SerializeField] protected GameObject CameraFollowGameObject;
 
+    [Header("Sound clips")]
+    [SerializeField] protected AudioClip JumpSound;
+    [SerializeField] protected AudioClip EatKiwiSound;
+
+
     ///------- PUBLIC PROPERTIES -------//
     public bool PlayerIsParrying { get; private set; }
 
@@ -426,6 +431,9 @@ public abstract class Player : MonoBehaviour
     {
         _lastPositionBeforeJump = transform.position;
         _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+
+        // Play jump sound
+        SoundFXManager.Instance.PlayFXClip(JumpSound, transform.position, 0.5f);
     }
 
     /// <summary>
@@ -675,6 +683,9 @@ public abstract class Player : MonoBehaviour
             _jumpsRemaining = Mathf.Clamp(_jumpsRemaining, 0, MaximumJumps);
 
         }
+
+        // Play kiwi collected sound
+        SoundFXManager.Instance.PlayFXClip(EatKiwiSound, transform.position, 0.5f);
     }
 
     /// <summary>

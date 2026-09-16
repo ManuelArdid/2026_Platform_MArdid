@@ -106090,10 +106090,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6084262025705461906, guid: f2d3c9ce84947dc4e9d699c6738b3852, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 1026954850962915212, guid: 700bd338c3b97254eb544758d04f1c6d, type: 3}
     - target: {fileID: 6393785900187709024, guid: f2d3c9ce84947dc4e9d699c6738b3852, type: 3}
       propertyPath: SpawnPoint
       value: 
@@ -121043,6 +121039,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8017358987826151224, guid: 07bc27e83d5e96b48a4986e5f3d8e1b9, type: 3}
   m_PrefabInstance: {fileID: 872156346}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1927926386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1927926387}
+  - component: {fileID: 1927926388}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1927926387
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927926386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -13.44125, y: -0.51525, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1927926388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927926386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee8eab0f29b47424ba13c0fcd1761a57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundFXManager
+  SoundFXObject: {fileID: 1753014461611657290, guid: 80b5f8d5dae10314a8fda783a27bad98, type: 3}
+  SoundFXObject3D: {fileID: 1753014461611657290, guid: c41c029b2be4d8149944a955ee0fe59d, type: 3}
 --- !u!1001 &1932308662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123737,6 +123779,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1685810197}
   - {fileID: 5763601806467723442}
+  - {fileID: 1927926387}
   - {fileID: 1329810352}
   - {fileID: 379070523}
   - {fileID: 211192710}

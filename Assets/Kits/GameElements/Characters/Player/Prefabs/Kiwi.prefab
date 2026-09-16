@@ -120,7 +120,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1902104952265141977, guid: db994893847d76b4bb0379cdd7d508bf, type: 3}
+  m_Sprite: {fileID: 1026954850962915212, guid: 700bd338c3b97254eb544758d04f1c6d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -195,7 +195,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.666087, y: 0.5747826}
+    oldSize: {x: 0.79913044, y: 0.67913043}
     newSize: {x: 0.64, y: 0.64}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -262,6 +262,8 @@ MonoBehaviour:
   RestartInputAction: {fileID: 4628103521864765669, guid: 1d520ac610da52d4d9801ec928333006, type: 3}
   SpawnPoint: {fileID: 0}
   CameraFollowGameObject: {fileID: 0}
+  JumpSound: {fileID: 8300000, guid: da100b4ddfe22e3458ed47807de31340, type: 3}
+  EatKiwiSound: {fileID: 8300000, guid: d7d22c6db8aaad649bcc3e7e17b7477b, type: 3}
 --- !u!114 &7690772094534013595
 MonoBehaviour:
   m_ObjectHideFlags: 0

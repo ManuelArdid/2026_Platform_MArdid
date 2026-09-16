@@ -141,3 +141,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d9aef755234e3b4299482c778d726b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BigFly
+  CollectableSound: {fileID: 8300000, guid: d9e431c30f8bc104bb3202ba3941b963, type: 3}

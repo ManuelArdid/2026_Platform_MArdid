@@ -8,6 +8,7 @@ public class Checkpoint : MonoBehaviour
 
     //------- Unity Editor -------//
     [SerializeField] private ParticleEmitter ParticleEmitterReference;
+    [SerializeField] private AudioClip CheckpointSound;
 
     //------- Private Variables -------//
     Animator _animator;
@@ -43,6 +44,9 @@ public class Checkpoint : MonoBehaviour
 
             // Play particle effect
             ParticleEmitterReference.Play();
+
+            // Play sound effect
+            SoundFXManager.Instance.PlayFXClip(CheckpointSound, transform.position, 0.5f);
         }
     }
 }
