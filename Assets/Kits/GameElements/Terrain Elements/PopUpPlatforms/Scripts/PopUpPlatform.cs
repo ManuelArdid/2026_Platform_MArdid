@@ -15,7 +15,7 @@ public class PopUpPlatform : ConcreteActivable
     //------------ CLASS VARIABLES ------------//
     private SpriteRenderer _spriteRenderer;
     private Collider2D _collider;
-    private PlatfromType _initialDeactivatedType = PlatfromType.Blue; //Make sure is the opposite of InitialState in PopUpPlatformButton.cs
+    private PlatfromType _initialDeactivatedType = PlatfromType.Red; //Make sure is the same of InitialState in PopUpPlatformButton.cs
 
     //------------ ENUMS ------------//
     public enum PlatfromType

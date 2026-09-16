@@ -15,7 +15,7 @@ public class PopUpPlatformButton : MonoBehaviour, IResetable
     private SpriteRenderer _spriteRenderer;
     private bool _canChangeState = true;
     private Coroutine _currentPressedTimeCoroutine;
-    protected readonly ButtonState InitialState = ButtonState.Blue; //Make sure is the same of _initialDeactivatedType in PopUpPlatform.cs
+    protected readonly ButtonState InitialState = ButtonState.Red; //Make sure is the same of _initialDeactivatedType in PopUpPlatform.cs
 
     //------------ EVENTS ------------//
     public static event Action<ButtonState> OnPopUpPlatformButtonSwitched;
