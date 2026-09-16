@@ -124163,6 +124163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundFXManager
   SoundFXObject: {fileID: 1753014461611657290, guid: 80b5f8d5dae10314a8fda783a27bad98, type: 3}
   SoundFXObject3D: {fileID: 1753014461611657290, guid: c41c029b2be4d8149944a955ee0fe59d, type: 3}
+  MuteAllSoundFX: 0
 --- !u!1001 &1932308662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -126267,7 +126268,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6274338692654113963, guid: d386013df4cd6ee4e94a9a87214ee0d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 212.75
+      value: 212.8
       objectReference: {fileID: 0}
     - target: {fileID: 6274338692654113963, guid: d386013df4cd6ee4e94a9a87214ee0d6, type: 3}
       propertyPath: m_LocalPosition.y

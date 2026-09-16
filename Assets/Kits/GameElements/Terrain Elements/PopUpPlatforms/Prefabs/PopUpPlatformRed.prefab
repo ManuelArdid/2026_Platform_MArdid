@@ -151,6 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 011fc1ad4ef3959408b0762cc796ab0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopUpPlatform
-  SpriteOn: {fileID: 6139440602567697778, guid: f344b28aaf9e26a4e8a94038a6318333, type: 3}
-  SpriteOff: {fileID: -2329354192316653241, guid: 3ca42fa46f832414286e36c2d2056146, type: 3}
+  RedSpriteOn: {fileID: 6139440602567697778, guid: f344b28aaf9e26a4e8a94038a6318333, type: 3}
+  BlueSpriteOn: {fileID: 7859360441490884205, guid: fab3cf405b30afd4ab4fa68e0d6024cb, type: 3}
+  RedSpriteOff: {fileID: -2329354192316653241, guid: 3ca42fa46f832414286e36c2d2056146, type: 3}
+  BlueSpriteOff: {fileID: -8814679890163927068, guid: d5529428545a45d4789c258d6c0b781e, type: 3}
   Type: 0

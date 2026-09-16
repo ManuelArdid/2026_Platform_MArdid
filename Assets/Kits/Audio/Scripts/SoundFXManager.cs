@@ -5,12 +5,13 @@ public class SoundFXManager : Singleton<SoundFXManager>
     // ---------- UNITY EDITOR ---------- //
     [SerializeField] protected AudioSource SoundFXObject;
     [SerializeField] protected AudioSource SoundFXObject3D;
+    [SerializeField] protected bool MuteAllSoundFX = false;
 
 
     // ---------- UNITY METHODS ---------- //
     protected void Awake()
     {
-       DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     // ---------- PUBLIC METHODS ---------- //
@@ -23,6 +24,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
     /// <param name="volume"></param>
     public void PlayFXClip(AudioClip clip, Vector3 position, float volume)
     {
+        if (MuteAllSoundFX)
+            return;
+
         // Instantiate an AudioSource at the given position
         AudioSource audioSource = Instantiate(SoundFXObject, position, Quaternion.identity);
 
@@ -37,6 +41,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
     /// <param name="volume"></param>
     public void PlayRandomFXClip(AudioClip[] clips, Vector3 position, float volume)
     {
+        if(MuteAllSoundFX)
+            return;
+
         int randomIndex = Random.Range(0, clips.Length);
         PlayFXClip(clips[randomIndex], position, volume);
     }
@@ -49,6 +56,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
     /// <param name="volume"></param>
     public void PlayFXClip3D(AudioClip clip, Vector3 position, float volume)
     {
+        if (MuteAllSoundFX)
+            return;
+
         // Instantiate an AudioSource at the given position
         AudioSource audioSource = Instantiate(SoundFXObject3D, position, Quaternion.identity);
 
@@ -63,6 +73,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
     /// <param name="volume"></param>
     public void PlayRandomFXClip3D(AudioClip[] clips, Vector3 position, float volume)
     {
+        if (MuteAllSoundFX)
+            return;
+
         int randomIndex = Random.Range(0, clips.Length);
         PlayFXClip3D(clips[randomIndex], position, volume);
     }
@@ -70,6 +83,9 @@ public class SoundFXManager : Singleton<SoundFXManager>
     // ---------- PRIVATE METHODS ---------- //
     private void _playUsingAudioSource(AudioSource source, AudioClip clip, float volume)
     {
+        if (MuteAllSoundFX)
+            return;
+            
         source.clip = clip;
         source.volume = volume;
         source.Play();
