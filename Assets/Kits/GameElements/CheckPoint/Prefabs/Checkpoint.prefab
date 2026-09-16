@@ -177,7 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
   ParticleEmitterReference: {fileID: 6515019999735083732}
-  CheckpointSound: {fileID: 8300000, guid: bf1a8a52d9a153a48932cf6d2ef52c07, type: 3}
+  CheckpointSound: {fileID: 8300000, guid: 8c8e2a0ac0120cd41b1bb39875e545b2, type: 3}
 --- !u!114 &7427078498268703738
 MonoBehaviour:
   m_ObjectHideFlags: 0

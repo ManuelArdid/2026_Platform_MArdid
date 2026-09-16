@@ -15,6 +15,7 @@ public class PopUpPlatform : ConcreteActivable
     private SpriteRenderer _spriteRenderer;
     private Collider2D _collider;
 
+
     //------------ ENUMS ------------//
     public enum PlatfromType
     {
@@ -40,6 +41,10 @@ public class PopUpPlatform : ConcreteActivable
     }
 
     //------------ PUBLIC METHODS ------------//
+
+    /// <summary>
+    /// Activates the platform, making it visible and enabling its collider.
+    /// </summary>
     public override void Activate()
     {
         _spriteRenderer.sprite = SpriteOn;
@@ -47,6 +52,9 @@ public class PopUpPlatform : ConcreteActivable
         IsActivated = true;
     }
 
+    /// <summary>
+    /// Deactivates the platform, making it invisible and disabling its collider.
+    /// </summary>
     public override void Deactivate()
     {
         _spriteRenderer.sprite = SpriteOff;
@@ -54,6 +62,10 @@ public class PopUpPlatform : ConcreteActivable
         IsActivated = false;
     }
 
+    /// <summary>
+    /// Returns the type of the platform (Red or Blue). 
+    /// </summary>
+    /// <returns></returns>
     public PlatfromType GetPlatformType()
     {
         return Type;
@@ -75,4 +87,5 @@ public class PopUpPlatform : ConcreteActivable
             Activate();
         }
     }
+
 }

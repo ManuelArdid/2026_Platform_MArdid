@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class PopUpPlatformButton : MonoBehaviour
+public class PopUpPlatformButton : MonoBehaviour, IResetable
 {
     //------------ UNITY EDITOR ------------//
     [SerializeField] protected Sprite SpriteRed;
@@ -87,6 +87,26 @@ public class PopUpPlatformButton : MonoBehaviour
         }
 
         OnPopUpPlatformButtonSwitched?.Invoke(_currentState);
+    }
+
+    /// <summary>
+    /// Resets the button to its initial state, updating the sprite and invoking the OnPopUpPlatformButtonSwitched event with the initial state.
+    /// </summary>
+    public void Reset()
+    {
+        _currentState = InitialState;
+
+        switch (InitialState)
+        {
+            case ButtonState.Red:
+                _spriteRenderer.sprite = SpriteRed;
+                OnPopUpPlatformButtonSwitched?.Invoke(ButtonState.Red);
+                break;
+            case ButtonState.Blue:
+                _spriteRenderer.sprite = SpriteBlue;
+                OnPopUpPlatformButtonSwitched?.Invoke(ButtonState.Blue);
+                break;
+        }
     }
 
     //------------ HANDLERS ------------//
